@@ -6,14 +6,10 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
-
 import java.lang.Runnable;
 import java.lang.Thread;
-
 import javax.swing.JFrame;
-
 import javax.imageio.ImageIO;
-
 import java.io.IOException;
 import java.io.File;
 
@@ -27,10 +23,11 @@ public class Game extends JFrame implements Runnable{
 	private SpriteSheet sheet;
 	private SpriteSheet playerSheet;
 
+	private Player player;
+	Rectangle proRect;
+
 	private int selectedTileID = 2;
 	private int selectedLayer = 0;
-
-	private Rectangle testRectangle = new Rectangle(30, 30, 100, 100);
 
 	private Tiles tiles;
 	private Map map;
@@ -38,8 +35,6 @@ public class Game extends JFrame implements Runnable{
 	private GameObject[] objects;
 	private KeyBoardListener keyListener = new KeyBoardListener(this);
 	private MouseEventListener mouseListener = new MouseEventListener(this);
-
-	private Player player;
 
 	private int xZoom = 3;
 	private int yZoom = 3;
@@ -76,11 +71,6 @@ public class Game extends JFrame implements Runnable{
 
 		//Load Map
 		map = new Map(new File("Map.txt"), tiles);
-
-		//testImage = loadImage("GrassTile.png");
-		//testSprite = sheet.getSprite(4,1);
-
-		testRectangle.generateGraphics(2, 12234);
 
 		//Load SDK GUI
 		GUIButton[] buttons = new GUIButton[tiles.size()];
@@ -124,7 +114,7 @@ public class Game extends JFrame implements Runnable{
 
 	public void update(){
 		for(int i = 0; i < objects.length; i++)
-			objects[i].update(this);
+			objects[i].update(this, player);
 	}
 
 	private BufferedImage loadImage(String path){
@@ -153,15 +143,15 @@ public class Game extends JFrame implements Runnable{
 
 		for(int i = 0; i < objects.length; i++) if(!stoppedChecking) stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
 		if(!stoppedChecking){
-			x = (int) Math.floor((x + renderer.getCamera().x)/(16.0 * xZoom));
+			x = (int) Math.floor(((x + renderer.getCamera().x)/(16.0 * xZoom)));
 			y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
 			map.setTile(selectedLayer, x, y, selectedTileID);
 		}
 	}
 
 	public void rightClick(int x, int y) {
-		x = (int) Math.floor((x + renderer.getCamera().x)/(16.0 * xZoom));
-		y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
+		x = (int) Math.floor((int)(x + renderer.getCamera().x)/(16.0 * xZoom));
+		y = (int) Math.floor((int)(y + renderer.getCamera().y)/(16.0 * yZoom));
 		map.removeTile(selectedLayer, x, y);
 	}
 
@@ -190,8 +180,6 @@ public class Game extends JFrame implements Runnable{
 
 	public void run(){
 		BufferStrategy bufferStrategy = canvas.getBufferStrategy();
-		int i = 0;
-		int x = 0;
 
 		long lastTime = System.nanoTime(); //long 2^63
 		double nanoSecondConversion = 1000000000.0 / 60; //60 frames per second
@@ -205,11 +193,9 @@ public class Game extends JFrame implements Runnable{
 				update();
 				changeInSeconds--;
 			}
-
 			render();
 			lastTime = now;
 		}
-
 	}
 
 	public static void main(String[] args){
@@ -218,27 +204,15 @@ public class Game extends JFrame implements Runnable{
 		gameThread.start();
 	}
 
-	public KeyBoardListener getKeyListener(){
-		return keyListener;
-	}
+	public KeyBoardListener getKeyListener(){return keyListener;}
 
-	public MouseEventListener getMouseListener(){
-		return mouseListener;
-	}
+	public MouseEventListener getMouseListener(){return mouseListener;}
 
-	public RenderHandler getRenderer(){
-		return renderer;
-	}
+	public RenderHandler getRenderer(){return renderer;}
 
-	public Map getMap() {
-		return map;
-	}
+	public Map getMap() {return map;}
 
-	public int getXZoom() {
-		return xZoom;
-	}
+	public int getXZoom() {return xZoom;}
 
-	public int getYZoom() {
-		return yZoom;
-	}
+	public int getYZoom() {return yZoom;}
 }

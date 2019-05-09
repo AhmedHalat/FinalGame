@@ -57,21 +57,18 @@ public class Map
 					String[] splitString = line.split(",");
 					if(splitString.length >= 4)
 					{
-						MappedTile mappedTile = new MappedTile(Integer.parseInt(splitString[0]),
-															   Integer.parseInt(splitString[1]),
-															   Integer.parseInt(splitString[2]),
-															   Integer.parseInt(splitString[3]));
+						MappedTile mappedTile = new MappedTile(Integer.parseInt(splitString[0]), Integer.parseInt(splitString[1]), Integer.parseInt(splitString[2]), Integer.parseInt(splitString[3]));
 						if(mappedTile.x < minX)
-							minX = mappedTile.x;
+						minX = mappedTile.x;
 						if(mappedTile.y < minY)
-							minY = mappedTile.y;
+						minY = mappedTile.y;
 						if(mappedTile.x > maxX)
-							maxX = mappedTile.x;
+						maxX = mappedTile.x;
 						if(mappedTile.x > maxY)
-							maxY = mappedTile.y;
+						maxY = mappedTile.y;
 
 						if(numLayers <= mappedTile.layer)
-							numLayers = mappedTile.layer + 1;
+						numLayers = mappedTile.layer + 1;
 
 
 						mappedTiles.add(mappedTile);
@@ -105,7 +102,7 @@ public class Map
 				assert(blockX >= 0 && blockX < blocks.length && blockY >= 0 && blockY < blocks[0].length);
 
 				if(blocks[blockX][blockY] == null)
-					blocks[blockX][blockY] = new Block();
+				blocks[blockX][blockY] = new Block();
 
 				blocks[blockX][blockY].addTile(mappedTile);
 			}
@@ -122,12 +119,12 @@ public class Map
 		int blockY = (tileY - blockStartY)/blockHeight;
 
 		if(blockX < 0 || blockX >= blocks.length || blockY < 0 || blockY >= blocks[0].length)
-			return null;
+		return null;
 
 		Block block = blocks[blockX][blockY];
 
 		if(block == null)
-			return null;
+		return null;
 
 		return block.getTile(layer, tileX, tileY);
 	}
@@ -144,47 +141,47 @@ public class Map
 
 		//Starting at the top left tile and going to the bottom right
 		for(int x = topLeftX; x < bottomRightX; x++)
-			for(int y = topLeftY; y < bottomRightY; y++) {
-				MappedTile tile = getTile(layer, x, y);
-				if(tile != null) {
-					int collisionType = tileSet.collisionType(tile.id);
+		for(int y = topLeftY; y < bottomRightY; y++) {
+			MappedTile tile = getTile(layer, x, y);
+			if(tile != null) {
+				int collisionType = tileSet.collisionType(tile.id);
 
-					//Full tile collision
-					if(collisionType == 0) {
-						Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, tileWidth, tileWidth);
-						if(tileRectangle.intersects(rect))
-							return true;
+				//Full tile collision
+				if(collisionType == 0) {
+					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, tileWidth, tileWidth);
+					if(tileRectangle.intersects(rect))
+					return true;
 
 					//Top of tile collision
-					} else if(collisionType == 1) {
-						Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, tileWidth, 16);
-						if(tileRectangle.intersects(rect))
-							return true;
+				} else if(collisionType == 1) {
+					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, tileWidth, 16);
+					if(tileRectangle.intersects(rect))
+					return true;
 
 					//Left of tile collision
-					} else if(collisionType == 2) {
-						Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, 16, tileHeight);
-						if(tileRectangle.intersects(rect))
-							return true;
+				} else if(collisionType == 2) {
+					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, 16, tileHeight);
+					if(tileRectangle.intersects(rect))
+					return true;
 
 					//Bottom of tile collision
-					} else if (collisionType == 3) {
-						Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight + tileHeight - 16, tileWidth, 16);
-						Rectangle adjustedRect = new Rectangle(rect.x, rect.y + rect.h, rect.w, 1);
-						if(tileRectangle.intersects(adjustedRect))
-							return true;
+				} else if (collisionType == 3) {
+					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight + tileHeight - 16, tileWidth, 16);
+					Rectangle adjustedRect = new Rectangle(rect.x, rect.y + rect.h, rect.w, 1);
+					if(tileRectangle.intersects(adjustedRect))
+					return true;
 
 					//Right of tile collision
-					} else if (collisionType == 4) {
-						Rectangle tileRectangle = new Rectangle(tile.x*tileWidth + tileWidth - 16, tile.y*tileHeight, 16, tileHeight);
-						if(tileRectangle.intersects(rect))
-							return true;
-					}
-
-
-
+				} else if (collisionType == 4) {
+					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth + tileWidth - 16, tile.y*tileHeight, 16, tileHeight);
+					if(tileRectangle.intersects(rect))
+					return true;
 				}
+
+
+
 			}
+		}
 
 		return false;
 	}
@@ -192,7 +189,7 @@ public class Map
 	public void setTile(int layer, int tileX, int tileY, int tileID)
 	{
 		if(layer >= numLayers)
-			numLayers = layer + 1;
+		numLayers = layer + 1;
 
 		for(int i = 0; i < mappedTiles.size(); i++)
 		{
@@ -212,7 +209,7 @@ public class Map
 		if(blockX >= 0 && blockY >= 0 && blockX < blocks.length && blockY < blocks[0].length)
 		{
 			if(blocks[blockX][blockY] == null)
-				blocks[blockX][blockY] = new Block();
+			blocks[blockX][blockY] = new Block();
 
 			blocks[blockX][blockY].addTile(mappedTile);
 		}
@@ -229,7 +226,7 @@ public class Map
 				newMinX = blockStartX - blockWidth*increaseAmount;
 				newLengthX = newLengthX + increaseAmount;
 			} else if(blockX >= blocks.length)
-				newLengthX = blocks.length + blockX;
+			newLengthX = blocks.length + blockX;
 
 			if(blockY < 0)
 			{
@@ -237,16 +234,16 @@ public class Map
 				newMinY = blockStartY - blockHeight*increaseAmount;
 				newLengthY = newLengthY + increaseAmount;
 			} else if(blockY >= blocks[0].length)
-				newLengthY = blocks[0].length + blockY;
+			newLengthY = blocks[0].length + blockY;
 
 			Block[][] newBlocks = new Block[newLengthX][newLengthY];
 
 			for(int x = 0; x < blocks.length; x++)
-				for(int y = 0; y < blocks[0].length; y++)
-					if(blocks[x][y] != null)
-					{
-						newBlocks[x + (blockStartX - newMinX)/blockWidth][y + (blockStartY - newMinY)/blockHeight] = blocks[x][y];
-					}
+			for(int y = 0; y < blocks[0].length; y++)
+			if(blocks[x][y] != null)
+			{
+				newBlocks[x + (blockStartX - newMinX)/blockWidth][y + (blockStartY - newMinY)/blockHeight] = blocks[x][y];
+			}
 
 			blocks = newBlocks;
 			blockStartX = newMinX;
@@ -254,7 +251,7 @@ public class Map
 			blockX = (tileX - blockStartX)/blockWidth;
 			blockY = (tileY - blockStartY)/blockHeight;
 			if(blocks[blockX][blockY] == null)
-				blocks[blockX][blockY] = new Block();
+			blocks[blockX][blockY] = new Block();
 			blocks[blockX][blockY].addTile(mappedTile);
 		}
 	}
@@ -282,7 +279,7 @@ public class Map
 		{
 			int currentLine = 0;
 			if(mapFile.exists())
-				mapFile.delete();
+			mapFile.delete();
 			mapFile.createNewFile();
 
 			PrintWriter printWriter = new PrintWriter(mapFile);
@@ -299,7 +296,7 @@ public class Map
 			for(int i = 0; i < mappedTiles.size(); i++)
 			{
 				if(comments.containsKey(currentLine))
-					printWriter.println(comments.get(currentLine));
+				printWriter.println(comments.get(currentLine));
 
 				MappedTile tile = mappedTiles.get(i);
 				printWriter.println(tile.layer + "," + tile.id + "," + tile.x + "," + tile.y);
@@ -351,7 +348,7 @@ public class Map
 				if(blockX >= 0 && blockY >= 0 && blockX < blocks.length && blockY < blocks[0].length)
 				{
 					if(blocks[blockX][blockY] != null)
-						blocks[blockX][blockY].render(renderer, layer, tileWidth, tileHeight, xZoom, yZoom);
+					blocks[blockX][blockY].render(renderer, layer, tileWidth, tileHeight, xZoom, yZoom);
 				}
 
 				blockX++;
@@ -364,38 +361,37 @@ public class Map
 					blockY++;
 					pixelY += blockPixelHeight;
 					if(pixelY > bottomRightY)
-						break;
+					break;
 				}
 			}
 
 			for(int i = 0; i < objects.length; i++)
-				if(objects[i].getLayer() == layer)
-					objects[i].render(renderer, xZoom, yZoom);
-				else if(objects[i].getLayer() + 1 == layer)
-				{
-					Rectangle rect = objects[i].getRectangle();
+			if(objects[i].getLayer() == layer)
+			objects[i].render(renderer, xZoom, yZoom);
+			else if(objects[i].getLayer() + 1 == layer)
+			{
+				Rectangle rect = objects[i].getRectangle();
 
-					int tileBelowX = rect.x/tileWidth;
-					int tileBelowX2 = (int) Math.floor((rect.x + rect.w/2*xZoom*1.0)/tileWidth);
-					int tileBelowX3 = (int) Math.floor((rect.x + rect.w*xZoom*1.0)/tileWidth);
+				int tileBelowX = rect.x/tileWidth;
+				int tileBelowX2 = (int) Math.floor((rect.x + rect.w/2*xZoom*1.0)/tileWidth);
+				int tileBelowX3 = (int) Math.floor((rect.x + rect.w*xZoom*1.0)/tileWidth);
 
-					int tileBelowY = (int) Math.floor((rect.y + rect.h*yZoom*1.0)/tileHeight);
+				int tileBelowY = (int) Math.floor((rect.y + rect.h*yZoom*1.0)/tileHeight);
 
-					if(getTile(layer, tileBelowX, tileBelowY) == null &&
-					   getTile(layer, tileBelowX2, tileBelowY) == null &&
-					   getTile(layer, tileBelowX3, tileBelowY) == null)
-						objects[i].render(renderer, xZoom, yZoom);
-				}
+				if(getTile(layer, tileBelowX, tileBelowY) == null &&
+				getTile(layer, tileBelowX2, tileBelowY) == null &&
+				getTile(layer, tileBelowX3, tileBelowY) == null)
+				objects[i].render(renderer, xZoom, yZoom);
+			}
 		}
 
 		for(int i = 0; i < objects.length; i++)
-			if(objects[i].getLayer() == Integer.MAX_VALUE)
-				objects[i].render(renderer, xZoom, yZoom);
+		if(objects[i].getLayer() == Integer.MAX_VALUE)
+		objects[i].render(renderer, xZoom, yZoom);
 
 	}
 
-	//Block represents a 6/6 block of tiles
-	@SuppressWarnings("unchecked")
+
 	private class Block
 	{
 		public ArrayList<MappedTile>[] mappedTilesByLayer;
@@ -404,11 +400,11 @@ public class Map
 		{
 			mappedTilesByLayer = new ArrayList[numLayers];
 			for(int i = 0; i < mappedTilesByLayer.length; i++)
-				mappedTilesByLayer[i] = new ArrayList<MappedTile>();
+			mappedTilesByLayer[i] = new ArrayList<MappedTile>();
 		}
 
 		public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom)
-		 {
+		{
 			if(mappedTilesByLayer.length > layer)
 			{
 				ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
@@ -427,9 +423,9 @@ public class Map
 
 				int i = 0;
 				for(i = 0; i < mappedTilesByLayer.length; i++)
-					newTilesByLayer[i] = mappedTilesByLayer[i];
+				newTilesByLayer[i] = mappedTilesByLayer[i];
 				for(; i < newTilesByLayer.length; i++)
-					newTilesByLayer[i] = new ArrayList<MappedTile>();
+				newTilesByLayer[i] = new ArrayList<MappedTile>();
 
 				mappedTilesByLayer = newTilesByLayer;
 			}
@@ -445,7 +441,7 @@ public class Map
 			for(MappedTile tile : mappedTilesByLayer[layer])
 			{
 				if(tile.x == tileX && tile.y == tileY)
-					return tile;
+				return tile;
 			}
 			return null;
 		}

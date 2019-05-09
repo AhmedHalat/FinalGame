@@ -1,4 +1,3 @@
-package FinalGame;
 import java.awt.image.BufferedImage;
 
 public class Sprite{
@@ -18,6 +17,8 @@ public class Sprite{
 		pixels = new int[width*height];
 		image.getRGB(0, 0, width, height, pixels, 0, width);
 	}
+
+	public Sprite(){}
 
 
 	public int getWidth(){

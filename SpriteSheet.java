@@ -1,6 +1,4 @@
-package FinalGame;
 import java.awt.image.BufferedImage;
-import FinalGame.Sprite;
 
 public class SpriteSheet {
 	private int[] pixels;
