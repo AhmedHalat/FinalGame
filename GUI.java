@@ -33,7 +33,7 @@ public class GUI implements GameObject{
 
 	 public void update(Game game, Player player){
 			 if(buttons != null)
-					 for(int i = 0; i < buttons.length; i++) buttons[i].update(game);
+					 for(int i = 0; i < buttons.length; i++) buttons[i].update(game, player);
 	 }
 
 	 public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom){

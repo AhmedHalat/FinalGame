@@ -102,6 +102,7 @@ public class RenderHandler{
       if(pixels.length > pixelIndex && pixel != Game.alpha) pixels[pixelIndex] = pixel;
     }
   }
+  
   private void setPixel(int pixel, int x, int y, boolean fixed) {
     int pixelIndex = 0;
     if(!fixed)

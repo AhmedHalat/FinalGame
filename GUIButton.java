@@ -19,11 +19,10 @@ public abstract class GUIButton implements GameObject
 	}
 
 	//Call at 60 fps rate.
-	public void update(Game game) {}
+	public void update(Game game, Player player) {}
 
 	//Call whenever mouse is clicked on Canvas.
-	public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom)
-	{
+	public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom){
 		if(mouseRectangle.intersects(rect)) {
 			activate();
 			return true;

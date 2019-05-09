@@ -55,7 +55,7 @@ public class Game extends JFrame implements Runnable{
 		renderer = new RenderHandler(getWidth(), getHeight());
 
 		//Load Assets
-		BufferedImage sheetImage = loadImage("Tiles1.png");
+		BufferedImage sheetImage = loadImage("DungeonTileset.png");
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
 
@@ -117,7 +117,7 @@ public class Game extends JFrame implements Runnable{
 			objects[i].update(this, player);
 	}
 
-	private BufferedImage loadImage(String path){
+	public BufferedImage loadImage(String path){
 		try{
 			BufferedImage loadedImage = ImageIO.read(Game.class.getResource(path));
 			BufferedImage formattedImage = new BufferedImage(loadedImage.getWidth(), loadedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -150,8 +150,8 @@ public class Game extends JFrame implements Runnable{
 	}
 
 	public void rightClick(int x, int y) {
-		x = (int) Math.floor((int)(x + renderer.getCamera().x)/(16.0 * xZoom));
-		y = (int) Math.floor((int)(y + renderer.getCamera().y)/(16.0 * yZoom));
+		x = (int) Math.floor((x + renderer.getCamera().x)/(16.0 * xZoom));
+		y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
 		map.removeTile(selectedLayer, x, y);
 	}
 
@@ -179,8 +179,6 @@ public class Game extends JFrame implements Runnable{
 	}
 
 	public void run(){
-		BufferStrategy bufferStrategy = canvas.getBufferStrategy();
-
 		long lastTime = System.nanoTime(); //long 2^63
 		double nanoSecondConversion = 1000000000.0 / 60; //60 frames per second
 		double changeInSeconds = 0;
