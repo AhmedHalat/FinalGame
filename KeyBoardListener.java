@@ -10,7 +10,6 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 	 public boolean[] keys = new boolean[120];
 
 	 private Game game;
-	 StatMenu statMenu = new StatMenu();
 	 public KeyBoardListener(Game game){
 			 this.game = game;
 	 }
@@ -21,8 +20,9 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 			 int keyCode = event.getKeyCode();
 
 			 if(keyCode < keys.length) keys[keyCode] = true;
+			 if(keys[KeyEvent.VK_CONTROL] && keys[KeyEvent.VK_S]) game.saveMap();
 
-			 if(keys[KeyEvent.VK_P])game.pause();
+			 /*if(keys[KeyEvent.VK_P])game.pause();
 			 if(keys[KeyEvent.VK_SPACE])game.attack();
 			 if(keys[KeyEvent.VK_Q]){
 					 int weaponID = game.selectedWeapon;
@@ -30,7 +30,7 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 					 if(weaponID == 5) game.weaponSelect(6);
 					 else if (weaponID == 6) game.weaponSelect(5);
 			 }
-			 if(keys[KeyEvent.VK_CONTROL] && keys[KeyEvent.VK_U]) game.newWave(0);
+			 if(keys[KeyEvent.VK_CONTROL] && keys[KeyEvent.VK_U]) game.newWave(0);*/
 	 }
 	 //Parameters: event
 	 //if key is released, sets the key to false

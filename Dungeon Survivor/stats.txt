@@ -1,0 +1,5 @@
+5
+Speed-5
+Health-100
+Defence-10
+Attack-100

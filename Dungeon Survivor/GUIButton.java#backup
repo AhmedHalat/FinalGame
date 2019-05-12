@@ -1,4 +1,4 @@
-
+package FinalGame;
 
 public abstract class GUIButton implements GameObject{
     protected Sprite sprite;

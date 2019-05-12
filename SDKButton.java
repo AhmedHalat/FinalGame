@@ -3,17 +3,17 @@ public class SDKButton extends GUIButton{
 	private int tileID;
 	private boolean upgrade = false;
 
-	public SDKButton(Game game, int tileID, Sprite tileSprite, Rectangle rect)
-	{
-		super(tileSprite, rect, true);
+	public SDKButton(Game game, Player player, int tileID, Sprite tileSprite, Rectangle rect, boolean upgrade){
+		super(tileSprite, rect, false);
 		this.game = game;
 		this.tileID = tileID;
-		rect.generateGraphics(0xFFDB3D);
+		this.upgrade = upgrade;
+		update(game, player);
 	}
 
 	@Override
 	public void update(Game game, Player player) {
-		if(upgrade)  rect.generateGraphics(0xFF67FF3D);
+		if(upgrade) rect.generateGraphics(0xFF67FF3D);
 		else rect.generateGraphics(0xFFDB3D);
 	}
 

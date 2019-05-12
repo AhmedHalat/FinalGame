@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Tiles
+comment1.params=tilesFile\ spriteSheet
+comment1.target=Tiles(java.io.File,\ SpriteSheet)
+comment2.params=tileID\ renderer\ xPosition\ yPosition\ xZoom\ yZoom
+comment2.target=void\ renderTile(int,\ RenderHandler,\ int,\ int,\ int,\ int)
+comment3.params=
+comment3.target=int\ size()
+comment4.params=
+comment4.target=Sprite[]\ getSprites()
+comment5.params=tileID
+comment5.target=int\ collisionType(int)
+numComments=6

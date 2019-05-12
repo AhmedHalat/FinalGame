@@ -78,7 +78,7 @@ public class Game extends JFrame implements Runnable{
 
 		for(int i = 0; i < buttons.length; i++){
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-			buttons[i] = new SDKButton(this, i, tileSprites[i], tileRectangle);
+			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
 		}
 		GUI gui = new GUI(buttons, 5, 5, true);
 
@@ -87,6 +87,7 @@ public class Game extends JFrame implements Runnable{
 		player = new Player(playerAnimations, xZoom, yZoom);
 		objects[0] = player;
 		objects[1] = gui;
+		gui.render(renderer, xZoom, yZoom);
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -110,6 +111,8 @@ public class Game extends JFrame implements Runnable{
 			public void componentShown(ComponentEvent e) {}
 		});
 		canvas.requestFocus();
+		map.setTile(3, 0, 0, 11);
+		map.setTile(3, 0, 1, 12);
 	}
 
 	public void update(){
@@ -131,8 +134,7 @@ public class Game extends JFrame implements Runnable{
 		}
 	}
 
-	public void handleCTRL(boolean[] keys){
-		if(keys[KeyEvent.VK_S])
+	public void saveMap(){
 			map.saveMap();
 	}
 
