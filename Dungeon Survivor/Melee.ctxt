@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Melee
+comment1.params=sprite\ xZoom\ yZoom
+comment1.target=Melee(Sprite,\ int,\ int)
+comment2.params=direction
+comment2.target=void\ updateDirection(int)
+comment3.params=
+comment3.target=void\ invisible()
+comment4.params=renderer\ xZoom\ yZoom
+comment4.target=void\ render(RenderHandler,\ int,\ int)
+comment5.params=game\ player\ spawner\ pro\ melee
+comment5.target=void\ update(Game,\ Player,\ Spawn,\ Projectile,\ Melee)
+comment6.params=
+comment6.target=int\ getLayer()
+comment7.params=
+comment7.target=Rectangle\ getRectangle()
+comment8.params=mouseRectangle\ camera\ xZoom\ yZoom
+comment8.target=boolean\ handleMouseClick(Rectangle,\ Rectangle,\ int,\ int)
+numComments=9

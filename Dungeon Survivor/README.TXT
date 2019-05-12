@@ -1,0 +1,2 @@
+The classes Map, Tiles, Sprites, Animated sprites and renderhandler were made following an online tutorial I found. No edits were made to these classes. 
+While I do know how they all work, it is written in a manner more advanced than my own. Click the screen to start the game, press "P" to pause and click help for more info.

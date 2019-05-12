@@ -1,0 +1,4 @@
+//TileName-SpriteX-SpriteY
+Empty-0-0
+Shuriken-1-0
+Glaive-2-0

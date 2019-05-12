@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=SpriteSheet
+comment1.params=sheetImage
+comment1.target=SpriteSheet(java.awt.image.BufferedImage)
+comment2.params=spriteSizeX\ spriteSizeY
+comment2.target=void\ loadSprites(int,\ int)
+comment3.params=x\ y
+comment3.target=FinalGame.Sprite\ getSprite(int,\ int)
+comment4.params=
+comment4.target=FinalGame.Sprite[]\ getLoadedSprites()
+comment5.params=
+comment5.target=int[]\ getPixels()
+comment6.params=
+comment6.target=java.awt.image.BufferedImage\ getImage()
+numComments=7

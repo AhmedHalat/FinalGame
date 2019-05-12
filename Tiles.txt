@@ -1,12 +1,19 @@
 //TileName-SpriteX-SpriteY-CollisionType
 //If there is no CollisionType argument, that tile has no collision
-Grass1-5-0
-Grass2-6-0
-Dirt-2-1
-PathVertical-1-1
-PathCorner-1-2
-PathHorizontal-2-2
-Water-4-3-0
-Water2-4-4-0
-TreeTop-6-6
-TreeBottom-6-7-3
+//CollisionType: 0:Full 1:Top 2:Left 3:Bottom 4:right
+//Take line # subtract 5 = TileID
+Blank1-5-0
+Blank2-6-0
+BrickWall1-0-1
+BrickWall2-1-1
+BrickWall3-2-1
+TileFloorTL-0-6
+TileFloorL-0-7
+TileFloorBL-0-8
+TileFloorTR-1-6
+TileFloorR-1-7
+TileFloorBR-1-8
+WoodenCrateFT-5-6
+WoodenCrateFB-5-7-3
+WoodenCrateBottom-6-7-3
+WoodenCrateTop-6-6
