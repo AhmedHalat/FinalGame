@@ -13,7 +13,7 @@ TileFloorBL-0-8
 TileFloorTR-1-6
 TileFloorR-1-7
 TileFloorBR-1-8
-WoodenCrateFT-5-6
-WoodenCrateFB-5-7-3
+WoodenCrateFT-5-6-3
+WoodenCrateFB-5-7-0
 WoodenCrateBottom-6-7-3
 WoodenCrateTop-6-6
