@@ -45,16 +45,16 @@ public class SpriteSheet {
 		return null;
 	}
 
-	public Sprite[] getLoadedSprites(){
-		return loadedSprites;
-	}
-
 	public int[] getPixels(){
 		return pixels;
 	}
 
 	public BufferedImage getImage(){
 		return image;
+	}
+
+	public Sprite[] getLoadedSprites(){
+		return loadedSprites;
 	}
 
 }

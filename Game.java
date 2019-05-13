@@ -78,7 +78,7 @@ public class Game extends JFrame implements Runnable{
 
 		for(int i = 0; i < buttons.length; i++){
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, true);
+			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
 		}
 		GUI gui = new GUI(buttons, 5, 5, true);
 
@@ -110,8 +110,8 @@ public class Game extends JFrame implements Runnable{
 			public void componentShown(ComponentEvent e) {}
 		});
 		canvas.requestFocus();
-		map.setTile(0, 0, 0, 11);
-		map.setTile(0, 0, 1, 12);
+		map.setTile(3, 0, 0, 11);
+		map.setTile(3, 0, 1, 12);
 	}
 
 	public void update(){
