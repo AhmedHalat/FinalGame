@@ -70,7 +70,7 @@ public class RenderHandler{
     for(int xZoomPosition = 0; xZoomPosition < xZoom; xZoomPosition++)
     setPixel(renderPixels[x + y * renderWidth], (x * xZoom) + xPosition + xZoomPosition, ((y * yZoom) + yPosition + yZoomPosition), fixed);
   }
-  
+
   private void setPixel(int pixel, int x, int y, boolean fixed) {
     int pixelIndex = 0;
     if(!fixed){
@@ -83,14 +83,6 @@ public class RenderHandler{
     }
     if(pixels.length > pixelIndex && pixel != Game.alpha)
     pixels[pixelIndex] = pixel;
-  }
-
-  private void setPixel(int pixel, int x, int y, boolean fixed) {
-    int pixelIndex = 0;
-    if(!fixed)
-    if(x >= camera.x && y >= camera.y && x <= camera.x + camera.w && y <= camera.y + camera.h) pixelIndex = (x - camera.x) + (y - camera.y) * view.getWidth();
-    else if(x >= 0 && y >= 0 && x <= camera.w && y <= camera.h) pixelIndex = x + y * view.getWidth();
-    if(pixels.length > pixelIndex && pixel != Game.alpha) pixels[pixelIndex] = pixel;
   }
 
   public Rectangle getCamera() {

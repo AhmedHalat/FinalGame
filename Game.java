@@ -80,7 +80,7 @@ public class Game extends JFrame implements Runnable{
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
 			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
 		}
-		GUI gui = new GUI(buttons, 5, 5, false);
+		GUI gui = new GUI(buttons, 5, 5, true);
 
 		//Load Objects
 		objects = new GameObject[2];

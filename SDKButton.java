@@ -4,7 +4,7 @@ public class SDKButton extends GUIButton{
 	private boolean upgrade = false;
 
 	public SDKButton(Game game, Player player, int tileID, Sprite tileSprite, Rectangle rect, boolean upgrade){
-		super(tileSprite, rect, false);
+		super(tileSprite, rect, true);
 		this.game = game;
 		this.tileID = tileID;
 		this.upgrade = upgrade;
