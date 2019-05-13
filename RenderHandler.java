@@ -85,6 +85,14 @@ public class RenderHandler{
     pixels[pixelIndex] = pixel;
   }
 
+  private void setPixel(int pixel, int x, int y, boolean fixed) {
+    int pixelIndex = 0;
+    if(!fixed)
+    if(x >= camera.x && y >= camera.y && x <= camera.x + camera.w && y <= camera.y + camera.h) pixelIndex = (x - camera.x) + (y - camera.y) * view.getWidth();
+    else if(x >= 0 && y >= 0 && x <= camera.w && y <= camera.h) pixelIndex = x + y * view.getWidth();
+    if(pixels.length > pixelIndex && pixel != Game.alpha) pixels[pixelIndex] = pixel;
+  }
+
   public Rectangle getCamera() {
     return camera;
   }
