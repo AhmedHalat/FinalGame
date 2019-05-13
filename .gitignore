@@ -1,3 +1,5 @@
-
+*.ctxt
 *.class
 .DS_Store
+*.bluej
+*.java#backup
