@@ -55,7 +55,7 @@ public class Game extends JFrame implements Runnable{
 		renderer = new RenderHandler(getWidth(), getHeight());
 
 		//Load Assets
-		BufferedImage sheetImage = loadImage("DungeonTileset.png");
+		BufferedImage sheetImage = loadImage("DungeonTileset2.png");
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
 
@@ -67,7 +67,7 @@ public class Game extends JFrame implements Runnable{
 		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
 
 		//Load Tiles
-		tiles = new Tiles(new File("Tiles.txt"),sheet);
+		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 
 		//Load Map
 		map = new Map(new File("Map.txt"), tiles);

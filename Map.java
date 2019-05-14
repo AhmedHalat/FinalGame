@@ -184,19 +184,19 @@ for(int n = 0; n <= numberOfChambers; n++){
 
 	for (int x = 0; x <= width; x++)
 		for (int y = n*30+height;y <= n*30+2*height;y++)
-			if (x == 0 || x == width || y == n*30+height || y == n*30+2*height) setTile(layer,x,y,3);
-			else setTile(layer,x,y,10);
+			if (x == 0 && y == n*30+2*height) setTile(layer,x,y,5);
+			else if (x == 0 ) setTile(layer,x,y,2);
+			else if (x == width && y == n*30+2*height) setTile(layer,x,y,7);
+			else if (x == width) setTile(layer,x,y,4);
+			else if (y == n*30+height) setTile(layer,x,y,3);
+			else if (y == n*30+2*height) setTile(layer,x,y,6);
+			else setTile(layer,x,y,1);
 }
 for(int i =height; i < numberOfChambers*30+2*height;i++){
-	// setTile(layer,3,i,3);
-
-	setTile(layer,4,i,10);
-	setTile(layer,5,i,10);
-	setTile(layer,6,i,10);
-
-	// setTile(layer,7,i,3);
+	setTile(layer,4,i,1);
+	setTile(layer,5,i,1);
+	setTile(layer,6,i,1);
 }
-	// setTile(layer,0,0,1);
 }
 
 	public void setTile(int layer, int tileX, int tileY, int tileID){
