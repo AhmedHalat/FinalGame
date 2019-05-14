@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Map{
 	private Tiles tileSet;
-	private int fillTileID = -1;
+	private int fillTileID = 0;
 
 	private ArrayList<MappedTile> mappedTiles = new ArrayList<MappedTile>();
 	private Block[][] blocks;
@@ -162,6 +162,30 @@ public class Map{
 
 		return false;
 	}
+
+
+public void randomMap(){
+	final int maxWidth = 20;
+	final int minWidth = 8;
+	final int maxHeight = 20;
+	final int minHight = 8;
+	int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
+	int layer = 0;
+	width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+	System.out.println(width+","+height);
+
+for(int n = 0; n <= numberOfChambers; n++){
+	width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+
+	for (int x = 0; x <= width; x++)
+		for (int y = 0+n*20+height;y <= height+n*20+height;y++)
+			if (x == 0 || x == width || y == 0+n*20+height || y == height+n*20+height) setTile(1,x,y,3);
+			else setTile(1,x,y,10);
+}
+
+}
 
 	public void setTile(int layer, int tileX, int tileY, int tileID){
 		if(layer >= numLayers) numLayers = layer + 1;

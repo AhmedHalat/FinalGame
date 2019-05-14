@@ -110,8 +110,7 @@ public class Game extends JFrame implements Runnable{
 			public void componentShown(ComponentEvent e) {}
 		});
 		canvas.requestFocus();
-		map.setTile(3, 0, 0, 11);
-		map.setTile(3, 0, 1, 12);
+		map.randomMap();
 	}
 
 	public void update(){
@@ -147,6 +146,7 @@ public class Game extends JFrame implements Runnable{
 			x = (int) Math.floor(((x + renderer.getCamera().x)/(16.0 * xZoom)));
 			y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
 			map.setTile(selectedLayer, x, y, selectedTileID);
+
 		}
 	}
 
