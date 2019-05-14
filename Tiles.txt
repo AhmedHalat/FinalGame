@@ -4,9 +4,9 @@
 //Take line # subtract 5 = TileID
 Blank-4-6
 Blank2-6-0
-BrickWall1-0-1
-BrickWall2-1-1
-BrickWall3-2-1
+BrickWall1-0-1-0
+BrickWall2-1-1-0
+BrickWall3-2-1-0
 TileFloorTL-0-6
 TileFloorL-0-7
 TileFloorBL-0-8

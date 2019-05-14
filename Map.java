@@ -174,7 +174,7 @@ public void randomMap(){
 	final int maxHeight = 20;
 	final int minHight = 8;
 	int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
-	int layer = 0;
+	int layer = 1;
 	width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
@@ -183,14 +183,20 @@ for(int n = 0; n <= numberOfChambers; n++){
 	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
 	for (int x = 0; x <= width; x++)
-		for (int y = n*20+height;y <= height+n*20+height;y++)
-			if (x == 0 || x == width || y == 0+n*20+height || y == height+n*20+height) setTile(1,x,y,3);
-			else setTile(1,x,y,10);
+		for (int y = n*30+height;y <= n*30+2*height;y++)
+			if (x == 0 || x == width || y == n*30+height || y == n*30+2*height) setTile(layer,x,y,3);
+			else setTile(layer,x,y,10);
 }
-for(int i =1; i <= numberOfChambers*20+height;i++){
-	setTile(1,4,i,10);
+for(int i =height; i < numberOfChambers*30+2*height;i++){
+	// setTile(layer,3,i,3);
+
+	setTile(layer,4,i,10);
+	setTile(layer,5,i,10);
+	setTile(layer,6,i,10);
+
+	// setTile(layer,7,i,3);
 }
-	setTile(1,0,0,1);
+	// setTile(layer,0,0,1);
 }
 
 	public void setTile(int layer, int tileX, int tileY, int tileID){
