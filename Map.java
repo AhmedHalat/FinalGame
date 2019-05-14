@@ -91,6 +91,10 @@ public class Map{
 		}
 	}
 
+	public void generateMap(int w, int h){
+		setTile(1, 1, 0, 5);
+	}
+
 	public MappedTile getTile(int layer, int tileX, int tileY) {
 		int blockX = (tileX - blockStartX)/blockWidth;
 		int blockY = (tileY - blockStartY)/blockHeight;

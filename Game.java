@@ -72,6 +72,7 @@ public class Game extends JFrame implements Runnable{
 		//Load Map
 		map = new Map(new File("Map.txt"), tiles);
 
+
 		//Load SDK GUI
 		GUIButton[] buttons = new GUIButton[tiles.size()];
 		Sprite[] tileSprites = tiles.getSprites();
@@ -110,7 +111,13 @@ public class Game extends JFrame implements Runnable{
 			public void componentShown(ComponentEvent e) {}
 		});
 		canvas.requestFocus();
+<<<<<<< HEAD
 		map.randomMap();
+=======
+		map.setTile(3, 0, 0, 11);
+		map.setTile(3, 0, 1, 12);
+		map.generateMap(10,10);
+>>>>>>> 28f81ef9ddafc70a2acc438872a311389a3bf0a4
 	}
 
 	public void update(){

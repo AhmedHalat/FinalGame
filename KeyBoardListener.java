@@ -52,16 +52,16 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 	 public void focusGained(FocusEvent event) {}
 	 //Player directions to be used in player class
 	 public boolean up(){
-			 return keys[KeyEvent.VK_UP];
+			 return keys[KeyEvent.VK_W];
 	 }
 	 public boolean down(){
-			 return  keys[KeyEvent.VK_DOWN];
+			 return  keys[KeyEvent.VK_S];
 	 }
 	 public boolean left(){
-			 return keys[KeyEvent.VK_LEFT] ;
+			 return keys[KeyEvent.VK_A] ;
 	 }
 	 public boolean right(){
-			 return keys[KeyEvent.VK_RIGHT];
+			 return keys[KeyEvent.VK_D];
 	 }
 
 
