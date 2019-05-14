@@ -15,7 +15,6 @@ public class Player implements GameObject{
 	int direction = 0;
 	private int layer;
 	private Sprite sprite;
-	private Bot bot;
 	private AnimatedSprite animatedSprite = null;
 	//Collision offset right and left of the blocks
 	private final int xCollisionOffset = 15;
@@ -30,7 +29,7 @@ public class Player implements GameObject{
 		animatedSprite = (AnimatedSprite) sprite;
 
 		updateDirection();
-		playerRectangle = new Rectangle(100, -300, 20, 26);
+		playerRectangle = new Rectangle(0, 0, 20, 26);
 		collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
 	}
 	//Parameters: array that contains players current stats
