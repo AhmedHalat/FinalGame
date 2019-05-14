@@ -408,6 +408,10 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 					mappedTilesByLayer[tile.layer].add(tile);
 			}
 
+			public void removeTile(MappedTile tile) {
+				mappedTilesByLayer[tile.layer].remove(tile);
+			}
+
 			//Parameters: layer, tile positions on spritesheet
 			//returns the position of a specific tile
 			public MappedTile getTile(int layer, int tileX, int tileY)

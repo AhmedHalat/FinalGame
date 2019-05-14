@@ -7,6 +7,9 @@ public abstract class Character{
 	protected int layer;
 	protected Sprite sprite;
   protected AnimatedSprite animatedSprite;
+
+  protected boolean dead;
+  protected boolean move;
   //Collision offset right and left of the blocks
   protected final int xCollisionOffset;
   protected final int yCollisionOffset;
@@ -32,7 +35,7 @@ public abstract class Character{
   }
 
   public abstract void update();
-  public abstract void updateStats();
+  public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
 
 

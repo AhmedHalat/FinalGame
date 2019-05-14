@@ -24,7 +24,6 @@ public class Game extends JFrame implements Runnable{
 	private SpriteSheet playerSheet;
 
 	private Player player;
-	Rectangle proRect;
 
 	private int selectedTileID = 2;
 	private int selectedLayer = 0;
