@@ -7,30 +7,23 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
 //GameObject method
-public class Player implements GameObject{
-	private Rectangle playerRectangle;
-	private Rectangle collisionCheckRectangle;
-	int newSpeed = 5;
-	//0 = Right, 1 = Left, 2 = Up, 3 = Down
-	int direction = 0;
-	private int layer;
-	private Sprite sprite;
-	private AnimatedSprite animatedSprite = null;
-	//Collision offset right and left of the blocks
-	private final int xCollisionOffset = 15;
-	private final int yCollisionOffset = 25;
+public class Player extends Character implements GameObject{
+
 	//Parameters: Sprite - the players animated sprite, zoom - the pixel zoom used to set player collision rectangle
 	//Player object constructor, creates player rectangle and collision
 	//Contructor
 	public Player(Sprite sprite, int xZoom, int yZoom){
+		super(sprite, 5, 0, 15, 25);
 		this.sprite = sprite;
 
 		if(sprite != null && sprite instanceof AnimatedSprite)
-		animatedSprite = (AnimatedSprite) sprite;
-
+		AnimatedSprite animatedSprite = (AnimatedSprite) sprite;
 		updateDirection();
-		playerRectangle = new Rectangle(0, 0, 20, 26);
-		collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
+		Rectangle playerRectangle = new Rectangle(0, 0, 20, 26);
+		Rectangle collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
+		super.setAnimatedSprite(animatedSprite);
+		super.setRect(playerRectangle);
+		super.setCollisionCheckRectangle(collisionCheckRectangle);
 	}
 	//Parameters: array that contains players current stats
 	//sets the players new motion speed if the stats have been upgraded
@@ -40,11 +33,9 @@ public class Player implements GameObject{
 	}
 
 
-	private void updateDirection(){
-		if(animatedSprite != null)
-		{
-			animatedSprite.setAnimationRange(direction * 8, (direction * 8) + 7);
-		}
+	public void updateDirection(){
+		if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 8, (direction * 8) + 7);
+
 	}
 
 	public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -137,6 +128,14 @@ public class Player implements GameObject{
 	public void updateCamera(Rectangle camera) {
 		camera.x = playerRectangle.x - (camera.w / 2);
 		camera.y = playerRectangle.y - (camera.h / 2);
+	}
+
+	public void updateStats(){
+
+	}
+
+	public void update(){
+
 	}
 
 	public int getLayer() {
