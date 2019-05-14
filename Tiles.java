@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public class Tiles 
+public class Tiles
 {
 	private SpriteSheet spriteSheet;
 	private ArrayList<Tile> tilesList = new ArrayList<Tile>();
@@ -12,10 +12,10 @@ public class Tiles
 	public Tiles(File tilesFile, SpriteSheet spriteSheet)
 	{
 		this.spriteSheet = spriteSheet;
-		try 
+		try
 		{
 			Scanner scanner = new Scanner(tilesFile);
-			while(scanner.hasNextLine()) 
+			while(scanner.hasNextLine())
 			{
 				String line = scanner.nextLine();
 				if(!line.startsWith("//"))
@@ -34,7 +34,7 @@ public class Tiles
 					tilesList.add(tile);
 				}
 			}
-		} 
+		}
 		catch(FileNotFoundException e)
 		{
 			e.printStackTrace();
@@ -68,7 +68,7 @@ public class Tiles
 		return sprites;
 	}
 
-	public int collisionType(int tileID) 
+	public int collisionType(int tileID)
 	{
 		if(tileID >= 0 && tilesList.size() > tileID)
 		{
@@ -81,14 +81,14 @@ public class Tiles
 		return -1;
 	}
 
-	class Tile 
+	class Tile
 	{
 		public String tileName;
 		public Sprite sprite;
 		public boolean collidable = false;
 		public int collisionType = -1;
 
-		public Tile(String tileName, Sprite sprite) 
+		public Tile(String tileName, Sprite sprite)
 		{
 			this.tileName = tileName;
 			this.sprite = sprite;

@@ -2,11 +2,16 @@
 //If there is no CollisionType argument, that tile has no collision
 //CollisionType: 0:Full 1:Top 2:Left 3:Bottom 4:right
 //Take line # subtract 5 = TileID
-Blank-4-6
-Blank2-6-0
-BrickWall1-0-1-0
-BrickWall2-1-1-0
-BrickWall3-2-1-0
+Blank-8-7
+Blank2-9-7
+BrickWall1-0-0-0
+BrickWall2-1-0-0
+BrickWall3-5-0-0
+BrickWall4-0-4-0
+BrickWall5-1-4-0
+BrickWall6-5-4-0
+BrickWall7-0-5-0
+BrickWall8-3-5-0
 TileFloorTL-0-6
 TileFloorL-0-7
 TileFloorBL-0-8

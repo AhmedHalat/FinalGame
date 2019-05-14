@@ -55,7 +55,7 @@ public class Game extends JFrame implements Runnable{
 		renderer = new RenderHandler(getWidth(), getHeight());
 
 		//Load Assets
-		BufferedImage sheetImage = loadImage("DungeonTileset.png");
+		BufferedImage sheetImage = loadImage("DungeonTileset2.png");
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
 
@@ -67,11 +67,10 @@ public class Game extends JFrame implements Runnable{
 		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
 
 		//Load Tiles
-		tiles = new Tiles(new File("Tiles.txt"),sheet);
+		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 
 		//Load Map
 		map = new Map(new File("Map.txt"), tiles);
-
 
 		//Load SDK GUI
 		GUIButton[] buttons = new GUIButton[tiles.size()];
@@ -110,8 +109,8 @@ public class Game extends JFrame implements Runnable{
 			public void componentMoved(ComponentEvent e) {}
 			public void componentShown(ComponentEvent e) {}
 		});
+		randomMap();
 		canvas.requestFocus();
-		map.randomMap();
 	}
 
 	public void update(){
@@ -137,8 +136,41 @@ public class Game extends JFrame implements Runnable{
 			map.saveMap();
 	}
 
-	public void leftClick(int x, int y){
 
+	public void randomMap(){
+		final int maxWidth = 20;
+		final int minWidth = 8;
+		final int maxHeight = 20;
+		final int minHight = 8;
+		selectedLayer = 1;
+		int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
+		int layer = 0;
+		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+
+	for(int n = 0; n <= numberOfChambers; n++){
+		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+
+		leftClick(-10, -10);
+		for (int x = 0; x <= width; x++)
+			for (int y = n*30+height;y <= n*30+2*height;y++)
+				if (x == 0 && y == n*30+2*height) map.setTile(layer,x,y,5);
+				else if (x == 0 ) map.setTile(layer,x,y,2);
+				else if (x == width && y == n*30+2*height) map.setTile(layer,x,y,7);
+				else if (x == width) map.setTile(layer,x,y,4);
+				else if (y == n*30+height) map.setTile(layer,x,y,3);
+				else if (y == n*30+2*height) map.setTile(layer,x,y,6);
+				else map.setTile(layer,x,y,1);
+	}
+	for(int i =height; i < numberOfChambers*30+2*height;i++){
+		map.setTile(layer,4,i,1);
+		map.setTile(layer,5,i,1);
+		map.setTile(layer,6,i,1);
+	}
+	}
+
+	public void leftClick(int x, int y){
 		Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 		boolean stoppedChecking = false;
 
