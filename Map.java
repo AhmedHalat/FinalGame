@@ -174,7 +174,7 @@ public void randomMap(){
 	final int maxHeight = 20;
 	final int minHight = 8;
 	int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
-	int layer = 1;
+	int layer = 0;
 	width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
