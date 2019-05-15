@@ -14,27 +14,26 @@ public abstract class Character{
   protected final int xCollisionOffset;
   protected final int yCollisionOffset;
 
-  public Character(Sprite sprite, AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
+  public Character(AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
     this.rect = rect;
     this.collisionCheckRectangle = collisionCheckRectangle;
     this.direction = direction;
     this.speed = speed;
     this.layer = layer;
-    this.sprite = sprite;
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
   }
 
-  public Character(Sprite sprite, int speed, int layer, int xCollisionOffset, int yCollisionOffset){
+  public Character(Sprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
     this.sprite = sprite;
     this.speed = speed;
-    this.layer = layer;
+    this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
   }
 
-  public abstract void update();
+  public abstract void update(Game game, Player player, int room);
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
 

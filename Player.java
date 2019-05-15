@@ -11,7 +11,7 @@ public class Player extends Character implements GameObject{
 	//Player object constructor, creates player rectangle and collision
 	//Contructor
 	public Player(Sprite sprite, int xZoom, int yZoom){
-		super(sprite, 5, 0, 15, 25);
+		super(sprite, 5, 15, 25);
 		this.sprite = sprite;
 
 		if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;

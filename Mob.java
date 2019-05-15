@@ -1,7 +1,7 @@
 public class Mob extends Character{
-
+  private int push = 0;
   public Mob(Sprite sprite, int xZoom, int yZoom, int w, int h){ //add stats to parameters
-    super(sprite, 3, 0, w, h);
+    super(sprite, 3, w, h);
     this.sprite = sprite;
 
     if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;
@@ -39,7 +39,7 @@ public class Mob extends Character{
 
   }
 
-  public void update(Game game, Player player){
+  public void update(Game game, Player player, int room){
     if(!dead)move(game, player);
   }
 
