@@ -75,6 +75,9 @@ public class Game extends JFrame implements Runnable{
 		GUIButton[] buttons = new GUIButton[tiles.size()];
 		Sprite[] tileSprites = tiles.getSprites();
 
+		randomMap();
+		randomMap2();
+
 		for(int i = 0; i < buttons.length; i++){
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
 			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
@@ -86,6 +89,7 @@ public class Game extends JFrame implements Runnable{
 		player = new Player(playerAnimations, xZoom, yZoom);
 		objects[0] = player;
 		objects[1] = gui;
+
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -108,7 +112,6 @@ public class Game extends JFrame implements Runnable{
 			public void componentMoved(ComponentEvent e) {}
 			public void componentShown(ComponentEvent e) {}
 		});
-		randomMap();
 		canvas.requestFocus();
 	}
 
@@ -137,6 +140,61 @@ public class Game extends JFrame implements Runnable{
 
 
 	public void randomMap(){
+		final int maxWidth = 22;
+		final int minWidth = 16;
+		final int maxHeight = 22;
+		final int minHight = 16;
+		selectedLayer = 1;
+		int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
+		int layer = 0;
+		int[][] randomMap = new int[numberOfChambers+1][4];
+		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+
+	for(int n = 0; n <= numberOfChambers; n++){
+		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+		// while (height %2 != 0) height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+		// while (width %2 != 0) 		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+		randomMap[n][0] = -width/2;
+		if (n == 0) randomMap[n][1] = height/2;
+		else randomMap[n][1] = randomMap[n-1][1]-height/2-20;
+		randomMap[n][2] = width/2;
+		if (n == 0) randomMap[n][3] = -height/2;
+		else randomMap[n][3] = randomMap[n-1][3]-height/2-20;
+	}
+
+	for (int i = 0; i < randomMap.length; i++) {
+		for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
+			for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
+				// map.saveMap(layer+",1,"+c+","+g);
+				if (x == randomMap[i][0] && y == randomMap[i][1]) map.setTile(0, x, y, 5);
+				else if (x == randomMap[i][2] && y == randomMap[i][1]) map.setTile(0, x, y, 7);
+				else if (x == randomMap[i][0]) map.setTile(0, x, y, 2);
+				else if (x == randomMap[i][2]) map.setTile(0, x, y, 4);
+				else if (y == randomMap[i][1]) map.setTile(0, x, y, 6);
+				else if (y == randomMap[i][3]) map.setTile(0, x, y, 3);
+				else map.setTile(0, x, y, 1);
+			}
+				// map.setTile(0, x, y, 1);
+		}
+	}
+	for (int n =0; n < randomMap.length-1;n++)
+	for(int i = randomMap[n][3]; i >= randomMap[n+1][1];i--){
+		if (i != randomMap[n][3] && i != randomMap[n][1]) {
+			map.setTile(layer,-2,i,2);
+			map.setTile(layer,2,i,4);
+		}
+		map.setTile(layer,1,i,1);
+		map.setTile(layer,0,i,1);
+		map.setTile(layer,-1,i,1);
+		if (i == randomMap[n+1][1]){
+			map.setTile(layer,2,i,8);
+			map.setTile(layer,-2,i,9);
+		}
+	}
+	}
+
+	public void randomMap2(){
 		final int maxWidth = 20;
 		final int minWidth = 8;
 		final int maxHeight = 20;
@@ -151,7 +209,6 @@ public class Game extends JFrame implements Runnable{
 		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
-		leftClick(-10, -10);
 		for (int x = 0; x <= width; x++)
 			for (int y = n*30+height;y <= n*30+2*height;y++)
 				if (x == 0 && y == n*30+2*height) map.setTile(layer,x,y,5);
@@ -162,12 +219,14 @@ public class Game extends JFrame implements Runnable{
 				else if (y == n*30+2*height) map.setTile(layer,x,y,6);
 				else map.setTile(layer,x,y,1);
 	}
-	for(int i =height; i < numberOfChambers*30+2*height;i++){
+
+	for(int i =-6; i < numberOfChambers*30+2*height;i++){
 		map.setTile(layer,4,i,1);
 		map.setTile(layer,5,i,1);
 		map.setTile(layer,6,i,1);
 	}
 	}
+
 
 	public void leftClick(int x, int y){
 		Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
@@ -193,23 +252,26 @@ public class Game extends JFrame implements Runnable{
 			BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 			Graphics graphics = bufferStrategy.getDrawGraphics();
 			super.paint(graphics);
-
 			map.render(renderer, objects, xZoom, yZoom);
-
 			renderer.render(graphics);
-
 			graphics.dispose();
 			bufferStrategy.show();
 			renderer.clear();
 	}
 
-	public void changeTile(int tileID){
-		selectedTileID = tileID;
-	}
+	//setters
+	public void changeTile(int tileID){selectedTileID = tileID;}
 
-	public int getSelectedTile(){
-		return selectedTileID;
-	}
+	//getters
+	public KeyBoardListener getKeyListener(){return keyListener;}
+	public MouseEventListener getMouseListener(){return mouseListener;}
+	public RenderHandler getRenderer(){return renderer;}
+	public Map getMap() {return map;}
+	public int getXZoom() {return xZoom;}
+	public int getYZoom() {return yZoom;}
+
+
+	public int getSelectedTile(){return selectedTileID;}
 
 	public void run(){
 		long lastTime = System.nanoTime(); //long 2^63
@@ -235,15 +297,5 @@ public class Game extends JFrame implements Runnable{
 		gameThread.start();
 	}
 
-	public KeyBoardListener getKeyListener(){return keyListener;}
 
-	public MouseEventListener getMouseListener(){return mouseListener;}
-
-	public RenderHandler getRenderer(){return renderer;}
-
-	public Map getMap() {return map;}
-
-	public int getXZoom() {return xZoom;}
-
-	public int getYZoom() {return yZoom;}
 }
