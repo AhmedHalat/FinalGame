@@ -1,3 +1,3 @@
 # FinalGame
 
-Whimsicle: https://whimsical.co/XRnDKKfsQ9CrTStVnGK3qq
+Check out [Whimsical] (https://whimsical.co/XRnDKKfsQ9CrTStVnGK3qq) for all data structures 

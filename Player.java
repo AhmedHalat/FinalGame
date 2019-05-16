@@ -35,12 +35,6 @@ public class Player extends Character implements GameObject{
 
 	}
 
-	public void render(RenderHandler renderer, int xZoom, int yZoom){
-		if(animatedSprite != null) renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
-		else if(sprite != null) renderer.renderSprite(sprite, rect.x, rect.y, xZoom, yZoom, false);
-		else renderer.renderRectangle(rect, xZoom, yZoom, false);
-	}
-
 	public void update(Game game, Player player){
 		KeyBoardListener keyListener = game.getKeyListener();
 		boolean didMove = false;
@@ -104,7 +98,7 @@ public class Player extends Character implements GameObject{
 		camera.y = rect.y - (camera.h / 2);
 	}
 
-	public void update(){
+	public void action(Game game, Player player){
 
 	}
 
