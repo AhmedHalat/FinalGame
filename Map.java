@@ -1,10 +1,11 @@
-import java.io.File;
+import java.io.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.*;
 
 public class Map{
 	private Tiles tileSet;
@@ -25,7 +26,11 @@ public class Map{
 
 	private int numLayers;
 
-	public Map(File mapFile, Tiles tileSet){
+public Map (File mapFile, Tiles tileSet){
+		loadMap(mapFile,tileSet);
+}
+
+	public void loadMap (File mapFile, Tiles tileSet){
 		this.mapFile = mapFile;
 		this.tileSet = tileSet;
 		int minX = Integer.MAX_VALUE;
@@ -90,6 +95,8 @@ public class Map{
 			e.printStackTrace();
 		}
 	}
+
+
 
 	public void generateMap(int w, int h){
 		setTile(1, 1, 0, 5);
@@ -183,13 +190,13 @@ for(int n = 0; n <= numberOfChambers; n++){
 	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
 	for (int x = 0; x <= width; x++)
-		for (int y = n*30+height;y <= n*30+2*height;y++)
-			if (x == 0 && y == n*30+2*height) setTile(layer,x,y,5);
+		for (int y = n*30-height;y <= n*30-2*height;y++)
+			if (x == 0 && y == n*30-2*height) setTile(layer,x,y,5);
 			else if (x == 0 ) setTile(layer,x,y,2);
-			else if (x == width && y == n*30+2*height) setTile(layer,x,y,7);
+			else if (x == width && y == n*30-2*height) setTile(layer,x,y,7);
 			else if (x == width) setTile(layer,x,y,4);
-			else if (y == n*30+height) setTile(layer,x,y,3);
-			else if (y == n*30+2*height) setTile(layer,x,y,6);
+			else if (y == n*30-height) setTile(layer,x,y,3);
+			else if (y == n*30-2*height) setTile(layer,x,y,6);
 			else setTile(layer,x,y,1);
 }
 for(int i =height; i < numberOfChambers*30+2*height;i++){
@@ -305,6 +312,17 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 		}
 	}
 
+	public void saveMap(String str){
+		try{
+			FileWriter fr = new FileWriter(new File("Map.txt"), true);
+			fr.write(str+"\n");
+			fr.close();
+		}
+		catch (java.io.IOException e){
+			e.printStackTrace();
+		}
+	}
+
 	public void render(RenderHandler renderer, GameObject[] objects, int xZoom, int yZoom){
 		int tileWidth = 16 * xZoom;
 		int tileHeight = 16 * yZoom;
@@ -361,83 +379,65 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 		for(int i = 0; i < objects.length; i++) if(objects[i].getLayer() == Integer.MAX_VALUE) objects[i].render(renderer, xZoom, yZoom);
 	}
 
-	//Block represents a 6/6 block of tiles
-	@SuppressWarnings("unchecked")
-	private class Block
-	{
-			public ArrayList<MappedTile>[] mappedTilesByLayer;
-			//Parameters: None
-			//creates an arrayList
-			//Constructor
-			public Block() {
-					mappedTilesByLayer = new ArrayList[numLayers];
-					for(int i = 0; i < mappedTilesByLayer.length; i++)
-							mappedTilesByLayer[i] = new ArrayList<MappedTile>();
-			}
-			//Parameters: renderer object, layer of tile and tile sizes
-			//renders each tile in the map
-			//return void
-			public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom)
-			 {
-					if(mappedTilesByLayer.length > layer)
-					{
-							ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
-							for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++)
-							{
-									MappedTile mappedTile = mappedTiles.get(tileIndex);
-									tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
-							}
-					}
-			}
-			//Parameters: mappedTile contains layer, tilex and y
-			//places the tile on the map
-			//returns Void
-			public void addTile(MappedTile tile) {
-					if(mappedTilesByLayer.length <= tile.layer)
-					{
-							ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
 
-							int i = 0;
-							for(i = 0; i < mappedTilesByLayer.length; i++)
-									newTilesByLayer[i] = mappedTilesByLayer[i];
-							for(; i < newTilesByLayer.length; i++)
-									newTilesByLayer[i] = new ArrayList<MappedTile>();
+	private class Block{
+		public ArrayList<MappedTile>[] mappedTilesByLayer;
 
-							mappedTilesByLayer = newTilesByLayer;
-					}
-					mappedTilesByLayer[tile.layer].add(tile);
+		public Block(){
+			mappedTilesByLayer = new ArrayList[numLayers];
+			for(int i = 0; i < mappedTilesByLayer.length; i++)
+			mappedTilesByLayer[i] = new ArrayList<MappedTile>();
+		}
+
+		public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom){
+			if(mappedTilesByLayer.length > layer){
+				ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
+				for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++){
+					MappedTile mappedTile = mappedTiles.get(tileIndex);
+					tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
+				}
 			}
+		}
 
-			public void removeTile(MappedTile tile) {
-				mappedTilesByLayer[tile.layer].remove(tile);
+		public void addTile(MappedTile tile) {
+			if(mappedTilesByLayer.length <= tile.layer){
+				ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
+
+				int i = 0;
+				for(i = 0; i < mappedTilesByLayer.length; i++)
+				newTilesByLayer[i] = mappedTilesByLayer[i];
+				for(; i < newTilesByLayer.length; i++)
+				newTilesByLayer[i] = new ArrayList<MappedTile>();
+
+				mappedTilesByLayer = newTilesByLayer;
 			}
+			mappedTilesByLayer[tile.layer].add(tile);
+		}
 
-			//Parameters: layer, tile positions on spritesheet
-			//returns the position of a specific tile
-			public MappedTile getTile(int layer, int tileX, int tileY)
+		public void removeTile(MappedTile tile) {
+			mappedTilesByLayer[tile.layer].remove(tile);
+		}
+
+		public MappedTile getTile(int layer, int tileX, int tileY)
+		{
+			for(MappedTile tile : mappedTilesByLayer[layer])
 			{
-					for(MappedTile tile : mappedTilesByLayer[layer])
-					{
-							if(tile.x == tileX && tile.y == tileY)
-									return tile;
-					}
-					return null;
+				if(tile.x == tileX && tile.y == tileY)
+				return tile;
 			}
+			return null;
+		}
 	}
 
 	//Tile ID in the tileSet and the position of the tile in the map
-	private class MappedTile
-	{
-			public int layer, id, x, y;
-			//Parameters: layer of tile, tile id, x-y position of tile
-			//Sets variables to be easily accesed
-			//Constructor
-			public MappedTile(int layer, int id, int x, int y)
-			{
-					this.layer = layer;
-					this.id = id;
-					this.x = x;
-					this.y = y;
-			}
+	private class MappedTile{
+		public int layer, id, x, y;
+
+		public MappedTile(int layer, int id, int x, int y){
+			this.layer = layer;
+			this.id = id;
+			this.x = x;
+			this.y = y;
+		}
 	}
 }
