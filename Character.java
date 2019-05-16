@@ -33,7 +33,7 @@ public abstract class Character{
     this.yCollisionOffset = yCollisionOffset;
   }
 
-  public abstract void update(Game game, Player player, int room);
+  public abstract void update(Game game, Player player);
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
 
