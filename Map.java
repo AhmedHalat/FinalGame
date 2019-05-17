@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.io.*;
 public class Map{
 	private Tiles tileSet;
 	private int fillTileID = 0;
@@ -217,35 +217,6 @@ public class Map{
 	}
 
 	public void saveMap(){
-		try{
-			int currentLine = 0;
-			if(mapFile.exists())
-			mapFile.delete();
-			mapFile.createNewFile();
-
-			PrintWriter printWriter = new PrintWriter(mapFile);
-
-			if(fillTileID >= 0) {
-				if(comments.containsKey(currentLine)) printWriter.println(comments.get(currentLine++));
-				printWriter.println("Fill:" + fillTileID);
-			}
-
-			for(int i = 0; i < mappedTiles.size(); i++){
-				if(comments.containsKey(currentLine))
-				printWriter.println(comments.get(currentLine));
-
-				MappedTile tile = mappedTiles.get(i);
-				printWriter.println(tile.layer + "," + tile.id + "," + tile.x + "," + tile.y);
-				currentLine++;
-			}
-			printWriter.close();
-		}
-		catch (java.io.IOException e){
-			e.printStackTrace();
-		}
-	}
-
-	public void saveMap(String str){
 		try{
 			int currentLine = 0;
 			if(mapFile.exists())
