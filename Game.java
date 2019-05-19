@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.File;
-
+import java.lang.*;
 public class Game extends JFrame implements Runnable{
 
 	public static int alpha = 0xFFFF00DC;
@@ -109,6 +109,9 @@ public class Game extends JFrame implements Runnable{
 			public void componentShown(ComponentEvent e) {}
 		});
 		randomMap();
+		// randomMap2();
+		// map.loadMap(new File ("Map.txt"), tiles);
+		// map.saveMap();
 		canvas.requestFocus();
 	}
 
@@ -144,22 +147,52 @@ public class Game extends JFrame implements Runnable{
 		selectedLayer = 1;
 		int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
 		int layer = 0;
+		int[][] randomMap = new int[numberOfChambers+1][4];
+
+	for(int n = 0; n <= numberOfChambers; n++){
 		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
+		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
+		randomMap[n][0] = -width/2;
+		if (n == 0) randomMap[n][1] = height/2;
+		else randomMap[n][1] = randomMap[n-1][1]+height/2-20;
+		randomMap[n][2] = width/2;
+		if (n == 0) randomMap[n][3] = -height/2;
+		else randomMap[n][3] = randomMap[n-1][3]-height/2-20;
+	}
+	int c,g;
+	for (int i = 0; i < randomMap.length; i++) {
+		for (int x = randomMap[i][0]; x < randomMap[i][2]; x++){
+			for (int y = randomMap[i][1]; y > randomMap[i][3]; y--){
+				c = (int) Math.floor(((x + renderer.getCamera().x)/(16.0 * xZoom)));
+				g = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
+				map.saveMap(layer+",1,"+c+","+g);
+			}
+				// map.setTile(0, x, y, 1);
+		}
+	}
+	}
+
+	public void randomMap2(){
+		final int maxWidth = 20;
+		final int minWidth = 8;
+		final int maxHeight = 20;
+		final int minHight = 8;
+		int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
+		int layer = 0;
 		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
 	for(int n = 0; n <= numberOfChambers; n++){
 		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
-		leftClick(-10, -10);
 		for (int x = 0; x <= width; x++)
-			for (int y = n*30+height;y <= n*30+2*height;y++)
-				if (x == 0 && y == n*30+2*height) map.setTile(layer,x,y,5);
+			for (int y = n*30-height;y <= n*30-2*height;y++)
+				if (x == 0 && y == n*30-2*height) map.setTile(layer,x,y,5);
 				else if (x == 0 ) map.setTile(layer,x,y,2);
-				else if (x == width && y == n*30+2*height) map.setTile(layer,x,y,7);
+				else if (x == width && y == n*30-2*height) map.setTile(layer,x,y,7);
 				else if (x == width) map.setTile(layer,x,y,4);
-				else if (y == n*30+height) map.setTile(layer,x,y,3);
-				else if (y == n*30+2*height) map.setTile(layer,x,y,6);
+				else if (y == n*30-height) map.setTile(layer,x,y,3);
+				else if (y == n*30-2*height) map.setTile(layer,x,y,6);
 				else map.setTile(layer,x,y,1);
 	}
 	for(int i =height; i < numberOfChambers*30+2*height;i++){
