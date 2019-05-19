@@ -10,14 +10,17 @@ public class Player extends Character implements GameObject{
 	//Parameters: Sprite - the players animated sprite, zoom - the pixel zoom used to set player collision rectangle
 	//Player object constructor, creates player rectangle and collision
 	//Contructor
+	Particle particles;
 	public Player(Sprite sprite, int xZoom, int yZoom){
-		super(sprite, 5, 0, 15, 25);
+		super(sprite, 5, 15, 25);
 		this.sprite = sprite;
 
 		if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;
 		updateDirection();
 		Rectangle playerRectangle = new Rectangle(0, 0, 20, 26);
 		Rectangle collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
+		particles = new Particle(30, 46, 50, 1);
+		particles.fill(0xFFF7D80C);
 		super.setAnimatedSprite(animatedSprite);
 		super.setRect(playerRectangle);
 		super.setCollisionCheckRectangle(collisionCheckRectangle);
@@ -29,16 +32,12 @@ public class Player extends Character implements GameObject{
 		speed = stats[0];
 	}
 
+	public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
+		particles.render(renderer, xZoom, yZoom);
+	}
 
 	public void updateDirection(){
 		if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 8, (direction * 8) + 7);
-
-	}
-
-	public void render(RenderHandler renderer, int xZoom, int yZoom){
-		if(animatedSprite != null) renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
-		else if(sprite != null) renderer.renderSprite(sprite, rect.x, rect.y, xZoom, yZoom, false);
-		else renderer.renderRectangle(rect, xZoom, yZoom, false);
 	}
 
 	public void update(Game game, Player player){
@@ -49,6 +48,8 @@ public class Player extends Character implements GameObject{
 
 		collisionCheckRectangle.x = rect.x;
 		collisionCheckRectangle.y = rect.y;
+		particles.update(rect.x, rect.y);
+
 		if(keyListener.left()){
 			newDirection = 1;
 			didMove = true;
@@ -97,6 +98,7 @@ public class Player extends Character implements GameObject{
 		}
 
 		updateCamera(game.getRenderer().getCamera());
+		particles.update(rect.x, rect.y);
 	}
 
 	public void updateCamera(Rectangle camera) {
@@ -104,7 +106,7 @@ public class Player extends Character implements GameObject{
 		camera.y = rect.y - (camera.h / 2);
 	}
 
-	public void update(){
+	public void action(Game game, Player player){
 
 	}
 

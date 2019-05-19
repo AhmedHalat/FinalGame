@@ -1,6 +1,8 @@
 public abstract class Character{
   protected Rectangle rect;
   protected Rectangle collisionCheckRectangle;
+  //protected abstract Item drop;
+
   //0 = Right, 1 = Left, 2 = Up, 3 = Down
   protected int direction;
   protected int speed;
@@ -14,29 +16,40 @@ public abstract class Character{
   protected final int xCollisionOffset;
   protected final int yCollisionOffset;
 
-  public Character(Sprite sprite, AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
+  public Character(AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
     this.rect = rect;
     this.collisionCheckRectangle = collisionCheckRectangle;
     this.direction = direction;
     this.speed = speed;
     this.layer = layer;
-    this.sprite = sprite;
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
   }
 
-  public Character(Sprite sprite, int speed, int layer, int xCollisionOffset, int yCollisionOffset){
+  public Character(Sprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
     this.sprite = sprite;
     this.speed = speed;
-    this.layer = layer;
+    this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
   }
 
-  public abstract void update();
+  public void render(RenderHandler renderer, int xZoom, int yZoom){
+    if(animatedSprite != null) renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
+    else if(sprite != null) renderer.renderSprite(sprite, rect.x, rect.y, xZoom, yZoom, false);
+    else renderer.renderRectangle(rect, xZoom, yZoom, false);
+  }
+
+  public void interact(Game game, Player player){
+    if(!dead) action(game, player);
+  }
+
+
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
+  public abstract void action(Game game, Player player);
+  public abstract boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom);
 
 
 	/**
