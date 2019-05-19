@@ -48,7 +48,6 @@ public class Player extends Character implements GameObject{
 
 		collisionCheckRectangle.x = rect.x;
 		collisionCheckRectangle.y = rect.y;
-		particles.update(rect.x, rect.y);
 
 		if(keyListener.left()){
 			newDirection = 1;

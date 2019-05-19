@@ -204,8 +204,6 @@ public class Game extends JFrame implements Runnable{
 	}
 
 	public void leftClick(int x, int y){
-		int xp = x;
-		int yp = y;
 		Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 		boolean stoppedChecking = false;
 
@@ -214,9 +212,7 @@ public class Game extends JFrame implements Runnable{
 			x = (int) Math.floor(((x + renderer.getCamera().x)/(16.0 * xZoom)));
 			y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
 			map.setTile(selectedLayer, x, y, selectedTileID);
-
 		}
-
 	}
 
 	public void rightClick(int x, int y) {
