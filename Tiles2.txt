@@ -12,13 +12,7 @@ BrickWall5-1-4-0
 BrickWall6-5-4-0
 BrickWall7-0-5-0
 BrickWall8-3-5-0
-TileFloorTL-0-6
-TileFloorL-0-7
-TileFloorBL-0-8
-TileFloorTR-1-6
-TileFloorR-1-7
-TileFloorBR-1-8
-WoodenCrateFT-5-6-3
-WoodenCrateFB-5-7-0
-WoodenCrateBottom-6-7-3
-WoodenCrateTop-6-6
+GateL-6-4-0
+GateR-7-4-0
+GateL-6-6-0
+GateR-7-6-0

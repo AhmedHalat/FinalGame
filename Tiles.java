@@ -12,8 +12,7 @@ public class Tiles
 	public Tiles(File tilesFile, SpriteSheet spriteSheet)
 	{
 		this.spriteSheet = spriteSheet;
-		try
-		{
+		try{
 			Scanner scanner = new Scanner(tilesFile);
 			while(scanner.hasNextLine())
 			{
@@ -34,11 +33,7 @@ public class Tiles
 					tilesList.add(tile);
 				}
 			}
-		}
-		catch(FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
+		}catch(FileNotFoundException e){e.printStackTrace();}
 	}
 
 	public void renderTile(int tileID, RenderHandler renderer, int xPosition, int yPosition, int xZoom, int yZoom)
@@ -53,10 +48,7 @@ public class Tiles
 		}
 	}
 
-	public int size()
-	{
-		return tilesList.size();
-	}
+	public int size(){return tilesList.size();}
 
 	public Sprite[] getSprites()
 	{
@@ -81,15 +73,13 @@ public class Tiles
 		return -1;
 	}
 
-	class Tile
-	{
+	class Tile{
 		public String tileName;
 		public Sprite sprite;
 		public boolean collidable = false;
 		public int collisionType = -1;
 
-		public Tile(String tileName, Sprite sprite)
-		{
+		public Tile(String tileName, Sprite sprite){
 			this.tileName = tileName;
 			this.sprite = sprite;
 		}

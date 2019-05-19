@@ -5,8 +5,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.*;
-
+import java.io.*;
 public class Map{
 	private Tiles tileSet;
 	private int fillTileID = 0;
@@ -96,12 +95,6 @@ public Map (File mapFile, Tiles tileSet){
 		}
 	}
 
-
-
-	public void generateMap(int w, int h){
-		setTile(1, 1, 0, 5);
-	}
-
 	public MappedTile getTile(int layer, int tileX, int tileY) {
 		int blockX = (tileX - blockStartX)/blockWidth;
 		int blockY = (tileY - blockStartY)/blockHeight;
@@ -118,97 +111,46 @@ public Map (File mapFile, Tiles tileSet){
 	public boolean checkCollision(Rectangle rect, int layer, int xZoom, int yZoom) {
 		int tileWidth = 16 * xZoom;
 		int tileHeight = 16 * yZoom;
-
 		//Coordinates to check all tiles in a radius of 4 around the player
 		int topLeftX = (rect.x - 64)/tileWidth;
 		int topLeftY = (rect.y - 64)/tileHeight;
 		int bottomRightX = (rect.x + rect.w + 64)/tileWidth;
 		int bottomRightY = (rect.y + rect.h + 64)/tileHeight;
-
 		//Starting at the top left tile and going to the bottom right
 		for(int x = topLeftX; x < bottomRightX; x++)
 		for(int y = topLeftY; y < bottomRightY; y++) {
 			MappedTile tile = getTile(layer, x, y);
 			if(tile != null) {
 				int collisionType = tileSet.collisionType(tile.id);
-
 				//Full tile collision
 				if(collisionType == 0) {
 					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, tileWidth, tileWidth);
-					if(tileRectangle.intersects(rect))
-					return true;
-
+					if(tileRectangle.intersects(rect))return true;
 					//Top of tile collision
-				}
-				else if(collisionType == 1) {
+				}else if(collisionType == 1) {
 					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, tileWidth, 16);
-					if(tileRectangle.intersects(rect))
-					return true;
-
+					if(tileRectangle.intersects(rect)) return true;
 					//Left of tile collision
-				}
-				else if(collisionType == 2) {
+				}else if(collisionType == 2) {
 					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight, 16, tileHeight);
-					if(tileRectangle.intersects(rect))
-					return true;
-
+					if(tileRectangle.intersects(rect)) return true;
 					//Bottom of tile collision
-				}
-				else if (collisionType == 3) {
+				}else if (collisionType == 3) {
 					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth, tile.y*tileHeight + tileHeight - 16, tileWidth, 16);
 					Rectangle adjustedRect = new Rectangle(rect.x, rect.y + rect.h, rect.w, 1);
-					if(tileRectangle.intersects(adjustedRect))
-					return true;
-
+					if(tileRectangle.intersects(adjustedRect)) return true;
 					//Right of tile collision
-				}
-				else if (collisionType == 4) {
+				}else if (collisionType == 4) {
 					Rectangle tileRectangle = new Rectangle(tile.x*tileWidth + tileWidth - 16, tile.y*tileHeight, 16, tileHeight);
-					if(tileRectangle.intersects(rect))
-					return true;
+					if(tileRectangle.intersects(rect)) return true;
 				}
-
 			}
 		}
-
 		return false;
 	}
 
-
-public void randomMap(){
-	final int maxWidth = 20;
-	final int minWidth = 8;
-	final int maxHeight = 20;
-	final int minHight = 8;
-	int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
-	int layer = 0;
-	width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
-	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
-
-for(int n = 0; n <= numberOfChambers; n++){
-	width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
-	height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
-
-	for (int x = 0; x <= width; x++)
-		for (int y = n*30-height;y <= n*30-2*height;y++)
-			if (x == 0 && y == n*30-2*height) setTile(layer,x,y,5);
-			else if (x == 0 ) setTile(layer,x,y,2);
-			else if (x == width && y == n*30-2*height) setTile(layer,x,y,7);
-			else if (x == width) setTile(layer,x,y,4);
-			else if (y == n*30-height) setTile(layer,x,y,3);
-			else if (y == n*30-2*height) setTile(layer,x,y,6);
-			else setTile(layer,x,y,1);
-}
-for(int i =height; i < numberOfChambers*30+2*height;i++){
-	setTile(layer,4,i,1);
-	setTile(layer,5,i,1);
-	setTile(layer,6,i,1);
-}
-}
-
 	public void setTile(int layer, int tileX, int tileY, int tileID){
 		if(layer >= numLayers) numLayers = layer + 1;
-
 		for(int i = 0; i < mappedTiles.size(); i++){
 			MappedTile mappedTile = mappedTiles.get(i);
 			if(mappedTile.x == tileX && mappedTile.y == tileY) {
@@ -226,7 +168,6 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 		if(blockX >= 0 && blockY >= 0 && blockX < blocks.length && blockY < blocks[0].length){
 			if(blocks[blockX][blockY] == null)
 			blocks[blockX][blockY] = new Block();
-
 			blocks[blockX][blockY].addTile(mappedTile);
 		}
 		else {
@@ -289,10 +230,7 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 			PrintWriter printWriter = new PrintWriter(mapFile);
 
 			if(fillTileID >= 0) {
-				if(comments.containsKey(currentLine)){
-					printWriter.println(comments.get(currentLine));
-					currentLine++;
-				}
+				if(comments.containsKey(currentLine)) printWriter.println(comments.get(currentLine++));
 				printWriter.println("Fill:" + fillTileID);
 			}
 
@@ -304,7 +242,6 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 				printWriter.println(tile.layer + "," + tile.id + "," + tile.x + "," + tile.y);
 				currentLine++;
 			}
-
 			printWriter.close();
 		}
 		catch (java.io.IOException e){
@@ -312,16 +249,6 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 		}
 	}
 
-	public void saveMap(String str){
-		try{
-			FileWriter fr = new FileWriter(new File("Map.txt"), true);
-			fr.write(str+"\n");
-			fr.close();
-		}
-		catch (java.io.IOException e){
-			e.printStackTrace();
-		}
-	}
 
 	public void render(RenderHandler renderer, GameObject[] objects, int xZoom, int yZoom){
 		int tileWidth = 16 * xZoom;
@@ -379,23 +306,48 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 		for(int i = 0; i < objects.length; i++) if(objects[i].getLayer() == Integer.MAX_VALUE) objects[i].render(renderer, xZoom, yZoom);
 	}
 
+	//Block represents a 6/6 block of tiles
+	@SuppressWarnings("unchecked")
+	private class Block
+	{
+			public ArrayList<MappedTile>[] mappedTilesByLayer;
+			public Block() {
+					mappedTilesByLayer = new ArrayList[numLayers];
+					for(int i = 0; i < mappedTilesByLayer.length; i++)
+							mappedTilesByLayer[i] = new ArrayList<MappedTile>();
+			}
+			//Parameters: renderer object, layer of tile and tile sizes
+			//renders each tile in the map
+			//return void
+			public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom)
+			 {
+					if(mappedTilesByLayer.length > layer)
+					{
+							ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
+							for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++)
+							{
+									MappedTile mappedTile = mappedTiles.get(tileIndex);
+									tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
+							}
+					}
+			}
+			//Parameters: mappedTile contains layer, tilex and y
+			//places the tile on the map
+			//returns Void
+			public void addTile(MappedTile tile) {
+					if(mappedTilesByLayer.length <= tile.layer)
+					{
+							ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
 
-	private class Block{
-		public ArrayList<MappedTile>[] mappedTilesByLayer;
+							int i = 0;
+							for(i = 0; i < mappedTilesByLayer.length; i++)
+									newTilesByLayer[i] = mappedTilesByLayer[i];
+							for(; i < newTilesByLayer.length; i++)
+									newTilesByLayer[i] = new ArrayList<MappedTile>();
 
-		public Block(){
-			mappedTilesByLayer = new ArrayList[numLayers];
-			for(int i = 0; i < mappedTilesByLayer.length; i++)
-			mappedTilesByLayer[i] = new ArrayList<MappedTile>();
-		}
-
-		public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom){
-			if(mappedTilesByLayer.length > layer){
-				ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
-				for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++){
-					MappedTile mappedTile = mappedTiles.get(tileIndex);
-					tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
-				}
+							mappedTilesByLayer = newTilesByLayer;
+					}
+					mappedTilesByLayer[tile.layer].add(tile);
 			}
 		}
 
@@ -403,27 +355,17 @@ for(int i =height; i < numberOfChambers*30+2*height;i++){
 			if(mappedTilesByLayer.length <= tile.layer){
 				ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
 
-				int i = 0;
-				for(i = 0; i < mappedTilesByLayer.length; i++)
-				newTilesByLayer[i] = mappedTilesByLayer[i];
-				for(; i < newTilesByLayer.length; i++)
-				newTilesByLayer[i] = new ArrayList<MappedTile>();
+			public void removeTile(MappedTile tile) {mappedTilesByLayer[tile.layer].remove(tile);}
 
-				mappedTilesByLayer = newTilesByLayer;
-			}
-			mappedTilesByLayer[tile.layer].add(tile);
-		}
-
-		public void removeTile(MappedTile tile) {
-			mappedTilesByLayer[tile.layer].remove(tile);
-		}
-
-		public MappedTile getTile(int layer, int tileX, int tileY)
-		{
-			for(MappedTile tile : mappedTilesByLayer[layer])
-			{
-				if(tile.x == tileX && tile.y == tileY)
-				return tile;
+			//Parameters: layer, tile positions on spritesheet
+			//returns the position of a specific tile
+			public MappedTile getTile(int layer, int tileX, int tileY){
+				// System.out.println(mappedTilesByLayer[0].get(0).x);
+				try{
+					for(MappedTile tile : mappedTilesByLayer[layer])
+							if(tile.x == tileX && tile.y == tileY)return tile;
+					return null;
+				}catch(Exception e){return null;}
 			}
 			return null;
 		}

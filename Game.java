@@ -11,8 +11,8 @@ import java.lang.Thread;
 import javax.swing.JFrame;
 import javax.imageio.ImageIO;
 import java.io.IOException;
-import java.io.File;
-import java.lang.*;
+import java.io.*;
+
 public class Game extends JFrame implements Runnable{
 
 	public static int alpha = 0xFFFF00DC;
@@ -68,6 +68,7 @@ public class Game extends JFrame implements Runnable{
 
 		//Load Tiles
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
+		randomMap();
 
 		//Load Map
 		map = new Map(new File("Map.txt"), tiles);
@@ -75,6 +76,8 @@ public class Game extends JFrame implements Runnable{
 		//Load SDK GUI
 		GUIButton[] buttons = new GUIButton[tiles.size()];
 		Sprite[] tileSprites = tiles.getSprites();
+
+		// randomMap2();
 
 		for(int i = 0; i < buttons.length; i++){
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
@@ -87,6 +90,7 @@ public class Game extends JFrame implements Runnable{
 		player = new Player(playerAnimations, xZoom, yZoom);
 		objects[0] = player;
 		objects[1] = gui;
+
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -109,11 +113,19 @@ public class Game extends JFrame implements Runnable{
 			public void componentMoved(ComponentEvent e) {}
 			public void componentShown(ComponentEvent e) {}
 		});
-		randomMap();
-		// randomMap2();
-		// map.loadMap(new File ("Map.txt"), tiles);
-		// map.saveMap();
+
 		canvas.requestFocus();
+	}
+
+	public void saveMap(String str){
+		try{
+			FileWriter fr = new FileWriter(new File("Map.txt"), true);
+			fr.write(str+"\n");
+			fr.close();
+		}
+		catch (java.io.IOException e){
+			e.printStackTrace();
+		}
 	}
 
 	public void update(){
@@ -141,17 +153,14 @@ public class Game extends JFrame implements Runnable{
 
 
 	public void randomMap(){
-		final int maxWidth = 20;
-		final int minWidth = 8;
-		final int maxHeight = 20;
-		final int minHight = 8;
+		final int maxWidth = 22;
+		final int minWidth = 16;
+		final int maxHeight = 22;
+		final int minHight = 16;
 		selectedLayer = 1;
 		int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
 		int layer = 0;
 		int[][] randomMap = new int[numberOfChambers+1][4];
-
-	for(int n = 0; n <= numberOfChambers; n++){
-		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 		randomMap[n][0] = -width/2;
 		if (n == 0) randomMap[n][1] = height/2;
@@ -185,21 +194,42 @@ public class Game extends JFrame implements Runnable{
 	for(int n = 0; n <= numberOfChambers; n++){
 		width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 		height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
-
-		for (int x = 0; x <= width; x++)
-			for (int y = n*30-height;y <= n*30-2*height;y++)
-				if (x == 0 && y == n*30-2*height) map.setTile(layer,x,y,5);
-				else if (x == 0 ) map.setTile(layer,x,y,2);
-				else if (x == width && y == n*30-2*height) map.setTile(layer,x,y,7);
-				else if (x == width) map.setTile(layer,x,y,4);
-				else if (y == n*30-height) map.setTile(layer,x,y,3);
-				else if (y == n*30-2*height) map.setTile(layer,x,y,6);
-				else map.setTile(layer,x,y,1);
+		randomMap[n][0] = -width/2;
+		if (n == 0) randomMap[n][1] = height/2;
+		else randomMap[n][1] = randomMap[n-1][1]-height/2-20;
+		randomMap[n][2] = width/2;
+		if (n == 0) randomMap[n][3] = -height/2;
+		else randomMap[n][3] = randomMap[n-1][3]-height/2-20;
 	}
-	for(int i =height; i < numberOfChambers*30+2*height;i++){
-		map.setTile(layer,4,i,1);
-		map.setTile(layer,5,i,1);
-		map.setTile(layer,6,i,1);
+	for (int i = 0; i < randomMap.length; i++) {
+		for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
+			for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
+				if (i == 0 && y == randomMap[i][1] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+6+","+x+","+y);
+				else if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
+				else if (x == 1 || x == -1 || x == 0) saveMap(0+","+1+","+x+","+y);
+				else if (x == randomMap[i][0] && y == randomMap[i][1]) saveMap(0+","+ 5+","+x+","+ y);
+				else if (x == randomMap[i][2] && y == randomMap[i][1]) saveMap(0+","+ 7+","+x+","+ y);
+				else if (x == randomMap[i][0]) saveMap(0+","+2+","+x+","+y);
+				else if (x == randomMap[i][2]) saveMap(0+","+4+","+x+","+y);
+				else if (y == randomMap[i][1]) saveMap(0+","+6+","+x+","+y);
+				else if (y == randomMap[i][3]) saveMap(0+","+3+","+x+","+y);
+				else saveMap(0+","+1+","+x+","+y);
+			}
+		}
+	}
+	for (int n =0; n < randomMap.length-1;n++)
+	for(int i = randomMap[n][3]; i >= randomMap[n+1][1];i--){
+		if (i != randomMap[n][3] && i != randomMap[n][1]) {
+			saveMap(layer+","+2+","+-2+","+i);
+			saveMap(layer+","+4+","+2+","+i);
+		}
+		saveMap(layer+","+1+","+1+","+i);
+		saveMap(layer+","+1+","+0+","+i);
+		saveMap(layer+","+1+","+-1+","+i);
+		if (i == randomMap[n+1][1]){
+			saveMap(layer+","+8+","+2+","+i);
+			saveMap(layer+","+9+","+-2+","+i);
+		}
 	}
 	}
 
@@ -226,25 +256,29 @@ public class Game extends JFrame implements Runnable{
 			BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 			Graphics graphics = bufferStrategy.getDrawGraphics();
 			super.paint(graphics);
-
 			map.render(renderer, objects, xZoom, yZoom);
 
 			player.renderParticles(renderer, 2, 2);
 
 			renderer.render(graphics);
-
 			graphics.dispose();
 			bufferStrategy.show();
 			renderer.clear();
 	}
 
-	public void changeTile(int tileID){
-		selectedTileID = tileID;
-	}
+	//setters
+	public void changeTile(int tileID){selectedTileID = tileID;}
 
-	public int getSelectedTile(){
-		return selectedTileID;
-	}
+	//getters
+	public KeyBoardListener getKeyListener(){return keyListener;}
+	public MouseEventListener getMouseListener(){return mouseListener;}
+	public RenderHandler getRenderer(){return renderer;}
+	public Map getMap() {return map;}
+	public int getXZoom() {return xZoom;}
+	public int getYZoom() {return yZoom;}
+
+
+	public int getSelectedTile(){return selectedTileID;}
 
 	public void run(){
 		long lastTime = System.nanoTime(); //long 2^63
@@ -270,15 +304,5 @@ public class Game extends JFrame implements Runnable{
 		gameThread.start();
 	}
 
-	public KeyBoardListener getKeyListener(){return keyListener;}
 
-	public MouseEventListener getMouseListener(){return mouseListener;}
-
-	public RenderHandler getRenderer(){return renderer;}
-
-	public Map getMap() {return map;}
-
-	public int getXZoom() {return xZoom;}
-
-	public int getYZoom() {return yZoom;}
 }
