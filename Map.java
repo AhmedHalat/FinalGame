@@ -25,9 +25,9 @@ public class Map{
 
 	private int numLayers;
 
-public Map (File mapFile, Tiles tileSet){
+	public Map (File mapFile, Tiles tileSet){
 		loadMap(mapFile,tileSet);
-}
+	}
 
 	public void loadMap (File mapFile, Tiles tileSet){
 		this.mapFile = mapFile;
@@ -193,8 +193,8 @@ public Map (File mapFile, Tiles tileSet){
 			Block[][] newBlocks = new Block[newLengthX][newLengthY];
 
 			for(int x = 0; x < blocks.length; x++)
-				for(int y = 0; y < blocks[0].length; y++)
-					if(blocks[x][y] != null) newBlocks[x + (blockStartX - newMinX)/blockWidth][y + (blockStartY - newMinY)/blockHeight] = blocks[x][y];
+			for(int y = 0; y < blocks[0].length; y++)
+			if(blocks[x][y] != null) newBlocks[x + (blockStartX - newMinX)/blockWidth][y + (blockStartY - newMinY)/blockHeight] = blocks[x][y];
 
 			blocks = newBlocks;
 			blockStartX = newMinX;
@@ -257,8 +257,8 @@ public Map (File mapFile, Tiles tileSet){
 		if(fillTileID >= 0){
 			Rectangle camera = renderer.getCamera();
 			for(int y = camera.y - tileHeight - (camera.y % tileHeight); y < camera.y + camera.h; y+= tileHeight)
-				for(int x = camera.x - tileWidth - (camera.x % tileWidth); x < camera.x + camera.w; x+= tileWidth)
-					tileSet.renderTile(fillTileID, renderer, x, y, xZoom, yZoom);
+			for(int x = camera.x - tileWidth - (camera.x % tileWidth); x < camera.x + camera.w; x+= tileWidth)
+			tileSet.renderTile(fillTileID, renderer, x, y, xZoom, yZoom);
 		}
 
 		for(int layer = 0; layer < numLayers; layer++){
@@ -305,77 +305,73 @@ public Map (File mapFile, Tiles tileSet){
 
 		for(int i = 0; i < objects.length; i++) if(objects[i].getLayer() == Integer.MAX_VALUE) objects[i].render(renderer, xZoom, yZoom);
 	}
-
 	//Block represents a 6/6 block of tiles
 	@SuppressWarnings("unchecked")
 	private class Block
 	{
-			public ArrayList<MappedTile>[] mappedTilesByLayer;
-			public Block() {
-					mappedTilesByLayer = new ArrayList[numLayers];
-					for(int i = 0; i < mappedTilesByLayer.length; i++)
-							mappedTilesByLayer[i] = new ArrayList<MappedTile>();
-			}
-			//Parameters: renderer object, layer of tile and tile sizes
-			//renders each tile in the map
-			//return void
-			public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom)
-			 {
-					if(mappedTilesByLayer.length > layer)
-					{
-							ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
-							for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++)
-							{
-									MappedTile mappedTile = mappedTiles.get(tileIndex);
-									tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
-							}
-					}
-			}
-			//Parameters: mappedTile contains layer, tilex and y
-			//places the tile on the map
-			//returns Void
-			public void addTile(MappedTile tile) {
-					if(mappedTilesByLayer.length <= tile.layer)
-					{
-							ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
-
-							int i = 0;
-							for(i = 0; i < mappedTilesByLayer.length; i++)
-									newTilesByLayer[i] = mappedTilesByLayer[i];
-							for(; i < newTilesByLayer.length; i++)
-									newTilesByLayer[i] = new ArrayList<MappedTile>();
-
-							mappedTilesByLayer = newTilesByLayer;
-					}
-					mappedTilesByLayer[tile.layer].add(tile);
+		public ArrayList<MappedTile>[] mappedTilesByLayer;
+		public Block() {
+			mappedTilesByLayer = new ArrayList[numLayers];
+			for(int i = 0; i < mappedTilesByLayer.length; i++)
+			mappedTilesByLayer[i] = new ArrayList<MappedTile>();
+		}
+		//Parameters: renderer object, layer of tile and tile sizes
+		//renders each tile in the map
+		//return void
+		public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom)
+		{
+			if(mappedTilesByLayer.length > layer)
+			{
+				ArrayList<MappedTile> mappedTiles = mappedTilesByLayer[layer];
+				for(int tileIndex = 0; tileIndex < mappedTiles.size(); tileIndex++)
+				{
+					MappedTile mappedTile = mappedTiles.get(tileIndex);
+					tileSet.renderTile(mappedTile.id, renderer, mappedTile.x * tileWidth, mappedTile.y * tileHeight, xZoom, yZoom);
+				}
 			}
 		}
-
+		//Parameters: mappedTile contains layer, tilex and y
+		//places the tile on the map
+		//returns Void
 		public void addTile(MappedTile tile) {
-			if(mappedTilesByLayer.length <= tile.layer){
+			if(mappedTilesByLayer.length <= tile.layer)
+			{
 				ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
 
-			public void removeTile(MappedTile tile) {mappedTilesByLayer[tile.layer].remove(tile);}
+				int i = 0;
+				for(i = 0; i < mappedTilesByLayer.length; i++)
+				newTilesByLayer[i] = mappedTilesByLayer[i];
+				for(; i < newTilesByLayer.length; i++)
+				newTilesByLayer[i] = new ArrayList<MappedTile>();
 
-			//Parameters: layer, tile positions on spritesheet
-			//returns the position of a specific tile
-			public MappedTile getTile(int layer, int tileX, int tileY){
-				// System.out.println(mappedTilesByLayer[0].get(0).x);
-				try{
-					for(MappedTile tile : mappedTilesByLayer[layer])
-							if(tile.x == tileX && tile.y == tileY)return tile;
-					return null;
-				}catch(Exception e){return null;}
+				mappedTilesByLayer = newTilesByLayer;
 			}
-			return null;
+			mappedTilesByLayer[tile.layer].add(tile);
+		}
+
+		public void removeTile(MappedTile tile) {mappedTilesByLayer[tile.layer].remove(tile);}
+
+		//Parameters: layer, tile positions on spritesheet
+		//returns the position of a specific tile
+		public MappedTile getTile(int layer, int tileX, int tileY){
+			// System.out.println(mappedTilesByLayer[0].get(0).x);
+			try{
+				for(MappedTile tile : mappedTilesByLayer[layer])
+				if(tile.x == tileX && tile.y == tileY)return tile;
+				return null;
+			}catch(Exception e){return null;}
 		}
 	}
 
 	//Tile ID in the tileSet and the position of the tile in the map
-	private class MappedTile{
+	private class MappedTile
+	{
 		public int layer, id, x, y;
-
-		public MappedTile(int layer, int id, int x, int y){
+		//Parameters: layer of tile, tile id, x-y position of tile
+		//Sets variables to be easily accesed
+		//Constructor
+		public MappedTile(int layer, int id, int x, int y)
+		{
 			this.layer = layer;
 			this.id = id;
 			this.x = x;
