@@ -16,6 +16,7 @@ import java.io.File;
 public class Game extends JFrame implements Runnable{
 
 	public static int alpha = 0xFFFF00DC;
+	Particle particle;
 
 	private Canvas canvas = new Canvas();
 	private RenderHandler renderer;
@@ -170,6 +171,8 @@ public class Game extends JFrame implements Runnable{
 	}
 
 	public void leftClick(int x, int y){
+		int xp = x;
+		int yp = y;
 		Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 		boolean stoppedChecking = false;
 
@@ -180,6 +183,7 @@ public class Game extends JFrame implements Runnable{
 			map.setTile(selectedLayer, x, y, selectedTileID);
 
 		}
+
 	}
 
 	public void rightClick(int x, int y) {
@@ -195,6 +199,8 @@ public class Game extends JFrame implements Runnable{
 			super.paint(graphics);
 
 			map.render(renderer, objects, xZoom, yZoom);
+
+			player.renderParticles(renderer, 2, 2);
 
 			renderer.render(graphics);
 
