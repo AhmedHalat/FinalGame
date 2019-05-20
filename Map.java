@@ -78,7 +78,6 @@ public class Map{
 			int blockSizeX = (maxX + blockWidth) - minX;
 			int blockSizeY = (maxY + blockHeight) - minY;
 			blocks = new Block[blockSizeX][blockSizeY];
-
 			//Loop through all mappedTiles in the entire level and add them to the blocks.
 			for(int i = 0; i < mappedTiles.size(); i++) {
 				MappedTile mappedTile = mappedTiles.get(i);
