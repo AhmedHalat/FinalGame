@@ -39,7 +39,7 @@ public class Game extends JFrame implements Runnable{
 	private int xZoom = 3;
 	private int yZoom = 3;
 
-	public Game(){ 
+	public Game(){
 		//Make our program shutdown when we exit out.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Set the position and size of our frame.
@@ -68,10 +68,11 @@ public class Game extends JFrame implements Runnable{
 
 		//Load Tiles
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
+		resetMap(new File ("Map.txt"));
 		randomMap();
+		map = new Map(new File("Map.txt"), tiles);
 
 		//Load Map
-		map = new Map(new File("Map.txt"), tiles);
 
 		//Load SDK GUI
 		GUIButton[] buttons = new GUIButton[tiles.size()];
@@ -114,6 +115,15 @@ public class Game extends JFrame implements Runnable{
 					});
 
 					canvas.requestFocus();
+				}
+
+				public void resetMap(File mapFile){
+					try {
+						FileWriter writer = new FileWriter(mapFile);
+						writer.write("//Fill Tile\nFill:0\n//Layer,TileID,X,Y\n");
+						writer.flush();
+						writer.close();
+					}catch (Exception e) {}
 				}
 
 				public void saveMap(String str){
@@ -176,7 +186,7 @@ public class Game extends JFrame implements Runnable{
 							for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
 								if (i == 0 && y == randomMap[i][1] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+6+","+x+","+y);
 								else if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
-								else if (x == 1 || x == -1 || x == 0) saveMap(0+","+1+","+x+","+y);
+								else if ((y == randomMap[i][1] || y == randomMap[i][3]) && (x == 1 || x == -1 || x == 0)) {}
 								else if (x == randomMap[i][0] && y == randomMap[i][1]) saveMap(0+","+ 5+","+x+","+ y);
 								else if (x == randomMap[i][2] && y == randomMap[i][1]) saveMap(0+","+ 7+","+x+","+ y);
 								else if (x == randomMap[i][0]) saveMap(0+","+2+","+x+","+y);
