@@ -60,6 +60,7 @@ public class Game extends JFrame implements Runnable{
 		sheet.loadSprites(16, 16);
 
 		BufferedImage playerSheetImage = loadImage("Player.png");
+		BufferedImage chestSheetImage = loadImage("Chest.png");
 		playerSheet = new SpriteSheet(playerSheetImage);
 		playerSheet.loadSprites(20, 26);
 
