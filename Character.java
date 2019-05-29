@@ -61,6 +61,8 @@ public abstract class Character{
 		return rect;
 	}
 
+  public abstract String toString();
+
 	/**
 	* Sets new value of rect
 	* @param

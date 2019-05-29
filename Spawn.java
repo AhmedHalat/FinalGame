@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 
 public class Spawn implements GameObject{
-  private ArrayList<Character> characters;
+  private ArrayList<Character> characters= new ArrayList <Character> ();
   private Rectangle rect;
   private int layer;
   private static int room;
@@ -13,11 +13,7 @@ public class Spawn implements GameObject{
   }
 
   public Spawn(){
-    BufferedImage chestSheetImage = Game.loadImage("Chest.png");
-    SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-		chestSheet.loadSprites(16, 16);
-    AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 5);
-    characters.add(new Chest(chestAnimations, 0, 0, 16, 16, 3, 3));
+
   }
 
   public void addCharacter(Character character, int multiple){
@@ -25,6 +21,9 @@ public class Spawn implements GameObject{
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
+    for(Character character: characters){
+      if(character.isAlive()) character.render(renderer, xZoom, yZoom);
+    }
   }
 
   public void update(Game game, Player player){
