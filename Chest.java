@@ -1,5 +1,6 @@
 public class Chest extends Character{
-  public Chest(Sprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
+
+  public Chest(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
     super(sprite, 0, w, h);
     this.sprite = sprite;
 
@@ -27,6 +28,10 @@ public class Chest extends Character{
     // If they  are within range and they clicked F keyListener
     dead = true;
     //Drop items and open animation
+  }
+
+  public boolean isAlive(){
+    return !dead;
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {

@@ -16,7 +16,7 @@ import java.io.*;
 public class Game extends JFrame implements Runnable{
 
 	public static int alpha = 0xFFFF00DC;
-	Particle particle;
+	private Particle particle;
 
 	private Canvas canvas = new Canvas();
 	private RenderHandler renderer;
@@ -25,6 +25,7 @@ public class Game extends JFrame implements Runnable{
 	private SpriteSheet playerSheet;
 
 	private Player player;
+	private Spawn spawner;
 
 	private int selectedTileID = 2;
 	private int selectedLayer = 0;
@@ -62,7 +63,6 @@ public class Game extends JFrame implements Runnable{
 		sheet.loadSprites(16, 16);
 
 		BufferedImage playerSheetImage = loadImage("Player.png");
-		BufferedImage chestSheetImage = loadImage("Chest.png");
 		playerSheet = new SpriteSheet(playerSheetImage);
 		playerSheet.loadSprites(20, 26);
 
@@ -89,10 +89,12 @@ public class Game extends JFrame implements Runnable{
 		GUI gui = new GUI(null, 5, 5, true);
 
 		//Load Objects
-		objects = new GameObject[2];
+		objects = new GameObject[3];
 		player = new Player(playerAnimations, xZoom, yZoom);
+		spawner = new Spawn();
 		objects[0] = player;
 		objects[1] = gui;
+		objects[2] = spawner;
 
 
 		//Add Listeners
@@ -145,7 +147,7 @@ public class Game extends JFrame implements Runnable{
 					objects[i].update(this, player);
 				}
 
-				public BufferedImage loadImage(String path){
+				public static BufferedImage loadImage(String path){
 					try{
 						BufferedImage loadedImage = ImageIO.read(Game.class.getResource(path));
 						BufferedImage formattedImage = new BufferedImage(loadedImage.getWidth(), loadedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
