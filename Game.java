@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
@@ -228,9 +229,7 @@ public class Game extends JFrame implements Runnable{
 					resetMap(new File ("Map.txt"));
 					map = new Map(new File("Map.txt"), tiles);
 					randomMap();
-					map = new Map(new File("Map.txt"), tiles);
 					render();
-					System.out.println(player.getRect().x);
 				}
 
 				public void leftClick(int x, int y){
@@ -248,13 +247,19 @@ public class Game extends JFrame implements Runnable{
 					reset();
 				}
 
+				public void mapLocation() {
+					for (int i = 0; i < randomMap.length; i++) {
+						if (player.getRect().y < randomMap[i][1]*yZoom*16 && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
+					}
+				}
+
 
 				public void render() {
 					BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 					Graphics graphics = bufferStrategy.getDrawGraphics();
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
-
+					mapLocation();
 					// // player.renderParticles(renderer, 2, 2);
 					renderer.render(graphics);
 					graphics.setColor(new Color(255, 255, 255));
