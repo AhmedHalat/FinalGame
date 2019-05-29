@@ -1,4 +1,4 @@
-    
+
 
 import java.io.IOException;
 import java.io.File;
@@ -40,7 +40,7 @@ public class Player implements GameObject
     public void updateStats(int [] stats){
        newSpeed = stats[0];
     }
-    
+
     //Parameters: None
     //Updates the players sprite range to the ones facing in the correct direction. Range to be shuffled through every few frames to create walking effect
     //returns Void
@@ -69,12 +69,12 @@ public class Player implements GameObject
     //Updates the players direction and collision boxe and updates the camera rectangle to match player position. GameObject method
     //returns Void
     public void update(Game game, Player player, Spawn spawner, Projectile pro, Melee melee){
-        
+
         KeyBoardListener keyListener = game.getKeyListener();
         boolean didMove = false;
         int newDirection = direction;
         layer = 0;
-        
+
         collisionCheckRectangle.x = playerRectangle.x;
         collisionCheckRectangle.y = playerRectangle.y;
         int speed = newSpeed;
@@ -90,13 +90,13 @@ public class Player implements GameObject
             didMove = true;
             collisionCheckRectangle.x += speed;
         }
-        else if(keyListener.up()) 
+        else if(keyListener.up())
         {
             collisionCheckRectangle.y -= speed;
             didMove = true;
-            newDirection = 2;   
+            newDirection = 2;
         }
-        else if(keyListener.down()) 
+        else if(keyListener.down())
         {
             newDirection = 3;
             didMove = true;
@@ -122,7 +122,7 @@ public class Player implements GameObject
             Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, playerRectangle.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);
 
             //Check the X axis
-            if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && 
+            if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) &&
                 !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)) {
                 playerRectangle.x = collisionCheckRectangle.x - xCollisionOffset;
             }
@@ -134,7 +134,7 @@ public class Player implements GameObject
             //axisCheck = new Rectangle(playerRectangle.x, collisionCheckRectangle.y, collisionCheckRectangle.w, collisionCheckRectangle.h);
 
             //Check the Y axis
-            if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && 
+            if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) &&
                 !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)) {
                 playerRectangle.y = collisionCheckRectangle.y - yCollisionOffset;
             }
@@ -147,7 +147,7 @@ public class Player implements GameObject
     }
     //Parameters: Camera Rectangle - rectangle objects contain x,y,w,h
     //Updates the camera's x,y to match player position
-    //returns 
+    //returns
     public void updateCamera(Rectangle camera) {
         camera.x = playerRectangle.x - (camera.w / 2);
         camera.y = playerRectangle.y - (camera.h / 2);
@@ -158,6 +158,14 @@ public class Player implements GameObject
     public int getLayer() {
         return layer;
     }
+
+    public void setX(int x){
+      playerRectangle.x = x;
+    }
+    public void setY(int y){
+      playerRectangle.y = y;
+    }
+
     //Parameters: None
     //Used by other methods to get players rectangle. GameObject method
     //returns player Rectangle
@@ -166,9 +174,9 @@ public class Player implements GameObject
     }
     //Parameters: Mouse rectangle - x,y,w,h. Camera rectangle - x,y,w,h. Xzoom yZoom
     //True if this method wants to use the mouse click. GameObject method
-    //returns false since this method does not use the mouse 
+    //returns false since this method does not use the mouse
     public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
-        return false; 
+        return false;
     }
     //Call whenever mouse is clicked on Canvas.
 }
