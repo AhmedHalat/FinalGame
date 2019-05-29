@@ -18,8 +18,7 @@ public class Game extends JFrame implements Runnable{
 
 	public static int alpha = 0xFFFF00DC;
 	Particle particle;
-	public static Game game;
-	public static Thread gameThread;
+	
 	private Canvas canvas = new Canvas();
 	private RenderHandler renderer;
 
@@ -321,8 +320,8 @@ public class Game extends JFrame implements Runnable{
 				}
 
 				public static void main(String[] args){
-					game = new Game();
-					gameThread = new Thread(game);
+					Game game = new Game();
+					Thread gameThread = new Thread(game);
 					gameThread.start();
 				}
 			}
