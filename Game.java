@@ -43,7 +43,7 @@ public class Game extends JFrame implements Runnable{
 	private int yZoom = 3;
 
 	private Rectangle mouseRectangle;
-	public int mapLevel = 0;
+	public int mapLevel = 1;
 	public int room = 1;
 	public Game(){
 		//Make our program shutdown when we exit out.
@@ -177,7 +177,6 @@ public class Game extends JFrame implements Runnable{
 				}
 
 				public void randomMap(){
-					mapLevel++;
 					final int maxWidth = 22;
 					final int minWidth = 16;
 					final int maxHeight = 22;
@@ -231,34 +230,17 @@ public class Game extends JFrame implements Runnable{
 				}
 
 				public void reset(){
+					player.getRect().x = 0;
+					player.getRect().y = 0;
 					resetMap(new File ("Map.txt"));
 					//Load Tiles
 					tiles = new Tiles(new File("Tiles2.txt"),sheet);
 					resetMap(new File ("Map.txt"));
 					map = new Map(new File("Map.txt"), tiles);
 					randomMap();
-					// player.setX(0);
-					// player.setY(0);
-
-					//Load Map
-					//
-					// //Load SDK GUI
-					// GUIButton[] buttons = new GUIButton[tiles.size()];
-					// Sprite[] tileSprites = tiles.getSprites();
-					//
-					// for(int i = 0; i < buttons.length; i++){
-					// 	Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-					// 	buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
-					// }
-					// GUI gui = new GUI(buttons, 5, 5, false);
-					//
-					// //Load Objects
-					// objects = new GameObject[2];
-					// player = new Player(new AnimatedSprite(playerSheet, 5), xZoom, yZoom);
-					// objects[0] = player;
-					// objects[1] = gui;
 					map = new Map(new File("Map.txt"), tiles);
 					render();
+					System.out.println(player.getRect().x);
 				}
 
 				public void leftClick(int x, int y){
@@ -271,14 +253,9 @@ public class Game extends JFrame implements Runnable{
 					// 	y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
 					// 	map.setTile(selectedLayer, x, y, selectedTileID);
 					// }
-					try{
+					//
+					mapLevel++;
 					reset();
-				}catch(Exception e) {
-					try{reset();} catch (Exception error){
-						try{reset();} catch (Exception error2){System.out.println("Oh Noooooo!" + error2);}
-						System.out.println("Oh No!");}
-					System.out.println("Welp");
-				}
 				}
 
 
