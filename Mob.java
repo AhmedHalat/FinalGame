@@ -79,6 +79,10 @@ public class Mob extends Character{
 
   }
 
+  public boolean isAlive(){
+    return dead;
+  }
+
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     return false;
   }

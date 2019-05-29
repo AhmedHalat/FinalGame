@@ -29,6 +29,10 @@ public class Gate extends Character{
     //Drop items and open animation
   }
 
+  public boolean isAlive(){
+    return dead;
+  }
+
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     if(mouseRectangle.intersects(rect)){
       open();

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
 
 public class Spawn implements GameObject{
   private ArrayList<Character> characters;
@@ -11,27 +12,41 @@ public class Spawn implements GameObject{
     rect = new Rectangle(0,0,0,0);
   }
 
+  public Spawn(){
+    BufferedImage chestSheetImage = Game.loadImage("Chest.png");
+    SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+		chestSheet.loadSprites(16, 16);
+    AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 5);
+    characters.add(new Chest(chestAnimations, 0, 0, 16, 16, 3, 3));
+  }
+
   public void addCharacter(Character character, int multiple){
     for(int i = 0; i < multiple; i++) characters.add(character);
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
-    for(int i = 0; i < characters.size(); i++) characters.get(i).render(renderer, xZoom, yZoom);
   }
 
   public void update(Game game, Player player){
-    for(int i = 0; i < characters.size(); i++) characters.get(i).update(game, player, wave);
+    for(Character character: characters){
+      if(character.isAlive()) character.interact(game, player);
+    }
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom){
-      return false;
+    boolean stoppedChecking = false;
+    for(Character character: characters){
+      if(character.isAlive()) stoppedChecking = character.handleMouseClick(mouseRectangle, camera, xZoom, yZoom);
+      if(stoppedChecking) break;
+    }
+    return stoppedChecking;
   }
 
   public int getLayer(){
-      return layer;
+    return layer;
   }
 
   public Rectangle getRectangle(){
-      return rect;
+    return rect;
   }
 }

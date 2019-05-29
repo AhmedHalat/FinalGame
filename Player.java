@@ -12,7 +12,7 @@ public class Player extends Character implements GameObject{
 	//Contructor
 	Particle particles;
 	public Player(Sprite sprite, int xZoom, int yZoom){
-		super(sprite, 5, 15, 25);
+		super((AnimatedSprite) sprite, 5, 15, 25);
 		this.sprite = sprite;
 
 		if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;
@@ -107,6 +107,10 @@ public class Player extends Character implements GameObject{
 
 	public void action(Game game, Player player){
 
+	}
+
+	public boolean isAlive(){
+		return dead;
 	}
 
 	public int getLayer() {

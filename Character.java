@@ -27,8 +27,8 @@ public abstract class Character{
     this.yCollisionOffset = yCollisionOffset;
   }
 
-  public Character(Sprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
-    this.sprite = sprite;
+  public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
+    this.animatedSprite = sprite;
     this.speed = speed;
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
@@ -49,6 +49,7 @@ public abstract class Character{
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
   public abstract void action(Game game, Player player);
+  public abstract boolean isAlive();
   public abstract boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom);
 
 
