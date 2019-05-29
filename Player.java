@@ -99,7 +99,7 @@ public class Player extends Character implements GameObject{
 		updateCamera(game.getRenderer().getCamera());
 		particles.update(rect.x, rect.y);
 	}
-
+	
 	public void updateCamera(Rectangle camera) {
 		camera.x = rect.x - (camera.w / 2);
 		camera.y = rect.y - (camera.h / 2);

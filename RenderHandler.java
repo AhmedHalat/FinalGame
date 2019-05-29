@@ -19,9 +19,9 @@ public class RenderHandler{
   private Rectangle camera;
   private int[] pixels;
   private int maxScreenWidth, maxScreenHeight;
+  public static GraphicsDevice[] graphicsDevices = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 
   public RenderHandler(int width, int height){
-    GraphicsDevice[] graphicsDevices = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
     for(int i = 0; i < graphicsDevices.length; i++) {
       if(maxScreenWidth < graphicsDevices[i].getDisplayMode().getWidth()) maxScreenWidth = graphicsDevices[i].getDisplayMode().getWidth();
       if(maxScreenHeight < graphicsDevices[i].getDisplayMode().getHeight()) maxScreenHeight = graphicsDevices[i].getDisplayMode().getHeight();

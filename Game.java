@@ -12,12 +12,14 @@ import javax.swing.JFrame;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.*;
+import java.awt.Font;
 
 public class Game extends JFrame implements Runnable{
 
 	public static int alpha = 0xFFFF00DC;
 	Particle particle;
-
+	public static Game game;
+	public static Thread gameThread;
 	private Canvas canvas = new Canvas();
 	private RenderHandler renderer;
 
@@ -36,11 +38,13 @@ public class Game extends JFrame implements Runnable{
 	private KeyBoardListener keyListener = new KeyBoardListener(this);
 	private MouseEventListener mouseListener = new MouseEventListener(this);
 
+	private int[][] randomMap;
 	private int xZoom = 3;
 	private int yZoom = 3;
 
 	private Rectangle mouseRectangle;
-
+	public int mapLevel = 0;
+	public int room = 1;
 	public Game(){
 		//Make our program shutdown when we exit out.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -164,6 +168,7 @@ public class Game extends JFrame implements Runnable{
 				}
 
 				public void randomMap(){
+					mapLevel++;
 					final int maxWidth = 22;
 					final int minWidth = 16;
 					final int maxHeight = 22;
@@ -171,7 +176,7 @@ public class Game extends JFrame implements Runnable{
 					selectedLayer = 1;
 					int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
 					int layer = 0;
-					int[][] randomMap = new int[numberOfChambers+1][4];
+					randomMap = new int[numberOfChambers+1][4];
 					height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
 
 					for(int n = 0; n <= numberOfChambers; n++){
@@ -216,14 +221,57 @@ public class Game extends JFrame implements Runnable{
 					}
 				}
 
-				public void leftClick(int x, int y){
-					mouseRectangle = new Rectangle(x, y, 1, 1);
-	        boolean stoppedChecking = false;
-	        for(int i = 0; i < objects.length; i++)
-	            if(!stoppedChecking)
-	                stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
+				public void reset(){
+					resetMap(new File ("Map.txt"));
+					//Load Tiles
+					tiles = new Tiles(new File("Tiles2.txt"),sheet);
+					resetMap(new File ("Map.txt"));
+					map = new Map(new File("Map.txt"), tiles);
+					randomMap();
+					// player.setX(0);
+					// player.setY(0);
 
+					//Load Map
+					//
+					// //Load SDK GUI
+					// GUIButton[] buttons = new GUIButton[tiles.size()];
+					// Sprite[] tileSprites = tiles.getSprites();
+					//
+					// for(int i = 0; i < buttons.length; i++){
+					// 	Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
+					// 	buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
+					// }
+					// GUI gui = new GUI(buttons, 5, 5, false);
+					//
+					// //Load Objects
+					// objects = new GameObject[2];
+					// player = new Player(new AnimatedSprite(playerSheet, 5), xZoom, yZoom);
+					// objects[0] = player;
+					// objects[1] = gui;
+					map = new Map(new File("Map.txt"), tiles);
+					render();
 				}
+
+				public void leftClick(int x, int y){
+					// Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
+					// boolean stoppedChecking = false;
+					//
+					// for(int i = 0; i < objects.length; i++) if(!stoppedChecking) stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
+					// if(!stoppedChecking){
+					// 	x = (int) Math.floor(((x + renderer.getCamera().x)/(16.0 * xZoom)));
+					// 	y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
+					// 	map.setTile(selectedLayer, x, y, selectedTileID);
+					// }
+					try{
+					reset();
+				}catch(Exception e) {
+					try{reset();} catch (Exception error){
+						try{reset();} catch (Exception error2){System.out.println("Oh Noooooo!" + error2);}
+						System.out.println("Oh No!");}
+					System.out.println("Welp");
+				}
+				}
+
 
 				public void render() {
 					BufferStrategy bufferStrategy = canvas.getBufferStrategy();
@@ -231,9 +279,10 @@ public class Game extends JFrame implements Runnable{
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
 
-					player.renderParticles(renderer, 2, 2);
-
+					// // player.renderParticles(renderer, 2, 2);
 					renderer.render(graphics);
+					graphics.setColor(new Color(255, 255, 255));
+					renderer.renderString(graphics,mapLevel+"-"+room,getWidth() - 100, getHeight()- 50,50);
 					graphics.dispose();
 					bufferStrategy.show();
 					renderer.clear();
@@ -272,10 +321,8 @@ public class Game extends JFrame implements Runnable{
 				}
 
 				public static void main(String[] args){
-					Game game = new Game();
-					Thread gameThread = new Thread(game);
+					game = new Game();
+					gameThread = new Thread(game);
 					gameThread.start();
 				}
-
-
 			}
