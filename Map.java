@@ -83,6 +83,8 @@ public class Map{
 				MappedTile mappedTile = mappedTiles.get(i);
 				int blockX = (mappedTile.x - minX)/blockWidth;
 				int blockY = (mappedTile.y - minY)/blockHeight;
+				if(blockX >= blocks.length) blockX = blocks.length-1;
+				if (blockY >= blocks[blockX].length) blockY = blocks[blockX].length-1;
 				assert(blockX >= 0 && blockX < blocks.length && blockY >= 0 && blockY < blocks[0].length);
 				if(blocks[blockX][blockY] == null) blocks[blockX][blockY] = new Block();
 				blocks[blockX][blockY].addTile(mappedTile);
