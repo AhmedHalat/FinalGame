@@ -29,6 +29,10 @@ public class GUI implements GameObject{
 			 this(null, buttons, x, y, fixed);
 	 }
 
+	 public GUI(){
+
+	 }
+
 
 	 //Call every time physically possible.'
 	 //Parameters: renderer object, zooms
@@ -57,8 +61,8 @@ public class GUI implements GameObject{
 	 //returns boolean
 	 public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom){
 			 boolean stopChecking = false;
-
-			 if(!fixed)  mouseRectangle = new Rectangle(mouseRectangle.x + camera.x, mouseRectangle.y + camera.y, 1, 1);
+			 if(buttons == null) return stopChecking;
+			 else if(!fixed)  mouseRectangle = new Rectangle(mouseRectangle.x + camera.x, mouseRectangle.y + camera.y, 1, 1);
 			 else mouseRectangle = new Rectangle(mouseRectangle.x, mouseRectangle.y, 1, 1);
 
 			 if(rect.w == 0 || rect.h == 0 || mouseRectangle.intersects(rect)) {

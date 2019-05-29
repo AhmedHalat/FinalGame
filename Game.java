@@ -39,6 +39,8 @@ public class Game extends JFrame implements Runnable{
 	private int xZoom = 3;
 	private int yZoom = 3;
 
+	private Rectangle mouseRectangle;
+
 	public Game(){
 		//Make our program shutdown when we exit out.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,7 +86,7 @@ public class Game extends JFrame implements Runnable{
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
 			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
 		}
-		GUI gui = new GUI(buttons, 5, 5, true);
+		GUI gui = new GUI(null, 5, 5, true);
 
 		//Load Objects
 		objects = new GameObject[2];
@@ -215,23 +217,13 @@ public class Game extends JFrame implements Runnable{
 				}
 
 				public void leftClick(int x, int y){
-					Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
-					boolean stoppedChecking = false;
+					mouseRectangle = new Rectangle(x, y, 1, 1);
+	        boolean stoppedChecking = false;
+	        for(int i = 0; i < objects.length; i++)
+	            if(!stoppedChecking)
+	                stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
 
-					for(int i = 0; i < objects.length; i++) if(!stoppedChecking) stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
-					if(!stoppedChecking){
-						x = (int) Math.floor(((x + renderer.getCamera().x)/(16.0 * xZoom)));
-						y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
-						map.setTile(selectedLayer, x, y, selectedTileID);
-					}
 				}
-
-				public void rightClick(int x, int y) {
-					x = (int) Math.floor((x + renderer.getCamera().x)/(16.0 * xZoom));
-					y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
-					map.removeTile(selectedLayer, x, y);
-				}
-
 
 				public void render() {
 					BufferStrategy bufferStrategy = canvas.getBufferStrategy();
