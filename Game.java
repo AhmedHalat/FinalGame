@@ -95,7 +95,7 @@ public class Game extends JFrame implements Runnable{
 		BufferedImage chestSheetImage = loadImage("Chest.png");
 		SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
 		chestSheet.loadSprites(16, 16);
-		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 15);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 3, 3);
 
 		//Load Objects
@@ -254,7 +254,6 @@ public class Game extends JFrame implements Runnable{
 					// 	map.setTile(selectedLayer, x, y, selectedTileID);
 					// }
 					//
-					mapLevel++;
 				}
 
 				public void mapLocation() {
