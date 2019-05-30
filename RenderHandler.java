@@ -15,7 +15,7 @@ import java.awt.event.MouseListener;
 import javax.swing.*;
 
 public class RenderHandler{
-  private BufferedImage view;
+  private static BufferedImage view;
   private Rectangle camera;
   private int[] pixels;
   private int maxScreenWidth, maxScreenHeight;
@@ -73,7 +73,7 @@ public class RenderHandler{
 
   private void setPixel(int pixel, int x, int y, boolean fixed) {
     int pixelIndex = 0;
-    if(!fixed){
+    if(!fixed){ 
       if(x >= camera.x && y >= camera.y && x <= camera.x + camera.w && y <= camera.y + camera.h)
       pixelIndex = (x - camera.x) + (y - camera.y) * view.getWidth();
     }
@@ -97,6 +97,10 @@ public class RenderHandler{
 
   public int getMaxHeight() {
     return maxScreenHeight;
+  }
+
+  public BufferedImage getView(){
+    return view;
   }
 
   public void clear(){
