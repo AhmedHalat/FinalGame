@@ -20,12 +20,12 @@ public class Chest extends Character{
   }
 
   public void open(){
-    System.out.println("OPENING");
+    move = true;
   }
 
   public void action(Game game, Player player){
     // If they  are within range and they clicked F keyListener
-    animatedSprite.update(game, player);
+    if(move)animatedSprite.update(game, player);
     //Drop items and open animation
   }
 
@@ -34,16 +34,14 @@ public class Chest extends Character{
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
+    System.out.println("RECT: "+ rect);
+    System.out.println("MouseRect: "+ mouseRectangle);
     if(mouseRectangle.intersects(rect)){
       //DO SOMETHING
       open();
       return true;
     }
     return false;
-  }
-
-  public String toString(){
-    return " ";
   }
 
 }

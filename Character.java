@@ -61,15 +61,13 @@ public abstract class Character{
 		return rect;
 	}
 
-  public abstract String toString();
-
 	/**
 	* Sets new value of rect
 	* @param
 	*/
 	public void setRect(Rectangle rect) {
 		this.rect = rect;
-	}
+	} 
 
 	/**
 	* Returns value of collisionCheckRectangle

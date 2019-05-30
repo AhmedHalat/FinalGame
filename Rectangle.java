@@ -46,4 +46,14 @@ public class Rectangle{
 			return true;
 	}
 
+
+
+	/**
+	* Create string representation of Rectangle for printing
+	* @return
+	*/
+	@Override
+	public String toString() {
+		return "Rectangle [x=" + x + ", y=" + y + ", w=" + w + ", h=" + h +"]";
+	}
 }

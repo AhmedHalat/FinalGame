@@ -20,6 +20,13 @@ public class Spawn implements GameObject{
     for(int i = 0; i < multiple; i++) characters.add(character);
   }
 
+  public boolean allDead(){
+    for (Character character : characters) 
+      if(!character.isAlive()) return true;
+
+    return false;
+  }
+
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     for(Character character: characters){
       if(character.isAlive()) character.render(renderer, xZoom, yZoom);
