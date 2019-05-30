@@ -34,7 +34,8 @@ public class Chest extends Character{
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
-    System.out.println("RECT: "+ rect);
+    Rectangle tap = new Rectangle((rect.x/xZoom - camera.x), (rect.y/yZoom - camera.y) , rect.w, rect.h );
+    System.out.println("RECT: "+ tap);
     System.out.println("MouseRect: "+ mouseRectangle);
     if(mouseRectangle.intersects(rect)){
       //DO SOMETHING
