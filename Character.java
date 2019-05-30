@@ -16,6 +16,9 @@ public abstract class Character{
   protected final int xCollisionOffset;
   protected final int yCollisionOffset;
 
+  protected Particle particles;
+  protected boolean particle;
+
   public Character(AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
     this.rect = rect;
     this.collisionCheckRectangle = collisionCheckRectangle;
@@ -36,9 +39,16 @@ public abstract class Character{
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
+    //if(dead) renderParticles(renderer, xZoom, yZoom);
     if(animatedSprite != null) renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
     else if(sprite != null) renderer.renderSprite(sprite, rect.x, rect.y, xZoom, yZoom, false);
     else renderer.renderRectangle(rect, xZoom, yZoom, false);
+  }
+
+  public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
+
+    particles.update(rect.x + 6, rect.y - 6);
+    particles.render(renderer, 2, 2);
   }
 
   public void interact(Game game, Player player){
@@ -67,7 +77,7 @@ public abstract class Character{
 	*/
 	public void setRect(Rectangle rect) {
 		this.rect = rect;
-	} 
+	}
 
 	/**
 	* Returns value of collisionCheckRectangle
@@ -140,6 +150,10 @@ public abstract class Character{
 	public int getLayer() {
 		return layer;
 	}
+
+  public boolean particles(){
+    return particle;
+  }
 
 	/**
 	* Sets new value of layer

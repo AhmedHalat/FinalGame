@@ -21,9 +21,8 @@ public class Player extends Character implements GameObject{
 		Rectangle collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
 		particles = new Particle(30, 46, 50, 1);
 		particles.fill(0xFFF7D80C);
-		super.setAnimatedSprite(animatedSprite);
-		super.setRect(playerRectangle);
-		super.setCollisionCheckRectangle(collisionCheckRectangle);
+		this.rect = playerRectangle;
+		this.collisionCheckRectangle = collisionCheckRectangle;
 	}
 	//Parameters: array that contains players current stats
 	//sets the players new motion speed if the stats have been upgraded

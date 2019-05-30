@@ -6,9 +6,12 @@ public class Chest extends Character{
 
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
-    animatedSprite.setAnimationRange(0, 8);
+    animatedSprite.setAnimationRange(0, 9);
     dead = false;
     move = false;
+
+    particles = new Particle(rect.w, rect.h, 50, 1);
+    particles.fill(0xFFF7D80C);
   }
 
   public void updateStats(int [] stats){
@@ -25,19 +28,22 @@ public class Chest extends Character{
 
   public void action(Game game, Player player){
     // If they  are within range and they clicked F keyListener
-    if(move)animatedSprite.update(game, player);
+    if(animatedSprite.getLooped()){
+      animatedSprite.setStatic();
+      dead = true;
+      particle = true;
+    }
+    else if(move)animatedSprite.update(game, player);
     //Drop items and open animation
   }
 
   public boolean isAlive(){
-    return !dead;
+    return !false;
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
-    Rectangle tap = new Rectangle((rect.x/xZoom - camera.x), (rect.y/yZoom - camera.y) , rect.w, rect.h );
-    System.out.println("RECT: "+ tap);
-    System.out.println("MouseRect: "+ mouseRectangle);
-    if(mouseRectangle.intersects(rect)){
+    Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
+    if(collision.intersects(rect)){
       //DO SOMETHING
       open();
       return true;

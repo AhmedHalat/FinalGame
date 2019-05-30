@@ -21,7 +21,7 @@ public class Spawn implements GameObject{
   }
 
   public boolean allDead(){
-    for (Character character : characters) 
+    for (Character character : characters)
       if(!character.isAlive()) return true;
 
     return false;
@@ -30,7 +30,8 @@ public class Spawn implements GameObject{
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     for(Character character: characters){
       if(character.isAlive()) character.render(renderer, xZoom, yZoom);
-    }
+      if(character.particles())character.renderParticles(renderer, xZoom, yZoom);
+    } 
   }
 
   public void update(Game game, Player player){
