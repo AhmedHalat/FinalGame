@@ -260,9 +260,9 @@ public class Game extends JFrame implements Runnable{
 
 				public void mapLocation() {
 					for (int i = 0; i < randomMap.length; i++) {
-						if (player.getRect().y < randomMap[i][1]*yZoom*16-32 && player.getRect().y > randomMap[i][3]*yZoom*16+32) room = i+1;
+						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
 					}
-					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom  
+					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 45 && player.getRect().x > -40) {
 						mapLevel++;
 						reset();
