@@ -13,6 +13,8 @@ BrickWall6-5-4-0
 BrickWall7-0-5-0
 BrickWall8-3-5-0
 ladder-9-3
+ladder-10-3
+ladder-8-3
 GateL-6-4-0
 GateR-7-4-0
 GateL-6-6-0
