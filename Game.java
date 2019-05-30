@@ -90,7 +90,7 @@ public class Game extends JFrame implements Runnable{
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
 			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
 		}
-		GUI gui = new GUI(null, 5, 5, true);
+		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
 
 		BufferedImage chestSheetImage = loadImage("Chest.png");
 		SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
@@ -198,11 +198,16 @@ public class Game extends JFrame implements Runnable{
 						if (n == 0) randomMap[n][3] = -height/2;
 						else randomMap[n][3] = randomMap[n-1][3]-height/2-20;
 					}
+					saveMap("0,10,30,30");
+					saveMap("0,11,41,31");
+					saveMap("0,12,50,31");
+
 					for (int i = 0; i < randomMap.length; i++) {
 						for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
 							for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
-								if (i == 0 && y == randomMap[i][1] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+6+","+x+","+y);
+								if (i == 0 && y == randomMap[i][1] && (x == 1 || x == -1 || x == 0)) saveMap("0,6,"+x+","+y);
 								else if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
+								else if (i == randomMap.length-1 && y == randomMap[i][3]+3 && x == 0) saveMap("0,10,"+x+","+y);
 								else if ((y == randomMap[i][1] || y == randomMap[i][3]) && (x == 1 || x == -1 || x == 0)) {}
 								else if (x == randomMap[i][0] && y == randomMap[i][1]) saveMap(0+","+ 5+","+x+","+ y);
 								else if (x == randomMap[i][2] && y == randomMap[i][1]) saveMap(0+","+ 7+","+x+","+ y);
@@ -233,19 +238,17 @@ public class Game extends JFrame implements Runnable{
 				public void reset(){
 					player.getRect().x = 0;
 					player.getRect().y = 0;
-					resetMap(new File ("Map.txt"));
 					//Load Tiles
-					tiles = new Tiles(new File("Tiles2.txt"),sheet);
 					resetMap(new File ("Map.txt"));
-					map = new Map(new File("Map.txt"), tiles);
 					randomMap();
+					map = new Map(new File("Map.txt"), tiles);
 					render();
 				}
 
 				public void leftClick(int x, int y){
+					System.out.println(player.getRect().x + ", "+player.getRect().y);
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
-					//
 					for(int i = 0; i < objects.length; i++)
 					if(!stoppedChecking) stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
 					/// if(!stoppedChecking){
@@ -253,13 +256,16 @@ public class Game extends JFrame implements Runnable{
 					// 	y = (int) Math.floor((y + renderer.getCamera().y)/(16.0 * yZoom));
 					// 	map.setTile(selectedLayer, x, y, selectedTileID);
 					// }
-					//
-					mapLevel++;
 				}
 
 				public void mapLocation() {
 					for (int i = 0; i < randomMap.length; i++) {
-						if (player.getRect().y < randomMap[i][1]*yZoom*16 && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
+						if (player.getRect().y < randomMap[i][1]*yZoom*16-32 && player.getRect().y > randomMap[i][3]*yZoom*16+32) room = i+1;
+					}
+					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom  
+							&& player.getRect().x < 45 && player.getRect().x > -40) {
+						mapLevel++;
+						reset();
 					}
 				}
 
