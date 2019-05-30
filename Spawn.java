@@ -31,12 +31,12 @@ public class Spawn implements GameObject{
     for(Character character: characters){
       if(character.isAlive()) character.render(renderer, xZoom, yZoom);
       if(character.particles())character.renderParticles(renderer, xZoom, yZoom);
-    } 
+    }
   }
 
-  public void update(Game game, Player player){
+  public void update(Game game, Player player, Spawn spawner){
     for(Character character: characters){
-      if(character.isAlive()) character.interact(game, player);
+      if(character.isAlive()) character.interact(game, player, spawner);
     }
   }
 

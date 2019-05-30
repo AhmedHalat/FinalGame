@@ -51,14 +51,14 @@ public abstract class Character{
     particles.render(renderer, 2, 2);
   }
 
-  public void interact(Game game, Player player){
-    if(!dead) action(game, player);
+  public void interact(Game game, Player player, Spawn spawner){
+    if(!dead) action(game, player, spawner);
   }
 
 
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
-  public abstract void action(Game game, Player player);
+  public abstract void action(Game game, Player player, Spawn spawner);
   public abstract boolean isAlive();
   public abstract boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom);
 

@@ -26,14 +26,14 @@ public class Chest extends Character{
     move = true;
   }
 
-  public void action(Game game, Player player){
+  public void action(Game game, Player player, Spawn spawner){
     // If they  are within range and they clicked F keyListener
     if(animatedSprite.getLooped()){
       animatedSprite.setStatic();
       dead = true;
       particle = true;
     }
-    else if(move)animatedSprite.update(game, player);
+    else if(move)animatedSprite.update(game, player, spawner);
     //Drop items and open animation
   }
 

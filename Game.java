@@ -88,7 +88,7 @@ public class Game extends JFrame implements Runnable{
 
 		for(int i = 0; i < buttons.length; i++){
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
+			buttons[i] = new SDKButton(this, player, spawner, i, tileSprites[i], tileRectangle, false);
 		}
 		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
 
@@ -156,7 +156,7 @@ public class Game extends JFrame implements Runnable{
 
 				public void update(){
 					for(int i = 0; i < objects.length; i++)
-					objects[i].update(this, player);
+					objects[i].update(this, player, spawner);
 				}
 
 				public static BufferedImage loadImage(String path){
@@ -262,7 +262,7 @@ public class Game extends JFrame implements Runnable{
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32 && player.getRect().y > randomMap[i][3]*yZoom*16+32) room = i+1;
 					}
-					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom  
+					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 45 && player.getRect().x > -40) {
 						mapLevel++;
 						reset();
