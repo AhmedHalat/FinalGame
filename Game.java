@@ -206,7 +206,7 @@ public class Game extends JFrame implements Runnable{
 						for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
 							for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
 								if (i == 0 && y == randomMap[i][1] && (x == 1 || x == -1 || x == 0)) saveMap("0,6,"+x+","+y);
-								else if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
+								if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
 								else if (i == randomMap.length-1 && y == randomMap[i][3]+3 && x == 0) saveMap("0,10,"+x+","+y);
 								else if ((y == randomMap[i][1] || y == randomMap[i][3]) && (x == 1 || x == -1 || x == 0)) {}
 								else if (x == randomMap[i][0] && y == randomMap[i][1]) saveMap(0+","+ 5+","+x+","+ y);
@@ -225,9 +225,16 @@ public class Game extends JFrame implements Runnable{
 							saveMap(layer+","+2+","+-2+","+i);
 							saveMap(layer+","+4+","+2+","+i);
 						}
-						saveMap(layer+","+1+","+1+","+i);
-						saveMap(layer+","+1+","+0+","+i);
-						saveMap(layer+","+1+","+-1+","+i);
+						if (i == 0 || (i == randomMap[n][3] || i == randomMap[n][1])) {
+							saveMap(layer+","+3+","+1+","+i);
+							saveMap(layer+","+3+","+0+","+i);
+							saveMap(layer+","+3+","+-1+","+i);
+						}
+						else{
+							saveMap(layer+","+1+","+1+","+i);
+							saveMap(layer+","+1+","+0+","+i);
+							saveMap(layer+","+1+","+-1+","+i);
+						}
 						if (i == randomMap[n+1][1]){
 							saveMap(layer+","+8+","+2+","+i);
 							saveMap(layer+","+9+","+-2+","+i);
@@ -261,10 +268,18 @@ public class Game extends JFrame implements Runnable{
 				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
-						if (i<randomMap.length && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {map.removeTile(0,0,randomMap[i][3]);}
+						if (i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
+						map.setTile(0,-1,randomMap[i][3],1);
+						map.setTile(0,0,randomMap[i][3],1);
+						map.setTile(0,1,randomMap[i][3],1);
+						// map.removeTile(0,-1,randomMap[i+1][1]);
+						// map.removeTile(0,0,randomMap[i+1][1]);
+						// map.removeTile(0,1,randomMap[i+1][1]);
+					}
+
 					}
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
-							&& player.getRect().x < 45 && player.getRect().x > -40) {
+							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
 						reset();
 					}

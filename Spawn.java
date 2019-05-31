@@ -30,7 +30,7 @@ public class Spawn implements GameObject{
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     for(Character character: characters){
       if(character.isAlive()) character.render(renderer, xZoom, yZoom);
-      if(character.particles())character.renderParticles(renderer, xZoom, yZoom);
+      if(character.particles()) character.renderParticles(renderer, xZoom, yZoom);
     }
   }
 
