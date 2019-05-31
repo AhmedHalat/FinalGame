@@ -258,9 +258,10 @@ public class Game extends JFrame implements Runnable{
 					// }
 				}
 
-				public void mapLocation() {
+				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
+						if (i<randomMap.length && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {map.removeTile(0,0,randomMap[i][3]);}
 					}
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 45 && player.getRect().x > -40) {
@@ -275,7 +276,7 @@ public class Game extends JFrame implements Runnable{
 					Graphics graphics = bufferStrategy.getDrawGraphics();
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
-					mapLocation();
+					mapUpdater();
 					// // player.renderParticles(renderer, 2, 2);
 					renderer.render(graphics);
 					graphics.setColor(new Color(255, 255, 255));

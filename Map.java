@@ -365,7 +365,7 @@ public class Map{
 	}
 
 	//Tile ID in the tileSet and the position of the tile in the map
-	private class MappedTile
+	public static class MappedTile
 	{
 		public int layer, id, x, y;
 		//Parameters: layer of tile, tile id, x-y position of tile
