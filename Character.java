@@ -62,6 +62,24 @@ public abstract class Character{
     if(true) action(game, player, spawner);
   }
 
+  public void didMove(Game game){
+    collisionCheckRectangle.x += xCollisionOffset;
+    collisionCheckRectangle.y += yCollisionOffset;
+
+    Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, rect.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);
+
+    //Check the X axis
+    if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.x = collisionCheckRectangle.x - xCollisionOffset;
+
+    axisCheck.x = rect.x + xCollisionOffset;
+    axisCheck.y = collisionCheckRectangle.y;
+    axisCheck.w = collisionCheckRectangle.w;
+    axisCheck.h = collisionCheckRectangle.h;
+    //axisCheck = new Rectangle(botRectangle.x, collisionCheckRectangle.y, collisionCheckRectangle.w, collisionCheckRectangle.h);
+    //Check the Y axis
+    if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
+  }
+
 
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
