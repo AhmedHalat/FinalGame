@@ -24,7 +24,6 @@ public class Spawn implements GameObject{
   public boolean allDead(){
     for (Character character : characters)
       if(!character.isAlive()) return true;
-
     return false;
   }
 

@@ -14,6 +14,9 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.*;
 import java.awt.Font;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 public class Game extends JFrame implements Runnable{
 
@@ -46,6 +49,8 @@ public class Game extends JFrame implements Runnable{
 	private Rectangle mouseRectangle;
 	public int mapLevel = 1;
 	public int room = 1;
+	public static JMenuBar mainMenu = new JMenuBar ();
+
 	public Game(){
 		//Make our program shutdown when we exit out.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +58,21 @@ public class Game extends JFrame implements Runnable{
 		setBounds(0,0, 1000, 800);
 		//Put our frame in the center of the screen.
 		setLocationRelativeTo(null);
+		JMenuItem weapon = new JMenuItem ("Weapon 1");
+		JMenuItem weapon2 = new JMenuItem ("Weapon 2");
+		JMenuItem attack = new JMenuItem ("Attack 1");
+		JMenuItem  defense = new JMenuItem ("Defense 2");
+
+		JMenu weaponMenu = new JMenu ("Weapons");
+		JMenu statMenu = new JMenu ("Stats");
+		weaponMenu.add(weapon);
+		weaponMenu.add(weapon2);
+		statMenu.add(attack);
+		statMenu.add(defense);
+		mainMenu.add (weaponMenu);
+		mainMenu.add (statMenu);
+		setJMenuBar(mainMenu);
+
 		//Add our graphics compoent
 		add(canvas);
 		//Make our frame visible.
@@ -143,7 +163,7 @@ public class Game extends JFrame implements Runnable{
 						writer.write("//Fill Tile\nFill:0\n//Layer,TileID,X,Y\n");
 						writer.flush();
 						writer.close();
-					}catch (Exception e) {}
+					}catch (Exception e) {e.printStackTrace();}
 				}
 
 				public void saveMap(String str){
@@ -152,9 +172,7 @@ public class Game extends JFrame implements Runnable{
 						fr.write(str+"\n");
 						fr.close();
 					}
-					catch (java.io.IOException e){
-						e.printStackTrace();
-					}
+					catch (java.io.IOException e){e.printStackTrace();}
 				}
 
 				public void update(){
@@ -201,9 +219,6 @@ public class Game extends JFrame implements Runnable{
 						if (n == 0) randomMap[n][3] = -height/2;
 						else randomMap[n][3] = randomMap[n-1][3]-height/2-20;
 					}
-					saveMap("0,10,30,30");
-					saveMap("0,11,41,31");
-					saveMap("0,12,50,31");
 
 					for (int i = 0; i < randomMap.length; i++) {
 						for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
@@ -228,7 +243,7 @@ public class Game extends JFrame implements Runnable{
 							saveMap(layer+","+2+","+-2+","+i);
 							saveMap(layer+","+4+","+2+","+i);
 						}
-						if (i == 0 || (i == randomMap[n][3] || i == randomMap[n][1])) {
+						if (i == randomMap[n][3] || i == randomMap[n][1]) {
 							saveMap(layer+","+3+","+1+","+i);
 							saveMap(layer+","+3+","+0+","+i);
 							saveMap(layer+","+3+","+-1+","+i);
@@ -271,7 +286,7 @@ public class Game extends JFrame implements Runnable{
 				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
-						if (i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
+						if (spawner.allDead() && i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
 						map.setTile(0,-1,randomMap[i][3],1);
 						map.setTile(0,0,randomMap[i][3],1);
 						map.setTile(0,1,randomMap[i][3],1);
