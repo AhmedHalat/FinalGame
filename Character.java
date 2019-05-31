@@ -19,6 +19,8 @@ public abstract class Character{
   protected Particle particles;
   protected boolean particle;
 
+   Character[] drops = new Character[2];
+
   public Character(AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
     this.rect = rect;
     this.collisionCheckRectangle = collisionCheckRectangle;
@@ -38,21 +40,26 @@ public abstract class Character{
     this.yCollisionOffset = yCollisionOffset;
   }
 
+  public Character(int speed, int xCollisionOffset, int yCollisionOffset){
+    this.speed = speed;
+    this.layer = 0;
+    this.xCollisionOffset = xCollisionOffset;
+    this.yCollisionOffset = yCollisionOffset;
+  }
+
   public void render(RenderHandler renderer, int xZoom, int yZoom){
-    //if(dead) renderParticles(renderer, xZoom, yZoom);
     if(animatedSprite != null) renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
     else if(sprite != null) renderer.renderSprite(sprite, rect.x, rect.y, xZoom, yZoom, false);
     else renderer.renderRectangle(rect, xZoom, yZoom, false);
   }
 
   public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
-
     particles.update(rect.x + 6, rect.y - 6);
     particles.render(renderer, 2, 2);
   }
 
   public void interact(Game game, Player player, Spawn spawner){
-    if(!dead) action(game, player, spawner);
+    if(true) action(game, player, spawner);
   }
 
 

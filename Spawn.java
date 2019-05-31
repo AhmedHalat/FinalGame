@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class Spawn implements GameObject{
   private ArrayList<Character> characters= new ArrayList <Character> ();
