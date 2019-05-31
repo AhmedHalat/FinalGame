@@ -88,7 +88,7 @@ public class Game extends JFrame implements Runnable{
 
 		for(int i = 0; i < buttons.length; i++){
 			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-			buttons[i] = new SDKButton(this, player, i, tileSprites[i], tileRectangle, false);
+			buttons[i] = new SDKButton(this, player, spawner, i, tileSprites[i], tileRectangle, false);
 		}
 		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
 
@@ -156,7 +156,7 @@ public class Game extends JFrame implements Runnable{
 
 				public void update(){
 					for(int i = 0; i < objects.length; i++)
-					objects[i].update(this, player);
+					objects[i].update(this, player, spawner);
 				}
 
 				public static BufferedImage loadImage(String path){

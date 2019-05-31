@@ -39,7 +39,7 @@ public class Mob extends Character{
     if(newDirection != direction) updateDirection();
     if(didMove){
       didMove(game);
-      animatedSprite.update(game, player);
+      animatedSprite.update(game, player, spawner);
     }
     else animatedSprite.reset();
 

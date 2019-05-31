@@ -40,7 +40,7 @@ public class AnimatedSprite extends Sprite implements GameObject{
     //Parameters: GameObjects that are being updated
     //calls increment sprite method everytime the speed of this object has been reached
     //returns Void
-    public void update(Game game, Player player){
+    public void update(Game game, Player player, Spawn spawner){
       counter++;
       if(counter >= speed) {
         counter = 0;

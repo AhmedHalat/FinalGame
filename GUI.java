@@ -50,7 +50,7 @@ public class GUI implements GameObject{
 	 //Parameters: GameObjects that need to be updated
 	 //updates the buttons
 	 //returns Void
-	 public void update(Game game, Player player){
+	 public void update(Game game, Player player, Spawn spawner){
 			 if(buttons != null)
 					 for(int i = 0; i < buttons.length; i++) buttons[i].update(game);
 	 }

@@ -39,7 +39,7 @@ public class Player extends Character implements GameObject{
 		if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 8, (direction * 8) + 7);
 	}
 
-	public void update(Game game, Player player){
+	public void update(Game game, Player player, Spawn spawner){
 		KeyBoardListener keyListener = game.getKeyListener();
 		boolean didMove = false;
 		int newDirection = direction;
@@ -92,7 +92,7 @@ public class Player extends Character implements GameObject{
 			axisCheck.h = collisionCheckRectangle.h;
 			//Check the Y axis
 			if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
-			animatedSprite.update(game, this);
+			animatedSprite.update(game, this, spawner);
 		}
 
 		updateCamera(game.getRenderer().getCamera());
@@ -104,7 +104,7 @@ public class Player extends Character implements GameObject{
 		camera.y = rect.y - (camera.h / 2);
 	}
 
-	public void action(Game game, Player player){
+	public void action(Game game, Player player, Spawn spawner){
 
 	}
 
