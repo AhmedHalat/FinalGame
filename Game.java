@@ -98,7 +98,7 @@ public class Game extends JFrame implements Runnable{
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
 
-		Mob mob = new Mob(30, 30, 16, 26, 16, 16);
+		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
 
 		//Load Objects
 		objects = new GameObject[3];

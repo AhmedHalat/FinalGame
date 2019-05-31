@@ -22,10 +22,11 @@ public class Spawn implements GameObject{
   }
 
   public boolean allDead(){
+    Boolean alive = true;
     for (Character character : characters)
-      if(!character.isAlive()) return true;
+      if(!character.isAlive()) alive = false;
 
-    return false;
+    return alive;
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
