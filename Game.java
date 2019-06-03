@@ -17,8 +17,10 @@ import java.awt.Font;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Game extends JFrame implements Runnable{
+public class Game extends JFrame implements Runnable,ActionListener{
 
 	public static int alpha = 0xFFFF00DC;
 	Particle particle;
@@ -58,20 +60,6 @@ public class Game extends JFrame implements Runnable{
 		setBounds(0,0, 1000, 800);
 		//Put our frame in the center of the screen.
 		setLocationRelativeTo(null);
-		JMenuItem weapon = new JMenuItem ("Weapon 1");
-		JMenuItem weapon2 = new JMenuItem ("Weapon 2");
-		JMenuItem attack = new JMenuItem ("Attack 1");
-		JMenuItem  defense = new JMenuItem ("Defense 2");
-
-		JMenu weaponMenu = new JMenu ("Weapons");
-		JMenu statMenu = new JMenu ("Stats");
-		weaponMenu.add(weapon);
-		weaponMenu.add(weapon2);
-		statMenu.add(attack);
-		statMenu.add(defense);
-		mainMenu.add (weaponMenu);
-		mainMenu.add (statMenu);
-		setJMenuBar(mainMenu);
 
 		//Add our graphics compoent
 		add(canvas);
@@ -153,8 +141,36 @@ public class Game extends JFrame implements Runnable{
 				public void componentMoved(ComponentEvent e) {}
 					public void componentShown(ComponentEvent e) {}
 					});
+					//Menu Bar
+					JMenuItem weapon = new JMenuItem ("Weapon 1");
+					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
+					JMenuItem attack = new JMenuItem ("Attack 1");
+					JMenuItem  defense = new JMenuItem ("Defense 2");
+
+					JMenu weaponMenu = new JMenu ("Weapons");
+					JMenu statMenu = new JMenu ("Stats");
+					weaponMenu.add(weapon);
+					weaponMenu.add(weapon2);
+					statMenu.add(attack);
+					statMenu.add(defense);
+					mainMenu.add (weaponMenu);
+					mainMenu.add (statMenu);
+					setJMenuBar(mainMenu);
+					attack.setActionCommand ("attack");
+					attack.addActionListener (this);
+					defense.setActionCommand ("defense");
+					defense.addActionListener (this);
+					weapon.setActionCommand ("weapon");
+					weapon.addActionListener (this);
+					weapon2.setActionCommand ("weapon2");
+					weapon2.addActionListener (this);
 
 					canvas.requestFocus();
+				}
+
+				public void actionPerformed(ActionEvent e) {
+					String eventName = e.getActionCommand ();
+					System.out.println(eventName);
 				}
 
 				public void resetMap(File mapFile){
