@@ -284,10 +284,16 @@ public class Game extends JFrame implements Runnable,ActionListener{
 					randomMap();
 					map = new Map(new File("Map.txt"), tiles);
 					render();
+					spawner.removeCharacters();
+					BufferedImage chestSheetImage = loadImage("Chest.png");
+					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+					chestSheet.loadSprites(16, 16);
+					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+					spawner.addCharacter(chest, 1);
 				}
 
 				public void leftClick(int x, int y){
-					System.out.println(player.getRect().x + ", "+player.getRect().y);
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
 					for(int i = 0; i < objects.length; i++)

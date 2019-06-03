@@ -21,6 +21,10 @@ public class Spawn implements GameObject{
     for(int i = 0; i < multiple; i++) characters.add(character);
   }
 
+  public void removeCharacters(){
+    characters.clear();
+  }
+
   public boolean allDead(){
     Boolean alive = true;
     for (Character character : characters)
