@@ -302,15 +302,11 @@ public class Game extends JFrame implements Runnable,ActionListener{
 				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
-						if (spawner.allDead() && i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
+						if (i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && !spawner.allDead()) {
 						map.setTile(0,-1,randomMap[i][3],1);
 						map.setTile(0,0,randomMap[i][3],1);
 						map.setTile(0,1,randomMap[i][3],1);
-						// map.removeTile(0,-1,randomMap[i+1][1]);
-						// map.removeTile(0,0,randomMap[i+1][1]);
-						// map.removeTile(0,1,randomMap[i+1][1]);
 					}
-
 					}
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
