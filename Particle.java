@@ -1,6 +1,4 @@
 public class Particle{
-  private int width;
-  private int height;
   private int timer;
   private int speed;
   private int[] pixels;
@@ -8,8 +6,6 @@ public class Particle{
   private Rectangle rect;
 
   public Particle(int width, int height, int density, int speed){
-    this.width = width;
-    this.height = height;
     this.speed = speed;
     //this.density = density;
     rect = new Rectangle(0, 0, width, height);
@@ -27,10 +23,11 @@ public class Particle{
     System.out.println(pixels.length);
   }
 
-  public void fill(int color){
+  public void fill(){
+    fill(0xFFE7DF25);
   }
 
-  public void fill(){
+  public void fill(int color){
     timer = 0;
 		int mod = (int) (Math.random() * (-6) + 3);
     for (int i = 0; i < pixels.length; i++)
@@ -38,12 +35,12 @@ public class Particle{
         try{
         pixels[i] = 0xFFFF00DC;
         if(Math.random() < 0.6){
-          if(i - width > 0 && i - width < pixels.length )pixels[i - width] = 0xFFE7DF25;
-          else pixels[pixels.length - i] = 0xFFE7DF25;
+          if(i - width > 0 && i - width < pixels.length )pixels[i - width] = color;
+          else pixels[pixels.length - i] = color;
         }
         else{
-          if(i + mod < pixels.length && i + mod > 0) pixels[i+mod] = 0xFFE7DF25;
-          else pixels[i] = 0xFFE7DF25;
+          if(i + mod < pixels.length && i + mod > 0) pixels[i+mod] = color;
+          else pixels[i] = color;
         }
       }
       catch(Exception e){

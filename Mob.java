@@ -26,9 +26,11 @@ public class Mob extends Character{
   public void action(Game game, Player player, Spawn spawner){
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
-    if(rect.intersects(player.getRectangle())) hit();
-
-    if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
+    if(rect.intersects(player.getRectangle())){
+       hit();
+       return;
+     }
+    else if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
       if(rect.x < player.getRectangle().x)collisionCheckRectangle.x += speed;
       else if(rect.x > player.getRectangle().x) collisionCheckRectangle.x -= speed;
       didMove(game);
@@ -58,15 +60,6 @@ public class Mob extends Character{
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
-    Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x - camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y - camera.y)/(16.0 * yZoom)), 1 , 1);
-    System.out.println("Mouse "+ collision + "  -  "+ mouseRectangle);
-    System.out.println("Mob "+ collisionCheckRectangle);
-    System.out.println(collision.intersects(rect) + " - "+ mouseRectangle.intersects(rect));
-    if(collision.intersects(rect)){
-      //DO SOMETHING
-      hit();
-      return true;
-    }
     return false;
   }
 
