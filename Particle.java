@@ -1,11 +1,15 @@
 public class Particle{
   private int timer;
   private int speed;
+  private int width;
+  private int height;
   private int[] pixels;
   //private int density;
   private Rectangle rect;
 
   public Particle(int width, int height, int density, int speed){
+    this.width = width;
+    this.height = height;
     this.speed = speed;
     //this.density = density;
     rect = new Rectangle(0, 0, width, height);
