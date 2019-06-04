@@ -13,13 +13,18 @@ public class MouseEventListener implements MouseListener, MouseMotionListener {
 
  public void mouseClicked(MouseEvent event){}
 
- public void mouseDragged(MouseEvent event){}
+ public void mouseDragged(MouseEvent event){
 
- public void mouseEntered(MouseEvent event){}
+ }
+
+ public void mouseEntered(MouseEvent event){
+ }
 
  public void mouseExited(MouseEvent event){}
 
- public void mouseMoved(MouseEvent event){}
+ public void mouseMoved(MouseEvent event){
+   //game.place(event.getX(), event.getY());
+ }
 
  public void mousePressed(MouseEvent event){
 	 if(event.getButton() == MouseEvent.BUTTON1)

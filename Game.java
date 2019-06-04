@@ -19,6 +19,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Point;
+import java.awt.MouseInfo;
 
 public class Game extends JFrame implements Runnable,ActionListener{
 
@@ -209,6 +211,7 @@ public class Game extends JFrame implements Runnable,ActionListener{
 						return null;
 					}
 				}
+
 
 				public void saveMap(){
 					map.saveMap();
