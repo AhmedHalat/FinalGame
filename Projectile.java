@@ -1,41 +1,23 @@
+import java.awt.Point;
+import java.awt.MouseInfo;
+
 public class Projectile extends Character{
-  private int timer = 120, lastHitTimer;
-  private int attackSpeed = 60;
 
-  private boolean directionStuck = false;
-  private boolean goUp = false;
-  private boolean goDown = false;
-  private boolean goLeft = false;
-  private boolean goRight = false;
-  private boolean fly = false;
-  private int playerX, playerY;
-
-  private int mouseX, mouseY;
-
-  public Projectile (Sprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize){
-    super(sprite, 10, w, h);
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
+    super(sprite, 0, w, h);
     this.sprite = sprite;
 
-    if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;
-    updateDirection();
     rect = new Rectangle(x, y, w, h);
-    collisionCheckRectangle = new Rectangle(0, 0, 8*xZoom, 8*yZoom);
+    collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
+    animatedSprite.setAnimationRange(0, 9);
     dead = false;
     move = false;
-  }
 
-  public void updateDirection(int direction){
-      if(timer >= attackSpeed ){
-          if(direction == 0) goRight = true;
-          else if (direction == 1) goLeft = true;
-          else if(direction == 2) goUp = true;
-          else if(direction == 3) goDown = true;
-          rect.x = playerX;
-          rect.y = playerY;
-          fly = true;
-          timer = 0;
-          lastHitTimer = 0;
-     }
+    particle = true;
+
+    particles = new Particle(rect.w, rect.h, 50, 1);
+    particles.fill(0xFFF7D80C);
+
   }
 
   public void updateStats(int [] stats){
@@ -46,12 +28,39 @@ public class Projectile extends Character{
 
   }
 
-  public void action(Game game, Player player){
-    
+  public void open(){
+    move = true;
+  }
+
+  public void action(Game game, Player player, Spawn spawner){
+    // If they  are within range and they clicked F keyListener
+
+    if(move)animatedSprite.update(game, player, spawner);
+    int mouseX= player.getRectangle().x + (int)Math.round(0.2 * (MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x- game.getWidth()/2 ));
+    int mouseY= player.getRectangle().y + (int)Math.round(0.2 *(MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - game.getHeight()/2) );
+    //mouseY-=game.getHeight();
+    rect = new Rectangle(mouseX, mouseY, 100, 100);
+    game.drawLine(MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x, MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y
+        , game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2
+        ,game.getHeight()/2 + rect.y +rect.h/4 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2);
+    if(animatedSprite.getLooped()){
+      move = false;
+      animatedSprite.reset();
+    }
+  }
+
+  public boolean isAlive(){
+    return !false;
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
-    return true;
+    Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
+    if(collision.intersects(rect)){
+      //DO SOMETHING
+      open();
+      return true;
+    }
+    return false;
   }
 
 }

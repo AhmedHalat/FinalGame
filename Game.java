@@ -39,6 +39,12 @@ public class Game extends JFrame implements Runnable,ActionListener{
 	private int selectedTileID = 2;
 	private int selectedLayer = 0;
 
+	private int mX;
+	private int mY;
+	private int mW;
+	private int mH;
+	private boolean showMouseLine = false;
+
 	private Tiles tiles;
 	private Map map;
 
@@ -108,6 +114,8 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
 
+		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
+
 		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
 
 		//Load Objects
@@ -118,7 +126,8 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		objects[1] = gui;
 		objects[2] = spawner;
 
-		spawner.addCharacter(chest,1);
+		spawner.addItem(chest,1);
+		spawner.addCharacter(projectile,1);
 		spawner.addCharacter(mob,1);
 
 
@@ -311,11 +320,15 @@ public class Game extends JFrame implements Runnable,ActionListener{
 				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
-						if (i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && !spawner.allDead()) {
+						if (spawner.allDead() && i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
 						map.setTile(0,-1,randomMap[i][3],1);
 						map.setTile(0,0,randomMap[i][3],1);
 						map.setTile(0,1,randomMap[i][3],1);
+						// map.removeTile(0,-1,randomMap[i+1][1]);
+						// map.removeTile(0,0,randomMap[i+1][1]);
+						// map.removeTile(0,1,randomMap[i+1][1]);
 					}
+
 					}
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
@@ -335,9 +348,22 @@ public class Game extends JFrame implements Runnable,ActionListener{
 					renderer.render(graphics);
 					graphics.setColor(new Color(255, 255, 255));
 					renderer.renderString(graphics,mapLevel+"-"+room,getWidth() - 100, getHeight()- 50,50);
+					if(showMouseLine){
+						graphics.setColor(Color.red);
+						graphics.drawLine(mW, mH, mX, mY);
+
+					}
 					graphics.dispose();
 					bufferStrategy.show();
 					renderer.clear();
+				}
+
+				public void drawLine(int w, int h, int x, int y){
+					this.mW= w;
+					this.mH= h;
+					this.mX= x;
+					this.mY= y;
+					showMouseLine = true;
 				}
 
 				//setters
@@ -370,6 +396,10 @@ public class Game extends JFrame implements Runnable,ActionListener{
 						render();
 						lastTime = now;
 					}
+				}
+
+				public Canvas getCanvas(){
+					return canvas;
 				}
 
 				public static void main(String[] args){

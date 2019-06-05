@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Spawn implements GameObject{
   private ArrayList<Character> characters= new ArrayList <Character> ();
+  private ArrayList<Character> items= new ArrayList <Character> ();
   private Rectangle rect;
   private int layer;
   private static int room;
@@ -19,6 +20,10 @@ public class Spawn implements GameObject{
 
   public void addCharacter(Character character, int multiple){
     for(int i = 0; i < multiple; i++) characters.add(character);
+  }
+
+  public void addItem(Character item, int multiple){
+    for(int i = 0; i < multiple; i++) items.add(item);
   }
 
   public void removeCharacters(){
@@ -38,11 +43,18 @@ public class Spawn implements GameObject{
       if(character.isAlive()) character.render(renderer, xZoom, yZoom);
       if(character.particles()) character.renderParticles(renderer, xZoom, yZoom);
     }
+    for(Character item: items){
+      if(item.isAlive()) item.render(renderer, xZoom, yZoom);
+      if(item.particles()) item.renderParticles(renderer, xZoom, yZoom);
+    }
   }
 
   public void update(Game game, Player player, Spawn spawner){
     for(Character character: characters){
       if(character.isAlive()) character.interact(game, player, spawner);
+    }
+    for(Character item: items){
+      if(item.isAlive()) item.interact(game, player, spawner);
     }
   }
 
@@ -50,6 +62,10 @@ public class Spawn implements GameObject{
     boolean stoppedChecking = false;
     for(Character character: characters){
       if(character.isAlive()) stoppedChecking = character.handleMouseClick(mouseRectangle, camera, xZoom, yZoom);
+      if(stoppedChecking) break;
+    }
+    for(Character item: items){
+      if(item.isAlive()) stoppedChecking = item.handleMouseClick(mouseRectangle, camera, xZoom, yZoom);
       if(stoppedChecking) break;
     }
     return stoppedChecking;
