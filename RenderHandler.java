@@ -73,7 +73,7 @@ public class RenderHandler{
 
   private void setPixel(int pixel, int x, int y, boolean fixed) {
     int pixelIndex = 0;
-    if(!fixed){ 
+    if(!fixed){
       if(x >= camera.x && y >= camera.y && x <= camera.x + camera.w && y <= camera.y + camera.h)
       pixelIndex = (x - camera.x) + (y - camera.y) * view.getWidth();
     }
