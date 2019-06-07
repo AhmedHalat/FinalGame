@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 public class Spawn implements GameObject{
   private ArrayList<Character> characters= new ArrayList <Character> ();
@@ -21,6 +23,11 @@ public class Spawn implements GameObject{
     for(int i = 0; i < multiple; i++) characters.add(character);
   }
 
+  public void addCharacter(Set <Character> character){
+    Iterator <Character> iter = character.iterator ();
+  	while (iter.hasNext()) characters.add(iter.next());
+  }
+
   public void removeCharacters(){
     characters.clear();
   }
@@ -29,7 +36,6 @@ public class Spawn implements GameObject{
     Boolean alive = true;
     for (Character character : characters)
       if(!character.isAlive()) alive = false;
-
     return alive;
   }
 

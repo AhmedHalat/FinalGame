@@ -1,3 +1,6 @@
+import java.util.Map;
+import java.util.HashMap;
+
 public abstract class Character{
   protected Rectangle rect;
   protected Rectangle collisionCheckRectangle;
@@ -18,6 +21,7 @@ public abstract class Character{
 
   protected Particle particles;
   protected boolean particle;
+  protected static Map <String,Integer> stats = new HashMap <String,Integer> ();
 
    Character[] drops = new Character[2];
 
@@ -30,6 +34,11 @@ public abstract class Character{
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
+    stats.put("Health", (Integer) 100);
+    stats.put("Attack", (Integer) 1);
+    stats.put("Defense", (Integer) 1);
+    stats.put("Speed", (Integer) 1);
+    stats.put("Luck", (Integer) 1);
   }
 
   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
@@ -38,6 +47,11 @@ public abstract class Character{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
+    stats.put("Health", (Integer) 100);
+    stats.put("Attack", (Integer) 1);
+    stats.put("Defense", (Integer) 1);
+    stats.put("Speed", (Integer) 1);
+    stats.put("Luck", (Integer) 1);
   }
 
   public Character(int speed, int xCollisionOffset, int yCollisionOffset){
@@ -45,6 +59,11 @@ public abstract class Character{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
+    stats.put("Health", (Integer) 100);
+    stats.put("Attack", (Integer) 1);
+    stats.put("Defense", (Integer) 1);
+    stats.put("Speed", (Integer) 1);
+    stats.put("Luck", (Integer) 1);
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){

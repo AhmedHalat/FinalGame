@@ -1,5 +1,10 @@
-public class Mob extends Character{
+import java.util.Comparator;
+import java.lang.Override;
+import java.lang.Comparable;
+
+public class Mob extends Character implements Comparable <Mob>{
   private int sheetSize;
+  // private Rectangle rect;
   public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize){ //add stats to parameters
     super(sprite, 3, w, h);
     this.sprite = sprite;
@@ -61,6 +66,17 @@ public class Mob extends Character{
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     return false;
+  }
+
+public boolean equals(Object o){
+  Mob mob2 = (Mob) o;
+  return this.rect.intersects(mob2.rect);
+}
+
+@Override
+  public int compareTo(Mob mob2){
+    if(this.rect.intersects(mob2.rect)) return 0;
+    return 1;
   }
 
 }
