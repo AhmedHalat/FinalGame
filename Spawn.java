@@ -17,7 +17,6 @@ public class Spawn implements GameObject{
   }
 
   public Spawn(){
-
   }
 
   public void addCharacter(Character character, int multiple){
@@ -25,7 +24,7 @@ public class Spawn implements GameObject{
   }
 
   public void addCharacter(Set <Character> character){
-    Iterator <Character> iter = character.iterator ();
+    Iterator <Character> iter = character.iterator();
   	while (iter.hasNext()) characters.add(iter.next());
   }
 
@@ -37,10 +36,12 @@ public class Spawn implements GameObject{
     characters.clear();
   }
 
-  public boolean allDead(){
+  public boolean allDead(int room){
     Boolean alive = true;
-    for (Character character : characters)
-      if(!character.isAlive()) alive = false;
+    for (Character character : characters){
+      if(character.isAlive() && character.getRoom() == room) alive = false;
+    }
+
     return alive;
   }
 
@@ -83,5 +84,9 @@ public class Spawn implements GameObject{
 
   public Rectangle getRectangle(){
     return rect;
+  }
+
+  public ArrayList <Character> getCharacters(){
+    return characters;
   }
 }

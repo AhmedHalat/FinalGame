@@ -4,22 +4,25 @@ import java.lang.Comparable;
 
 public class Mob extends Character implements Comparable <Mob>{
   private int sheetSize;
+  private int room;
   // private Rectangle rect;
-  public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize){ //add stats to parameters
+  public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize, int room){ //add stats to parameters
     super(sprite, 3, w, h);
     this.sprite = sprite;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     dead = false;
     move = true;
+    this.room = room;
   }
 
-  public Mob(int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
+  public Mob(int x, int y, int w, int h, int xZoom, int yZoom,int room){ //add stats to parameters
     super(3, w, h);
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     dead = false;
     move = true;
+    this.room = room;
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -63,6 +66,11 @@ public class Mob extends Character implements Comparable <Mob>{
   public boolean isAlive(){
     return !dead;
   }
+
+  public int getRoom(){
+    return this.room;
+  }
+
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     return false;

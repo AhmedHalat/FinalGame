@@ -19,13 +19,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-<<<<<<< HEAD
 import java.util.Set;
 import java.util.HashSet;
-=======
-import java.awt.Point;
-import java.awt.MouseInfo;
->>>>>>> b443743c6441c2784b46c5e01422fcbe26e9aa62
 
 public class Game extends JFrame implements Runnable, ActionListener{
 
@@ -122,16 +117,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
 
-<<<<<<< HEAD
-		mobSet.add(new Mob(200, -360, 16, 26, 16, 16));
-		mobSet.add(new Mob(-200, -360, 16, 26, 16, 16));
-		mobSet.add(new Mob(-208, -360, 16, 26, 16, 16));
-		mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16));
-=======
+		mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
+		mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
+		mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
+		mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
 		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
 
-		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
->>>>>>> b443743c6441c2784b46c5e01422fcbe26e9aa62
 
 		//Load Objects
 		objects = new GameObject[3];
@@ -139,16 +130,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		objects[0] = player;
 		objects[1] = gui;
 		objects[2] = spawner;
-<<<<<<< HEAD
-		spawner.addCharacter(chest,1);
-		spawner.addCharacter(mobSet);
-=======
 
 		spawner.addItem(chest,1);
-		spawner.addCharacter(projectile,1);
-		spawner.addCharacter(mob,1);
+		// spawner.addCharacter(projectile,1);
+		spawner.addCharacter(mobSet);
 
->>>>>>> b443743c6441c2784b46c5e01422fcbe26e9aa62
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -171,7 +157,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void componentMoved(ComponentEvent e) {}
 					public void componentShown(ComponentEvent e) {}
 					});
-
 					canvas.requestFocus();
 				}
 
@@ -223,6 +208,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void actionPerformed(ActionEvent e) {
 					String eventName = e.getActionCommand ();
 					player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
+					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					System.out.println("All Dead:" + spawner.allDead(0));
+					System.out.println(spawner.getCharacters());
 					jmenu();
 				}
 
@@ -362,7 +350,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
-<<<<<<< HEAD
 					}
 					int i = room-1;
 					if (i > 0 && i < randomMap.length-1 && player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom ){
@@ -370,8 +357,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						map.setTile(0,0,randomMap[i][1],3);
 						map.setTile(0,1,randomMap[i][1],3);
 					}
-					if ((i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && !spawner.allDead()) ||
-					(player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y+32*yZoom > randomMap[i][3]*yZoom*16 && !spawner.allDead())) {
+					if ((i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && spawner.allDead(i)) ||
+					(player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y+32*yZoom > randomMap[i][3]*yZoom*16 && spawner.allDead(i))) {
 						map.setTile(0,-1,randomMap[i][3],1);
 						map.setTile(0,0,randomMap[i][3],1);
 						map.setTile(0,1,randomMap[i][3],1);
@@ -382,18 +369,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						}
 					}
 
-=======
-						if (spawner.allDead() && i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
-						map.setTile(0,-1,randomMap[i][3],1);
-						map.setTile(0,0,randomMap[i][3],1);
-						map.setTile(0,1,randomMap[i][3],1);
-						// map.removeTile(0,-1,randomMap[i+1][1]);
-						// map.removeTile(0,0,randomMap[i+1][1]);
-						// map.removeTile(0,1,randomMap[i+1][1]);
-					}
-
-					}
->>>>>>> b443743c6441c2784b46c5e01422fcbe26e9aa62
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;

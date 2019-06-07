@@ -81,6 +81,11 @@ public abstract class Character{
     if(true) action(game, player, spawner);
   }
 
+  public int getRoom(){
+    if (this instanceof Player) return -1;
+    return this.getRoom();
+  }
+
   public void didMove(Game game){
     collisionCheckRectangle.x += xCollisionOffset;
     collisionCheckRectangle.y += yCollisionOffset;
