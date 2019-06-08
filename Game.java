@@ -111,28 +111,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		}
 		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
 
-		BufferedImage chestSheetImage = loadImage("Chest.png");
-		SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-		chestSheet.loadSprites(16, 16);
-		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-<<<<<<< HEAD
-
 		BufferedImage proImg = loadImage("book.png");
 		SpriteSheet proSheet = new SpriteSheet(proImg);
 		proSheet.loadSprites(62, 54);
 		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
-
 		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 6, 6);
-
-		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
-=======
-		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
-		mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
-		mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
-		mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
-		mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
->>>>>>> ef64166f5f142337050d11f89cc45ede7c801edb
 
 		//Load Objects
 		objects = new GameObject[3];
@@ -141,15 +124,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		objects[1] = gui;
 		objects[2] = spawner;
 
-		spawner.addItem(chest,1);
-<<<<<<< HEAD
 		spawner.addWeapon(projectile);
-		spawner.addCharacter(mob,1);
-=======
-		// spawner.addCharacter(projectile,1);
-		spawner.addCharacter(mobSet);
->>>>>>> ef64166f5f142337050d11f89cc45ede7c801edb
-
+		randomMobs();
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -216,9 +192,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void actionPerformed(ActionEvent e) {
 					String eventName = e.getActionCommand ();
 					player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
-					// for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
-					// System.out.println("All Dead:" + spawner.allDead(0));
-					System.out.println(spawner.getCharacters());
+					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					System.out.println("All Dead:" + spawner.allDead(0));
 					jMenu();
 				}
 
@@ -336,8 +311,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					chestSheet.loadSprites(16, 16);
 					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-
-					spawner.removeCharacters();
+					spawner.removeAll();
 					spawner.addCharacter(mobSet);
 					spawner.addItem(chest, 1);
 				}
