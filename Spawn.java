@@ -16,8 +16,7 @@ public class Spawn implements GameObject{
     rect = new Rectangle(0,0,0,0);
   }
 
-  public Spawn(){
-  }
+  public Spawn(){}
 
   public void addCharacter(Character character, int multiple){
     for(int i = 0; i < multiple; i++) characters.add(character);
@@ -37,12 +36,8 @@ public class Spawn implements GameObject{
   }
 
   public boolean allDead(int room){
-    Boolean alive = true;
-    for (Character character : characters){
-      if(character.isAlive() && character.getRoom() == room) alive = false;
-    }
-
-    return alive;
+    for (Character character : characters) if(character.isAlive() && character.getRoom() == room) return false;
+    return true;
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -78,15 +73,10 @@ public class Spawn implements GameObject{
     return stoppedChecking;
   }
 
-  public int getLayer(){
-    return layer;
-  }
 
-  public Rectangle getRectangle(){
-    return rect;
-  }
+  public int getLayer(){return layer;}
 
-  public ArrayList <Character> getCharacters(){
-    return characters;
-  }
+  public Rectangle getRectangle(){return rect;}
+
+  public ArrayList <Character> getCharacters(){return characters;}
 }

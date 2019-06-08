@@ -81,10 +81,6 @@ public abstract class Character{
     if(true) action(game, player, spawner);
   }
 
-  public int getRoom(){
-    if (this instanceof Player) return -1;
-    return this.getRoom();
-  }
 
   public void didMove(Game game){
     collisionCheckRectangle.x += xCollisionOffset;
@@ -104,7 +100,6 @@ public abstract class Character{
     if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
   }
 
-
   public abstract void updateStats(int [] stats);
   public abstract void updateDirection();
   public abstract void action(Game game, Player player, Spawn spawner);
@@ -112,152 +107,56 @@ public abstract class Character{
   public abstract boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom);
 
 
-	/**
-	* Returns value of rect
-	* @return
-	*/
-	public Rectangle getRect() {
-		return rect;
-	}
-
-	/**
-	* Sets new value of rect
-	* @param
-	*/
-	public void setRect(Rectangle rect) {
-		this.rect = rect;
-	}
-
-	/**
-	* Returns value of collisionCheckRectangle
-	* @return
-	*/
-	public Rectangle getCollisionCheckRectangle() {
-		return collisionCheckRectangle;
-	}
-
-  public int getCollisionCheckRectangleX() {
-    return collisionCheckRectangle.x;
+  //Getters and Setters
+  public int getRoom(){
+    try {
+      if (this instanceof Player) return -1;
+      return this.getRoom();
+    } catch(Exception e) {
+      System.out.println(this);
+    }
+    return -1;
   }
+	public Rectangle getRect() {return rect;}
 
-  public int getCollisionCheckRectangleY() {
-    return collisionCheckRectangle.y;
-  }
+	public void setRect(Rectangle rect) {this.rect = rect;}
 
-	/**
-	* Sets new value of collisionCheckRectangle
-	* @param
-	*/
-	public void setCollisionCheckRectangle(Rectangle collisionCheckRectangle) {
-		this.collisionCheckRectangle = collisionCheckRectangle;
-	}
+	public Rectangle getCollisionCheckRectangle() {return collisionCheckRectangle;}
 
-  public void setCollisionCheckRectangleX(int x) {
-    this.collisionCheckRectangle.x = x;
-  }
+  public int getCollisionCheckRectangleX() {return collisionCheckRectangle.x;}
 
-  public void setCollisionCheckRectangleY(int y) {
-    this.collisionCheckRectangle.y = y;
-  }
+  public int getCollisionCheckRectangleY() {return collisionCheckRectangle.y;}
 
-	/**
-	* Returns value of direction
-	* @return
-	*/
-	public int getDirection() {
-		return direction;
-	}
+	public void setCollisionCheckRectangle(Rectangle collisionCheckRectangle) {this.collisionCheckRectangle = collisionCheckRectangle;}
 
-	/**
-	* Sets new value of direction
-	* @param
-	*/
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
+  public void setCollisionCheckRectangleX(int x) {this.collisionCheckRectangle.x = x;}
 
-	/**
-	* Returns value of speed
-	* @return
-	*/
-	public int getSpeed() {
-		return speed;
-	}
+  public void setCollisionCheckRectangleY(int y) {this.collisionCheckRectangle.y = y;}
 
-	/**
-	* Sets new value of speed
-	* @param
-	*/
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
+	public int getDirection() {return direction;}
 
-	/**
-	* Returns value of layer
-	* @return
-	*/
-	public int getLayer() {
-		return layer;
-	}
+	public void setDirection(int direction) {this.direction = direction;}
 
-  public boolean particles(){
-    return particle;
-  }
+	public int getSpeed() {return speed;}
 
-	/**
-	* Sets new value of layer
-	* @param
-	*/
-	public void setLayer(int layer) {
-		this.layer = layer;
-	}
+	public void setSpeed(int speed) {this.speed = speed;}
 
-	/**
-	* Returns value of sprite
-	* @return
-	*/
-	public Sprite getSprite() {
-		return sprite;
-	}
+	public int getLayer() {return layer;}
 
-	/**
-	* Sets new value of sprite
-	* @param
-	*/
-	public void setSprite(Sprite sprite) {
-		this.sprite = sprite;
-	}
+  public boolean particles(){return particle;}
 
-	/**
-	* Returns value of animatedSprite
-	* @return
-	*/
-	public AnimatedSprite getAnimatedSprite() {
-		return animatedSprite;
-	}
+	public void setLayer(int layer) {this.layer = layer;}
 
-	/**
-	* Sets new value of animatedSprite
-	* @param
-	*/
-	public void setAnimatedSprite(AnimatedSprite animatedSprite) {
-		this.animatedSprite = animatedSprite;
-	}
+	public Sprite getSprite() {return sprite;}
 
-	/**
-	* Returns value of xCollisionOffset
-	* @return
-	*/
-	public int getXCollisionOffset() {
-		return xCollisionOffset;
-	}
+	public void setSprite(Sprite sprite) {this.sprite = sprite;}
 
-	/**
-	* Returns value of yCollisionOffset
-	* @return
-	*/
-	public int getYCollisionOffset() {
-		return yCollisionOffset;
-	}
+	public AnimatedSprite getAnimatedSprite() {return animatedSprite;}
+
+	public void setAnimatedSprite(AnimatedSprite animatedSprite) {this.animatedSprite = animatedSprite;}
+
+	public int getXCollisionOffset() {return xCollisionOffset;}
+
+	public int getYCollisionOffset() {return yCollisionOffset;}
 
 }

@@ -78,7 +78,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
 		player = new Player(playerAnimations, xZoom, yZoom);
 		//Menu Bar
-		jmenu();
+		jMenu();
 
 		//Add our graphics compoent
 		add(canvas);
@@ -116,13 +116,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		chestSheet.loadSprites(16, 16);
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-
+		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
 		mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
 		mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
 		mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
 		mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
-		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
-
 
 		//Load Objects
 		objects = new GameObject[3];
@@ -161,7 +159,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 
-				public void jmenu(){
+				public void jMenu(){
 					mainMenu.removeAll();
 					JMenuItem weapon = new JMenuItem ("Weapon");
 					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
@@ -196,13 +194,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					weapon.addActionListener (this);
 					weapon2.setActionCommand ("weapon2");
 					weapon2.addActionListener (this);
-					// attack.disable();
-					// health.disable();
-					// speed.disable();
-					// defense.disable();
-					// luck.disable();
-					// weapon.disable();
-					// weapon2.disable();
 				}
 
 				public void actionPerformed(ActionEvent e) {
@@ -211,7 +202,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
 					System.out.println("All Dead:" + spawner.allDead(0));
 					System.out.println(spawner.getCharacters());
-					jmenu();
+					jMenu();
 				}
 
 				public void resetMap(File mapFile){
@@ -319,6 +310,23 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void reset(){
+					// spawner.removeCharacters();
+					// Set <Character> set = mobSet;
+					// mobSet.add(new Mob(201, -360, 16, 26, 16, 16,0));
+					// mobSet.removeAll(set);
+					// mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
+					// mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
+					// mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
+					// mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+					// spawner.addCharacter(mobSet);
+					// BufferedImage chestSheetImage = loadImage("Chest.png");
+					// SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+					// chestSheet.loadSprites(16, 16);
+					// AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+					// Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+					// spawner.addCharacter(chest, 1);
+
+
 					player.getRect().x = 0;
 					player.getRect().y = 0;
 					//Load Tiles
@@ -326,13 +334,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					randomMap();
 					map = new Map(new File("Map.txt"), tiles);
 					render();
-					spawner.removeCharacters();
-					BufferedImage chestSheetImage = loadImage("Chest.png");
-					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-					chestSheet.loadSprites(16, 16);
-					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-					spawner.addCharacter(chest, 1);
 				}
 
 				public void leftClick(int x, int y){
@@ -358,10 +359,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						map.setTile(0,1,randomMap[i][1],3);
 					}
 					if ((i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && spawner.allDead(i)) ||
-					(player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y+32*yZoom > randomMap[i][3]*yZoom*16 && spawner.allDead(i))) {
+					(player.getRect().y+32*yZoom > randomMap[i][3]*yZoom*16 && spawner.allDead(i))) {
+						if (i < randomMap.length-1){
 						map.setTile(0,-1,randomMap[i][3],1);
 						map.setTile(0,0,randomMap[i][3],1);
-						map.setTile(0,1,randomMap[i][3],1);
+						map.setTile(0,1,randomMap[i][3],1);}
 						if (i > 0){
 							map.setTile(0,-1,randomMap[i][1],1);
 							map.setTile(0,0,randomMap[i][1],1);
@@ -372,6 +374,20 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
+						mobSet.removeAll(mobSet);
+
+						mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
+						mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
+						mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+						BufferedImage chestSheetImage = loadImage("Chest.png");
+						SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+						chestSheet.loadSprites(16, 16);
+						AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+						Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+
+						spawner.removeCharacters();
+						spawner.addCharacter(mobSet);
+						spawner.addCharacter(chest, 1);
 						reset();
 					}
 				}
