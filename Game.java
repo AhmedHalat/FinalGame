@@ -115,7 +115,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		SpriteSheet proSheet = new SpriteSheet(proImg);
 		proSheet.loadSprites(62, 54);
 		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
-		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 6, 6);
+
+		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
 
 		//Load Objects
 		objects = new GameObject[3];

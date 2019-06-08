@@ -38,7 +38,6 @@ public class Projectile extends Character{
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     renderer.renderSprite(animatedSprite, rect.x, rect.y, 1, 1, false);
-
   }
 
 
@@ -60,9 +59,12 @@ public class Projectile extends Character{
       }
     }
     else if(move)animatedSprite.update(game, player, spawner);
-    int mouseX= player.getRectangle().x + (int)Math.round(0.3 * (MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x- game.getWidth()/2 ));
-    int mouseY= player.getRectangle().y + (int)Math.round(0.3 *(MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - game.getHeight()/2) );
-    //mouseY-=game.getHeight();
+    int mouseX =  (int)Math.round(0.3 * (MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x- game.getWidth()/2 ));
+    int mouseY =  (int)Math.round(0.3 *(MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - game.getHeight()/2) );
+
+    double magnitude = (1/Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)))*70.0;
+    mouseX = player.getRectangle().x +(int)(mouseX*magnitude);
+    mouseY = player.getRectangle().y +(int)(mouseY*magnitude);
     rect = new Rectangle(mouseX, mouseY, 100, 100);
     if(!dead)game.drawLine(MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x, MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y
     , game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2
