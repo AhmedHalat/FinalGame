@@ -50,8 +50,8 @@ public class Mob extends Character implements Comparable <Mob>{
     }
   }
 
-  public void updateStats(int [] stats){
-    speed = stats[0];
+  public void updateStats(){
+    speed = stats.getSpeed();
   }
 
   public void updateDirection(){

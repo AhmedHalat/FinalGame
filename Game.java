@@ -59,6 +59,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private Rectangle mouseRectangle;
 	public int mapLevel = 1;
 	public int room = 1;
+	public int levelUp = 0;
 	public static JMenuBar mainMenu = new JMenuBar ();
 	public static Set mobSet = new HashSet <Mob> ();
 
@@ -162,12 +163,16 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					JMenuItem health = new JMenuItem ("Health: " + (player.getStats().getHealth()));
 					JMenuItem speed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
 					JMenuItem luck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
+					JMenuItem expInfo = new JMenuItem ("You can now level up "+levelUp+" times!\nClick on a stat to upgrade it!");
+					if (levelUp == 1)  expInfo = new JMenuItem ("You can now level up "+levelUp+" time!\nClick on a stat to upgrade it!");
 					// JMenuItem weaponAttack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
 					// JMenuItem weaponDefense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
 					// JMenuItem weaponSpeed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
 					// JMenuItem weaponLuck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
 					JMenu statMenu = new JMenu ("Stats");
+					JMenu expMenu = new JMenu ("Level Up!");
 					JMenu weaponMenu = new JMenu ("Weapons");
+					expMenu.add(expInfo);
 					weaponMenu.add(weapon);
 					weaponMenu.add(weapon2);
 					statMenu.add(attack);
@@ -177,6 +182,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					statMenu.add(luck);
 					mainMenu.add (weaponMenu);
 					mainMenu.add (statMenu);
+					mainMenu.add(expMenu);
 					setJMenuBar(mainMenu);
 					attack.setActionCommand ("Attack");
 					attack.addActionListener (this);
@@ -192,20 +198,26 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					weapon.addActionListener (this);
 					weapon2.setActionCommand ("weapon2");
 					weapon2.addActionListener (this);
+					if (levelUp == 0) expMenu.hide();
+					expInfo.disable();
 				}
 
 				public void actionPerformed(ActionEvent event) {
+					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					System.out.println("All Dead:" + spawner.allDead(0));
+
+					if (keyListener.levelUp()) levelUp++;
+					if (levelUp > 0){
 					String e = event.getActionCommand ();
 					if (e.equals("Attack")) player.getStats().setDamage(player.getStats().getDamage()+1);
 					else if (e.equals("Defense")) player.getStats().setDefense(player.getStats().getDefense()+1);
 					else if (e.equals("Speed")) player.getStats().setSpeed(player.getStats().getSpeed()+1);
 					else if (e.equals("Health")) player.getStats().setHealth(player.getStats().getHealth()+10);
 					else if (e.equals("Luck")) player.getStats().setLuck(player.getStats().getLuck()+1);
-
-					// player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
-					// for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
-					// System.out.println("All Dead:" + spawner.allDead(0));
+					levelUp--;
+					player.updateStats();
 					jMenu();
+				}
 				}
 
 				public void resetMap(File mapFile){
@@ -316,6 +328,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					mobSet.removeAll(mobSet);
 					mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
 					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-108, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
 					mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
 					BufferedImage chestSheetImage = loadImage("Chest.png");
 					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
@@ -340,6 +354,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void leftClick(int x, int y){
+					levelUp++;
+					jMenu();
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
 					for(int i = 0; i < objects.length; i++)
@@ -377,6 +393,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
+						levelUp++;
+						jMenu();
 						reset();
 					}
 				}
@@ -392,6 +410,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					renderer.render(graphics);
 					graphics.setColor(new Color(255, 255, 255));
 					renderer.renderString(graphics,mapLevel+"-"+room,getWidth() - 100, getHeight()- 50,50);
+					renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
 					if(showMouseLine){
 						graphics.setColor(Color.red);
 						graphics.drawLine(mW, mH, mX, mY);

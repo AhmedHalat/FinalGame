@@ -20,7 +20,7 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 			 int keyCode = event.getKeyCode();
 
 			 if(keyCode < keys.length) keys[keyCode] = true;
-			 if(keys[KeyEvent.VK_CONTROL] && keys[KeyEvent.VK_S]) game.saveMap();
+			 if(keys[KeyEvent.VK_CONTROL] && keys[KeyEvent.VK_L]) game.levelUp++;
 
 			 /*if(keys[KeyEvent.VK_P])game.pause();
 			 if(keys[KeyEvent.VK_SPACE])game.attack();
@@ -56,6 +56,9 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 	 }
 	 public boolean down(){
 			 return  keys[KeyEvent.VK_S];
+	 }
+	 public boolean levelUp(){
+			 return  keys[KeyEvent.VK_CONTROL];
 	 }
 	 public boolean left(){
 			 return keys[KeyEvent.VK_A] ;

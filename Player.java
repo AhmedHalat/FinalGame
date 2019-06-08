@@ -27,8 +27,8 @@ public class Player extends Character implements GameObject{
 	//Parameters: array that contains players current stats
 	//sets the players new motion speed if the stats have been upgraded
 	//returns Void
-	public void updateStats(int [] stats){
-		speed = stats[0];
+	public void updateStats(){
+		speed = stats.getSpeed();
 	}
 
 	public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){

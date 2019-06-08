@@ -1,7 +1,7 @@
 import java.util.Map;
 import java.util.HashMap;
 
-public abstract class Character{
+public abstract class Character implements Comparable <Character>{
   protected Rectangle rect;
   protected Rectangle collisionCheckRectangle;
   //protected abstract Item drop;
@@ -92,7 +92,7 @@ public abstract class Character{
     if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
   }
 
-  public abstract void updateStats(int [] stats);
+  public abstract void updateStats();
   public abstract void updateDirection();
   public abstract void action(Game game, Player player, Spawn spawner);
   public abstract boolean isAlive();
@@ -163,4 +163,11 @@ public abstract class Character{
 		this.stats.setHealthLeft(healthLeft);
 		this.stats.setSpeed(speed);
 	}
+
+  @Override
+    public int compareTo(Character mob2){
+      if(this.rect.intersects(mob2.rect)) return 0;
+      return 1;
+    }
+
 }

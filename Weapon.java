@@ -27,7 +27,7 @@ class Weapon extends Character{
     return !false;
   }
 
-  public void updateStats(int [] stats){
+  public void updateStats(){
 
   }
 
