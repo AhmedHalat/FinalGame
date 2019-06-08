@@ -19,6 +19,8 @@ public abstract class Character{
   protected Particle particles;
   protected boolean particle;
 
+  protected int color = 0;
+
    Character[] drops = new Character[2];
 
   public Character(AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
@@ -54,6 +56,7 @@ public abstract class Character{
   }
 
   public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
+    if(color != 0)particles.fill(color);
     particles.update(rect.x + 6, rect.y - 6);
     particles.render(renderer, 2, 2);
   }

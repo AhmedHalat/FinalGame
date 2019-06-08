@@ -114,7 +114,12 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
 
-		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
+		BufferedImage proImg = loadImage("book.png");
+		SpriteSheet proSheet = new SpriteSheet(proImg);
+		proSheet.loadSprites(62, 54);
+		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
+
+		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 6, 6);
 
 		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
 
@@ -127,7 +132,7 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		objects[2] = spawner;
 
 		spawner.addItem(chest,1);
-		spawner.addCharacter(projectile,1);
+		spawner.addWeapon(projectile);
 		spawner.addCharacter(mob,1);
 
 
@@ -364,6 +369,10 @@ public class Game extends JFrame implements Runnable,ActionListener{
 					this.mX= x;
 					this.mY= y;
 					showMouseLine = true;
+				}
+
+				public void hideLine(){
+					showMouseLine = false;
 				}
 
 				//setters

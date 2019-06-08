@@ -30,7 +30,7 @@ public class AnimatedSprite extends Sprite implements GameObject{
 
 
     public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) { return false; }
-    
+
     public void update(Game game, Player player, Spawn spawner){
       counter++;
       if(counter >= speed) {
@@ -42,6 +42,7 @@ public class AnimatedSprite extends Sprite implements GameObject{
     public void reset(){
       counter = 0;
       currentSprite = startSprite;
+      looped = false;
     }
 
     public void setAnimationRange(int startSprite, int endSprite){
