@@ -116,11 +116,23 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		chestSheet.loadSprites(16, 16);
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+<<<<<<< HEAD
+
+		BufferedImage proImg = loadImage("book.png");
+		SpriteSheet proSheet = new SpriteSheet(proImg);
+		proSheet.loadSprites(62, 54);
+		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
+
+		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 6, 6);
+
+		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
+=======
 		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
 		mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
 		mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
 		mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
 		mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+>>>>>>> ef64166f5f142337050d11f89cc45ede7c801edb
 
 		//Load Objects
 		objects = new GameObject[3];
@@ -130,8 +142,13 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		objects[2] = spawner;
 
 		spawner.addItem(chest,1);
+<<<<<<< HEAD
+		spawner.addWeapon(projectile);
+		spawner.addCharacter(mob,1);
+=======
 		// spawner.addCharacter(projectile,1);
 		spawner.addCharacter(mobSet);
+>>>>>>> ef64166f5f142337050d11f89cc45ede7c801edb
 
 
 		//Add Listeners
@@ -406,6 +423,10 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					this.mX= x;
 					this.mY= y;
 					showMouseLine = true;
+				}
+
+				public void hideLine(){
+					showMouseLine = false;
 				}
 
 				//setters
