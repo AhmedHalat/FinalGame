@@ -36,8 +36,9 @@ public class Spawn implements GameObject{
     weapons.add(weapon);
   }
 
-  public void removeCharacters(){
+  public void removeAll(){
     characters.clear();
+    items.clear();
   }
 
   public boolean allDead(int room){

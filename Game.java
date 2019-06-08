@@ -111,20 +111,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		}
 		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
 
-		BufferedImage chestSheetImage = loadImage("Chest.png");
-		SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-		chestSheet.loadSprites(16, 16);
-		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-
 		BufferedImage proImg = loadImage("book.png");
 		SpriteSheet proSheet = new SpriteSheet(proImg);
 		proSheet.loadSprites(62, 54);
 		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
-
-		Projectile projectile = new Projectile(pro, 0, 0, 62, 54, 1, 1);
-
-		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
+		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 6, 6);
 
 		//Load Objects
 		objects = new GameObject[3];
@@ -133,12 +124,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		objects[1] = gui;
 		objects[2] = spawner;
 
-		spawner.addItem(chest,1);
 		spawner.addWeapon(projectile);
-		spawner.addCharacter(mob,1);
-		// spawner.addCharacter(projectile,1);
-		spawner.addCharacter(mobSet);
-
+		randomMobs();
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -207,7 +194,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
 					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
 					System.out.println("All Dead:" + spawner.allDead(0));
-					System.out.println(spawner.getCharacters());
 					jMenu();
 				}
 
@@ -259,7 +245,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					final int maxHeight = 22;
 					final int minHight = 16;
 					selectedLayer = 1;
-					int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
+					int width, height, numberOfChambers = 2;//(int) (Math.random()*(5-3+1))+3;
 					int layer = 0;
 					randomMap = new int[numberOfChambers+1][4];
 					height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
@@ -315,24 +301,24 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					}
 				}
 
+				public void randomMobs(){
+					mobSet.removeAll(mobSet);
+					mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+					BufferedImage chestSheetImage = loadImage("Chest.png");
+					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+					chestSheet.loadSprites(16, 16);
+					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+					spawner.removeAll();
+					spawner.addCharacter(mobSet);
+					spawner.addItem(chest, 1);
+				}
+
+
 				public void reset(){
-					// spawner.removeCharacters();
-					// Set <Character> set = mobSet;
-					// mobSet.add(new Mob(201, -360, 16, 26, 16, 16,0));
-					// mobSet.removeAll(set);
-					// mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
-					// mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
-					// mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
-					// mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
-					// spawner.addCharacter(mobSet);
-					// BufferedImage chestSheetImage = loadImage("Chest.png");
-					// SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-					// chestSheet.loadSprites(16, 16);
-					// AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-					// Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-					// spawner.addCharacter(chest, 1);
-
-
+					randomMobs();
 					player.getRect().x = 0;
 					player.getRect().y = 0;
 					//Load Tiles
@@ -380,19 +366,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
-						mobSet.removeAll(mobSet);
-						mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
-						mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
-						mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
-						BufferedImage chestSheetImage = loadImage("Chest.png");
-						SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-						chestSheet.loadSprites(16, 16);
-						AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-						Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-
-						spawner.removeCharacters();
-						spawner.addCharacter(mobSet);
-						spawner.addCharacter(chest, 1);
 						reset();
 					}
 				}
