@@ -21,8 +21,8 @@ public abstract class Character{
 
   protected Particle particles;
   protected boolean particle;
-  protected static Map <String,Integer> stats = new HashMap <String,Integer> ();
-
+  // protected static Map <String,Integer> stats = new HashMap <String,Integer> ();
+  protected Stats stats;
   protected int color = 0;
 
    Character[] drops = new Character[2];
@@ -36,11 +36,7 @@ public abstract class Character{
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    stats.put("Health", (Integer) 100);
-    stats.put("Attack", (Integer) 1);
-    stats.put("Defense", (Integer) 1);
-    stats.put("Speed", (Integer) 1);
-    stats.put("Luck", (Integer) 1);
+    this.stats = new Stats(1,10,0,100,speed);
   }
 
   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
@@ -49,23 +45,16 @@ public abstract class Character{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    stats.put("Health", (Integer) 100);
-    stats.put("Attack", (Integer) 1);
-    stats.put("Defense", (Integer) 1);
-    stats.put("Speed", (Integer) 1);
-    stats.put("Luck", (Integer) 1);
+    this.stats = new Stats(1,10,0,100,speed);
   }
+
 
   public Character(int speed, int xCollisionOffset, int yCollisionOffset){
     this.speed = speed;
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    stats.put("Health", (Integer) 100);
-    stats.put("Attack", (Integer) 1);
-    stats.put("Defense", (Integer) 1);
-    stats.put("Speed", (Integer) 1);
-    stats.put("Luck", (Integer) 1);
+    this.stats = new Stats(1,10,0,100,speed);
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -162,4 +151,16 @@ public abstract class Character{
 
 	public int getYCollisionOffset() {return yCollisionOffset;}
 
+  public Stats getStats() {return this.stats;}
+
+  public void setStats(Stats stats) {this.stats = stats;}
+
+  public void setStats(int luck, int defense, int damage, int health,int healthLeft, int speed) {
+		this.stats.setLuck(luck);
+		this.stats.setDefense(defense);
+		this.stats.setDamage(damage);
+		this.stats.setHealth(health);
+		this.stats.setHealthLeft(healthLeft);
+		this.stats.setSpeed(speed);
+	}
 }

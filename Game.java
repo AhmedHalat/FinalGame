@@ -156,11 +156,15 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					mainMenu.removeAll();
 					JMenuItem weapon = new JMenuItem ("Weapon");
 					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
-					JMenuItem attack = new JMenuItem ("Attack: " + (player.stats.get("Attack")));
-					JMenuItem defense = new JMenuItem ("Defense: " + (player.stats.get("Defense")));
-					JMenuItem health = new JMenuItem ("Health: " + (player.stats.get("Health")));
-					JMenuItem speed = new JMenuItem ("Speed: " + (player.stats.get("Speed")));
-					JMenuItem luck = new JMenuItem ("Luck: " + (player.stats.get("Luck")));
+					JMenuItem attack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
+					JMenuItem defense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
+					JMenuItem health = new JMenuItem ("Health: " + (player.getStats().getHealth()));
+					JMenuItem speed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
+					JMenuItem luck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
+					// JMenuItem weaponAttack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
+					// JMenuItem weaponDefense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
+					// JMenuItem weaponSpeed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
+					// JMenuItem weaponLuck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
 					JMenu statMenu = new JMenu ("Stats");
 					JMenu weaponMenu = new JMenu ("Weapons");
 					weaponMenu.add(weapon);
@@ -189,11 +193,17 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					weapon2.addActionListener (this);
 				}
 
-				public void actionPerformed(ActionEvent e) {
-					String eventName = e.getActionCommand ();
-					player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
-					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
-					System.out.println("All Dead:" + spawner.allDead(0));
+				public void actionPerformed(ActionEvent event) {
+					String e = event.getActionCommand ();
+					if (e.equals("Attack")) player.getStats().setDamage(player.getStats().getDamage()+1);
+					else if (e.equals("Defense")) player.getStats().setDefense(player.getStats().getDefense()+1);
+					else if (e.equals("Speed")) player.getStats().setSpeed(player.getStats().getSpeed()+1);
+					else if (e.equals("Health")) player.getStats().setHealth(player.getStats().getHealth()+10);
+					else if (e.equals("Luck")) player.getStats().setLuck(player.getStats().getLuck()+1);
+
+					// player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
+					// for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					// System.out.println("All Dead:" + spawner.allDead(0));
 					jMenu();
 				}
 

@@ -26,7 +26,7 @@ class Weapon extends Character{
   public boolean isAlive(){
     return !false;
   }
-  
+
   public void updateStats(int [] stats){
 
   }
