@@ -19,10 +19,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Point;
-import java.awt.MouseInfo;
+import java.util.Set;
+import java.util.HashSet;
 
-public class Game extends JFrame implements Runnable,ActionListener{
+public class Game extends JFrame implements Runnable, ActionListener{
 
 	public static int alpha = 0xFFFF00DC;
 	Particle particle;
@@ -60,6 +60,7 @@ public class Game extends JFrame implements Runnable,ActionListener{
 	public int mapLevel = 1;
 	public int room = 1;
 	public static JMenuBar mainMenu = new JMenuBar ();
+	public static Set mobSet = new HashSet <Mob> ();
 
 	public Game(){
 		//Make our program shutdown when we exit out.
@@ -68,6 +69,16 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		setBounds(0,0, 1000, 800);
 		//Put our frame in the center of the screen.
 		setLocationRelativeTo(null);
+
+		BufferedImage playerSheetImage = loadImage("Player.png");
+		playerSheet = new SpriteSheet(playerSheetImage);
+		playerSheet.loadSprites(20, 26);
+
+		//Player Animated Sprites
+		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
+		player = new Player(playerAnimations, xZoom, yZoom);
+		//Menu Bar
+		jMenu();
 
 		//Add our graphics compoent
 		add(canvas);
@@ -82,20 +93,12 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
 
-		BufferedImage playerSheetImage = loadImage("Player.png");
-		playerSheet = new SpriteSheet(playerSheetImage);
-		playerSheet.loadSprites(20, 26);
-
-		//Player Animated Sprites
-		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
-
 		//Load Tiles
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 		resetMap(new File ("Map.txt"));
 		randomMap();
 		map = new Map(new File("Map.txt"), tiles);
 
-		//Load Map
 
 		//Load SDK GUI
 		GUIButton[] buttons = new GUIButton[tiles.size()];
@@ -113,6 +116,7 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		chestSheet.loadSprites(16, 16);
 		AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
 		Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+<<<<<<< HEAD
 
 		BufferedImage proImg = loadImage("book.png");
 		SpriteSheet proSheet = new SpriteSheet(proImg);
@@ -122,18 +126,29 @@ public class Game extends JFrame implements Runnable,ActionListener{
 		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 6, 6);
 
 		Mob mob = new Mob(-360, -360, 16, 26, 16, 16);
+=======
+		Projectile projectile = new Projectile(chestAnimations, 0, 0, 16, 16, 6, 6);
+		mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
+		mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
+		mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
+		mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+>>>>>>> ef64166f5f142337050d11f89cc45ede7c801edb
 
 		//Load Objects
 		objects = new GameObject[3];
-		player = new Player(playerAnimations, xZoom, yZoom);
 		spawner = new Spawn();
 		objects[0] = player;
 		objects[1] = gui;
 		objects[2] = spawner;
 
 		spawner.addItem(chest,1);
+<<<<<<< HEAD
 		spawner.addWeapon(projectile);
 		spawner.addCharacter(mob,1);
+=======
+		// spawner.addCharacter(projectile,1);
+		spawner.addCharacter(mobSet);
+>>>>>>> ef64166f5f142337050d11f89cc45ede7c801edb
 
 
 		//Add Listeners
@@ -157,36 +172,54 @@ public class Game extends JFrame implements Runnable,ActionListener{
 				public void componentMoved(ComponentEvent e) {}
 					public void componentShown(ComponentEvent e) {}
 					});
-					//Menu Bar
-					JMenuItem weapon = new JMenuItem ("Weapon 1");
-					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
-					JMenuItem attack = new JMenuItem ("Attack 1");
-					JMenuItem  defense = new JMenuItem ("Defense 2");
+					canvas.requestFocus();
+				}
 
-					JMenu weaponMenu = new JMenu ("Weapons");
+
+				public void jMenu(){
+					mainMenu.removeAll();
+					JMenuItem weapon = new JMenuItem ("Weapon");
+					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
+					JMenuItem attack = new JMenuItem ("Attack: " + (player.stats.get("Attack")));
+					JMenuItem defense = new JMenuItem ("Defense: " + (player.stats.get("Defense")));
+					JMenuItem health = new JMenuItem ("Health: " + (player.stats.get("Health")));
+					JMenuItem speed = new JMenuItem ("Speed: " + (player.stats.get("Speed")));
+					JMenuItem luck = new JMenuItem ("Luck: " + (player.stats.get("Luck")));
 					JMenu statMenu = new JMenu ("Stats");
+					JMenu weaponMenu = new JMenu ("Weapons");
 					weaponMenu.add(weapon);
 					weaponMenu.add(weapon2);
 					statMenu.add(attack);
 					statMenu.add(defense);
+					statMenu.add(health);
+					statMenu.add(speed);
+					statMenu.add(luck);
 					mainMenu.add (weaponMenu);
 					mainMenu.add (statMenu);
 					setJMenuBar(mainMenu);
-					attack.setActionCommand ("attack");
+					attack.setActionCommand ("Attack");
 					attack.addActionListener (this);
-					defense.setActionCommand ("defense");
+					defense.setActionCommand ("Defense");
 					defense.addActionListener (this);
+					health.setActionCommand ("Health");
+					health.addActionListener (this);
+					speed.setActionCommand ("Speed");
+					speed.addActionListener (this);
+					luck.setActionCommand ("Luck");
+					luck.addActionListener (this);
 					weapon.setActionCommand ("weapon");
 					weapon.addActionListener (this);
 					weapon2.setActionCommand ("weapon2");
 					weapon2.addActionListener (this);
-
-					canvas.requestFocus();
 				}
 
 				public void actionPerformed(ActionEvent e) {
 					String eventName = e.getActionCommand ();
-					System.out.println(eventName);
+					player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
+					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					System.out.println("All Dead:" + spawner.allDead(0));
+					System.out.println(spawner.getCharacters());
+					jMenu();
 				}
 
 				public void resetMap(File mapFile){
@@ -294,6 +327,23 @@ public class Game extends JFrame implements Runnable,ActionListener{
 				}
 
 				public void reset(){
+					// spawner.removeCharacters();
+					// Set <Character> set = mobSet;
+					// mobSet.add(new Mob(201, -360, 16, 26, 16, 16,0));
+					// mobSet.removeAll(set);
+					// mobSet.add(new Mob(200, -360, 16, 26, 16, 16,0));
+					// mobSet.add(new Mob(-200, -360, 16, 26, 16, 16,0));
+					// mobSet.add(new Mob(-208, -360, 16, 26, 16, 16,0));
+					// mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+					// spawner.addCharacter(mobSet);
+					// BufferedImage chestSheetImage = loadImage("Chest.png");
+					// SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+					// chestSheet.loadSprites(16, 16);
+					// AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+					// Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+					// spawner.addCharacter(chest, 1);
+
+
 					player.getRect().x = 0;
 					player.getRect().y = 0;
 					//Load Tiles
@@ -301,13 +351,6 @@ public class Game extends JFrame implements Runnable,ActionListener{
 					randomMap();
 					map = new Map(new File("Map.txt"), tiles);
 					render();
-					spawner.removeCharacters();
-					BufferedImage chestSheetImage = loadImage("Chest.png");
-					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
-					chestSheet.loadSprites(16, 16);
-					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
-					spawner.addCharacter(chest, 1);
 				}
 
 				public void leftClick(int x, int y){
@@ -325,19 +368,43 @@ public class Game extends JFrame implements Runnable,ActionListener{
 				public void mapUpdater() {
 					for (int i = 0; i < randomMap.length; i++) {
 						if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
-						if (spawner.allDead() && i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16) {
+					}
+					int i = room-1;
+					if (i > 0 && i < randomMap.length-1 && player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom ){
+						map.setTile(0,-1,randomMap[i][1],3);
+						map.setTile(0,0,randomMap[i][1],3);
+						map.setTile(0,1,randomMap[i][1],3);
+					}
+					if ((i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && spawner.allDead(i)) ||
+					(player.getRect().y+32*yZoom > randomMap[i][3]*yZoom*16 && spawner.allDead(i))) {
+						if (i < randomMap.length-1){
 						map.setTile(0,-1,randomMap[i][3],1);
 						map.setTile(0,0,randomMap[i][3],1);
-						map.setTile(0,1,randomMap[i][3],1);
-						// map.removeTile(0,-1,randomMap[i+1][1]);
-						// map.removeTile(0,0,randomMap[i+1][1]);
-						// map.removeTile(0,1,randomMap[i+1][1]);
+						map.setTile(0,1,randomMap[i][3],1);}
+						if (i > 0){
+							map.setTile(0,-1,randomMap[i][1],1);
+							map.setTile(0,0,randomMap[i][1],1);
+							map.setTile(0,1,randomMap[i][1],1);
+						}
 					}
 
-					}
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
+						mobSet.removeAll(mobSet);
+
+						mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
+						mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
+						mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+						BufferedImage chestSheetImage = loadImage("Chest.png");
+						SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
+						chestSheet.loadSprites(16, 16);
+						AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
+						Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+
+						spawner.removeCharacters();
+						spawner.addCharacter(mobSet);
+						spawner.addCharacter(chest, 1);
 						reset();
 					}
 				}

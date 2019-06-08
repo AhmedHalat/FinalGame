@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 public class Spawn implements GameObject{
   private ArrayList<Character> characters= new ArrayList <Character> ();
@@ -15,12 +17,15 @@ public class Spawn implements GameObject{
     rect = new Rectangle(0,0,0,0);
   }
 
-  public Spawn(){
-
-  }
+  public Spawn(){}
 
   public void addCharacter(Character character, int multiple){
     for(int i = 0; i < multiple; i++) characters.add(character);
+  }
+
+  public void addCharacter(Set <Character> character){
+    Iterator <Character> iter = character.iterator();
+  	while (iter.hasNext()) characters.add(iter.next());
   }
 
   public void addItem(Character item, int multiple){
@@ -35,12 +40,9 @@ public class Spawn implements GameObject{
     characters.clear();
   }
 
-  public boolean allDead(){
-    Boolean alive = true;
-    for (Character character : characters)
-      if(!character.isAlive()) alive = false;
-
-    return alive;
+  public boolean allDead(int room){
+    for (Character character : characters) if(character.isAlive() && character.getRoom() == room) return false;
+    return true;
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -84,11 +86,10 @@ public class Spawn implements GameObject{
     return stoppedChecking;
   }
 
-  public int getLayer(){
-    return layer;
-  }
 
-  public Rectangle getRectangle(){
-    return rect;
-  }
+  public int getLayer(){return layer;}
+
+  public Rectangle getRectangle(){return rect;}
+
+  public ArrayList <Character> getCharacters(){return characters;}
 }
