@@ -87,6 +87,16 @@ public class Spawn implements GameObject{
     return stoppedChecking;
   }
 
+  public Rectangle getHitBox(){
+    return weapons.get(0).getHitBox();
+  }
+
+  public boolean hitbox(){
+    if(weapons.get(0).getHitBox() != null) return true;
+    return false;
+  }
+
+
 
   public int getLayer(){return layer;}
 

@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.HashSet;
+import java.awt.Graphics2D;
+import java.awt.BasicStroke;
 
 public class Game extends JFrame implements Runnable, ActionListener{
 
@@ -44,6 +46,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private int mW;
 	private int mH;
 	private boolean showMouseLine = false;
+		private boolean line2 = false;
+			private boolean line3 = false;
 
 	private Tiles tiles;
 	private Map map;
@@ -56,12 +60,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private int xZoom = 3;
 	private int yZoom = 3;
 
+	private Graphics graphics;
+
 	private Rectangle mouseRectangle;
 	public int mapLevel = 1;
 	public int room = 1;
 	public int levelUp = 0;
 	public static JMenuBar mainMenu = new JMenuBar ();
-	public static Set mobSet = new HashSet <Mob> ();
+	public static Set mobSet = new HashSet <Character> ();
 
 	public Game(){
 		//Make our program shutdown when we exit out.
@@ -107,7 +113,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		proSheet.loadSprites(62, 54);
 		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
 
-		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
+		Character projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
 
 		//Load Objects
 		objects = new GameObject[2];
@@ -315,16 +321,18 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 				public void randomMobs(){
 					mobSet.removeAll(mobSet);
-					mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
-					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
-					mobSet.add(new Mob(-108, -360, 16, 26, 16, 16,0));
-					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
-					mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
+					BufferedImage enemySheetImage = loadImage("EnemySpriteSheet.png");
+					SpriteSheet enemySheet = new SpriteSheet(enemySheetImage);
+					enemySheet.loadSprites(27, 28);
+					AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
+
+					mobSet.add(new Mob(enemyAnimations, 0, -360, 16, 26, 16, 16,12, 0));
+					System.out.println("create");
 					BufferedImage chestSheetImage = loadImage("Chest.png");
 					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
 					chestSheet.loadSprites(16, 16);
 					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+					Character chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
 					spawner.removeAll();
 					spawner.addCharacter(mobSet);
 					spawner.addItem(chest, 1);
@@ -392,7 +400,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 				public void render() {
 					BufferStrategy bufferStrategy = canvas.getBufferStrategy();
-					Graphics graphics = bufferStrategy.getDrawGraphics();
+				 graphics = bufferStrategy.getDrawGraphics();
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
 					mapUpdater();
@@ -411,27 +419,47 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
 					renderer.renderString(graphics, "XP:" + player.getStats().getExp() +"/"+10, 200, getHeight()- 50, 20);
 
-					if(showMouseLine){
-						graphics.setColor(Color.red);
-						graphics.drawLine(mW, mH, mX, mY);
+					Graphics2D g2 = (Graphics2D) graphics;
 
-					}
+					graphics.setColor(new Color(199, 14, 14));
+					g2.setStroke(new BasicStroke(30));
+					if(line3)g2.drawLine(mX, mY, mW, mH);
+
+					g2.setStroke(new BasicStroke(15));
+					graphics.setColor(new Color(213, 99, 16));
+					if(line2)g2.drawLine(mX, mY, mW, mH);
+
+					graphics.setColor(new Color(255, 223, 6));
+					g2.setStroke(new BasicStroke(2));
+					if(showMouseLine) g2.drawLine(mX, mY, mW, mH);
 					graphics.dispose();
 					bufferStrategy.show();
 					renderer.clear();
 				}
 
-				public void drawLine(int w, int h, int x, int y){
-					this.mW= w;
-					this.mH= h;
-					this.mX= x;
-					this.mY= y;
+
+				public void drawLine(int color, int w, int h, int x, int y, int thickness){
+					mX = x;
+					mY = y;
+					mW = w;
+					mH = h;
 					showMouseLine = true;
+				}
+
+				public void line2(){
+					line2 = true;
+				}
+
+				public void line3(){
+					line3 = true;
 				}
 
 				public void hideLine(){
 					showMouseLine = false;
+					line2 = false;
+					line3 = false;
 				}
+
 
 				//setters
 				public void changeTile(int tileID){selectedTileID = tileID;}

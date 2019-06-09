@@ -12,6 +12,7 @@ public class Mob extends Character{
   public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize, int room){ //add stats to parameters
     super(sprite, 3, w, h);
     this.sprite = sprite;
+    this.animatedSprite = sprite;
     this.sheetSize = sheetSize;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
@@ -35,10 +36,10 @@ public class Mob extends Character{
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     rect.generateGraphics(0x0Fff0005);
-    renderer.renderRectangle(rect, xZoom, yZoom, false);
     // System.out.println(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*100);
     Rectangle r = new Rectangle(rect.x, rect.y-rect.h-5, (int) Math.round(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*10), 5);
     r.generateGraphics(0xFFff000F);
+    renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
     renderer.renderRectangle(r, xZoom, yZoom, false);
   }
 
@@ -46,7 +47,7 @@ public class Mob extends Character{
     int preDirection = direction;
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
-    if(rect.intersects(player.getRectangle())){
+    if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
       hit(player);
       return;
     }
@@ -102,16 +103,4 @@ public class Mob extends Character{
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     return false;
   }
-
-  public boolean equals(Object o){
-    Mob mob2 = (Mob) o;
-    return this.rect.intersects(mob2.rect);
-  }
-
-  @Override
-  public int compareTo(Mob mob2){
-    if(this.rect.intersects(mob2.rect)) return 0;
-    return 1;
-  }
-
 }

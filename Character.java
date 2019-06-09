@@ -24,6 +24,7 @@ public abstract class Character implements Comparable <Character>{
   // protected static Map <String,Integer> stats = new HashMap <String,Integer> ();
   protected Stats stats;
   protected int color = 0;
+  protected Rectangle hitbox;
 
    Character[] drops = new Character[2];
 
@@ -163,6 +164,16 @@ public abstract class Character implements Comparable <Character>{
 		this.stats.setHealthLeft(healthLeft);
 		this.stats.setSpeed(speed);
 	}
+
+  public Rectangle getHitBox(){
+    return hitbox;
+  }
+
+  public boolean hitbox(){
+    if(hitbox != null) return true;
+    return false;
+  }
+
 
   @Override
     public int compareTo(Character mob2){

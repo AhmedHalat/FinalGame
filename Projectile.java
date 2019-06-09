@@ -4,7 +4,9 @@ import java.awt.MouseInfo;
 public class Projectile extends Character{
   private int cooldown;
   private int timer = 0;
+  private int type;
   private boolean fired = false;
+  private Rectangle runeRect;
 
   public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
     super(sprite, 0, w, h);
@@ -16,6 +18,9 @@ public class Projectile extends Character{
     dead = false;
     move = false;
     int seconds = 3;
+    type = 1;
+    runeRect = new Rectangle(x,y,20,20);
+    runeRect.generateGraphics(0xFFa45d3f);
     cooldown = seconds * 60;
 
     particle = true;
@@ -25,7 +30,29 @@ public class Projectile extends Character{
 
   }
 
-  public void updateStats(int [] stats){
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, Sprite rune, int type){ //add stats to parameters
+    super(sprite, 0, w, h);
+    this.sprite = sprite;
+
+    rect = new Rectangle(x, y, w, h);
+    collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
+    animatedSprite.setAnimationRange(0, 2);
+    dead = false;
+    move = false;
+    int seconds = 3;
+    type = 1;
+    runeRect = new Rectangle(x,y,20,20);
+    runeRect.generateGraphics(0xFFa45d3f);
+    cooldown = seconds * 60;
+
+    particle = true;
+
+    particles = new Particle(rect.w, rect.h, 50, 1);
+    particles.fill(0xFFF7D80C);
+
+  }
+
+  public void updateStats(){
 
   }
 
@@ -41,6 +68,7 @@ public class Projectile extends Character{
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     renderer.renderSprite(animatedSprite, rect.x, rect.y, 1, 1, false);
+    if(type ==1) renderer.renderRectangle(runeRect, xZoom, yZoom, false);
   }
 
 
@@ -50,7 +78,11 @@ public class Projectile extends Character{
       if(timer < cooldown){
         animatedSprite.setStatic();
         dead = true;
-        if(timer == 0) color = 0xFFe81414;
+        if(timer == 0){
+          color = 0xFFe81414;
+          runeRect.generateGraphics(0xFF9d3131);
+          hitbox = runeRect;
+        }
         timer++;
       }
       else{
@@ -59,6 +91,8 @@ public class Projectile extends Character{
         move = false;
         fired = false;
         color = 0xFFE7DF25;
+        runeRect.generateGraphics(0xFF917911);
+        hitbox = null;
         animatedSprite.reset();
       }
     }
@@ -81,11 +115,23 @@ public class Projectile extends Character{
     mouseX = player.getRectangle().x +(int)(mouseX*magnitude);
     mouseY = player.getRectangle().y +(int)(mouseY*magnitude);
     rect = new Rectangle(mouseX, mouseY, 100, 100);
+
+    if(type == 0) ray(game, player);
+    else if(!move && type == 1) rune(game, player);
+
+  }
+
+  public void ray(Game game, Player player){
     if(!fired)game.drawLine( 0xFFf61f19,MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x, MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y
     , (game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2)
     ,game.getHeight()/2 + rect.y +rect.h/4 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2, 5);
-
   }
+
+  public void rune(Game game, Player player){
+    runeRect.x = player.getRectangle().x+ MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x - game.getWidth()/2 - runeRect.w ;
+    runeRect.y =  game.getRenderer().getCamera().y +MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - runeRect.h;
+  }
+
 
   public boolean isAlive(){
     return !false;
