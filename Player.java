@@ -27,8 +27,8 @@ public class Player extends Character implements GameObject{
 	//Parameters: array that contains players current stats
 	//sets the players new motion speed if the stats have been upgraded
 	//returns Void
-	public void updateStats(int [] stats){
-		speed = stats[0];
+	public void updateStats(){
+		speed = stats.getSpeed();
 	}
 
 	public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
@@ -105,7 +105,13 @@ public class Player extends Character implements GameObject{
 	}
 
 	public void action(Game game, Player player, Spawn spawner){
-
+		if(rect.intersects(player.getRectangle())){
+			this.stats.setHealthLeft(this.stats.getHealthLeft() - player.stats.getDamage());
+	    if (this.stats.getHealthLeft() <= 0){
+	      dead = true;
+	      move = false;
+	    }
+		}
 	}
 
 	public boolean isAlive(){

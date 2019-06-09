@@ -21,8 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.HashSet;
-import java.awt.Graphics2D;
-import java.awt.BasicStroke;
 
 public class Game extends JFrame implements Runnable, ActionListener{
 
@@ -46,8 +44,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private int mW;
 	private int mH;
 	private boolean showMouseLine = false;
-		private boolean line2 = false;
-			private boolean line3 = false;
 
 	private Tiles tiles;
 	private Map map;
@@ -60,13 +56,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private int xZoom = 3;
 	private int yZoom = 3;
 
-	private Graphics graphics;
-
 	private Rectangle mouseRectangle;
 	public int mapLevel = 1;
 	public int room = 1;
+	public int levelUp = 0;
 	public static JMenuBar mainMenu = new JMenuBar ();
-	public static Set mobSet = new HashSet <Character> ();
+	public static Set mobSet = new HashSet <Mob> ();
 
 	public Game(){
 		//Make our program shutdown when we exit out.
@@ -99,37 +94,26 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
 
-		//Load Tiles
+		//Load Tiles and Map
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 		resetMap(new File ("Map.txt"));
 		randomMap();
 		map = new Map(new File("Map.txt"), tiles);
 
 
-		//Load SDK GUI
-		GUIButton[] buttons = new GUIButton[tiles.size()];
 		Sprite[] tileSprites = tiles.getSprites();
-
-
-		for(int i = 0; i < buttons.length; i++){
-			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-			buttons[i] = new SDKButton(this, player, spawner, i, tileSprites[i], tileRectangle, false);
-		}
-		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
-
 		BufferedImage proImg = loadImage("book.png");
 		SpriteSheet proSheet = new SpriteSheet(proImg);
 		proSheet.loadSprites(62, 54);
 		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
 
-		Character projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
+		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
 
 		//Load Objects
-		objects = new GameObject[3];
+		objects = new GameObject[2];
 		spawner = new Spawn();
 		objects[0] = player;
-		objects[1] = gui;
-		objects[2] = spawner;
+		objects[1] = spawner;
 
 		spawner.addWeapon(projectile);
 		randomMobs();
@@ -163,13 +147,21 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					mainMenu.removeAll();
 					JMenuItem weapon = new JMenuItem ("Weapon");
 					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
-					JMenuItem attack = new JMenuItem ("Attack: " + (player.stats.get("Attack")));
-					JMenuItem defense = new JMenuItem ("Defense: " + (player.stats.get("Defense")));
-					JMenuItem health = new JMenuItem ("Health: " + (player.stats.get("Health")));
-					JMenuItem speed = new JMenuItem ("Speed: " + (player.stats.get("Speed")));
-					JMenuItem luck = new JMenuItem ("Luck: " + (player.stats.get("Luck")));
+					JMenuItem attack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
+					JMenuItem defense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
+					JMenuItem health = new JMenuItem ("Health: " + (player.getStats().getHealth()));
+					JMenuItem speed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
+					JMenuItem luck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
+					JMenuItem expInfo = new JMenuItem ("You can now level up "+levelUp+" times!\nClick on a stat to upgrade it!");
+					if (levelUp == 1)  expInfo = new JMenuItem ("You can now level up "+levelUp+" time!\nClick on a stat to upgrade it!");
+					// JMenuItem weaponAttack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
+					// JMenuItem weaponDefense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
+					// JMenuItem weaponSpeed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
+					// JMenuItem weaponLuck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
 					JMenu statMenu = new JMenu ("Stats");
+					JMenu expMenu = new JMenu ("Level Up!");
 					JMenu weaponMenu = new JMenu ("Weapons");
+					expMenu.add(expInfo);
 					weaponMenu.add(weapon);
 					weaponMenu.add(weapon2);
 					statMenu.add(attack);
@@ -179,6 +171,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					statMenu.add(luck);
 					mainMenu.add (weaponMenu);
 					mainMenu.add (statMenu);
+					mainMenu.add(expMenu);
 					setJMenuBar(mainMenu);
 					attack.setActionCommand ("Attack");
 					attack.addActionListener (this);
@@ -194,14 +187,26 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					weapon.addActionListener (this);
 					weapon2.setActionCommand ("weapon2");
 					weapon2.addActionListener (this);
+					if (levelUp == 0) expMenu.hide();
+					expInfo.disable();
 				}
 
-				public void actionPerformed(ActionEvent e) {
-					String eventName = e.getActionCommand ();
-					player.stats.put(eventName, (Integer) player.stats.get(eventName).intValue()+1);
-					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
-					System.out.println("All Dead:" + spawner.allDead(0));
+				public void actionPerformed(ActionEvent event) {
+					// for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					// System.out.println("All Dead:" + spawner.allDead(0));
+
+					if (keyListener.levelUp()) levelUp++;
+					if (levelUp > 0){
+					String e = event.getActionCommand ();
+					if (e.equals("Attack")) player.getStats().setDamage(player.getStats().getDamage()+1);
+					else if (e.equals("Defense")) player.getStats().setDefense(player.getStats().getDefense()+1);
+					else if (e.equals("Speed")) player.getStats().setSpeed(player.getStats().getSpeed()+1);
+					else if (e.equals("Health")) player.getStats().setHealth(player.getStats().getHealth()+10);
+					else if (e.equals("Luck")) player.getStats().setLuck(player.getStats().getLuck()+1);
+					levelUp--;
+					player.updateStats();
 					jMenu();
+				}
 				}
 
 				public void resetMap(File mapFile){
@@ -310,18 +315,16 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 				public void randomMobs(){
 					mobSet.removeAll(mobSet);
-					BufferedImage enemySheetImage = loadImage("EnemySpriteSheet.png");
-					SpriteSheet enemySheet = new SpriteSheet(enemySheetImage);
-					enemySheet.loadSprites(27, 28);
-					AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
-
-					mobSet.add(new Mob(enemyAnimations, 0, -360, 16, 26, 16, 16,12, 0));
-					System.out.println("create");
+					mobSet.add(new Mob(0, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-108, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-100, -360, 16, 26, 16, 16,0));
+					mobSet.add(new Mob(-200, -1560, 16, 26, 16, 16,1));
 					BufferedImage chestSheetImage = loadImage("Chest.png");
 					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
 					chestSheet.loadSprites(16, 16);
 					AnimatedSprite chestAnimations = new AnimatedSprite(chestSheet, 25);
-					Character chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
+					Chest chest = new Chest(chestAnimations, 0, 0, 16, 16, 6, 6);
 					spawner.removeAll();
 					spawner.addCharacter(mobSet);
 					spawner.addItem(chest, 1);
@@ -340,6 +343,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void leftClick(int x, int y){
+					if (keyListener.levelUp()) player.getStats().setExp(player.getStats().getExp()+50);
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
 					for(int i = 0; i < objects.length; i++)
@@ -377,6 +381,10 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
+						player.getStats().setExp(player.getStats().getExp()+1);
+						player.getStats().setHealthLeft((int) Math.round(player.getStats().getHealthLeft()+player.getStats().getHealth()*.1));
+						if (player.getStats().getHealthLeft() > player.getStats().getHealth())player.getStats().setHealthLeft(player.getStats().getHealth());
+						jMenu();
 						reset();
 					}
 				}
@@ -384,56 +392,46 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 				public void render() {
 					BufferStrategy bufferStrategy = canvas.getBufferStrategy();
-				 graphics = bufferStrategy.getDrawGraphics();
+					Graphics graphics = bufferStrategy.getDrawGraphics();
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
 					mapUpdater();
+					if (player.getStats().getExp() >= 10){
+						player.getStats().setExp(player.getStats().getExp()-10);
+						levelUp++;
+						jMenu();
+					}
+					Rectangle r = new Rectangle(20, getHeight()-100, (int) Math.round(player.getStats().getHealthLeft()*1.0/player.getStats().getHealth()*100), 5);
+					r.generateGraphics(0xFFff000F);
+					renderer.renderRectangle(r, xZoom, yZoom, true);
 					// // player.renderParticles(renderer, 2, 2);
 					renderer.render(graphics);
 					graphics.setColor(new Color(255, 255, 255));
 					renderer.renderString(graphics,mapLevel+"-"+room,getWidth() - 100, getHeight()- 50,50);
+					renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
+					renderer.renderString(graphics, "XP:" + player.getStats().getExp() +"/"+10, 200, getHeight()- 50, 20);
 
-					Graphics2D g2 = (Graphics2D) graphics;
+					if(showMouseLine){
+						graphics.setColor(Color.red);
+						graphics.drawLine(mW, mH, mX, mY);
 
-					graphics.setColor(new Color(199, 14, 14));
-					g2.setStroke(new BasicStroke(30));
-					if(line3)g2.drawLine(mX, mY, mW, mH);
-
-					g2.setStroke(new BasicStroke(15));
-					graphics.setColor(new Color(213, 99, 16));
-					if(line2)g2.drawLine(mX, mY, mW, mH);
-
-					graphics.setColor(new Color(255, 223, 6));
-					g2.setStroke(new BasicStroke(2));
-					if(showMouseLine) g2.drawLine(mX, mY, mW, mH);
+					}
 					graphics.dispose();
 					bufferStrategy.show();
 					renderer.clear();
 				}
 
-
-				public void drawLine(int color, int w, int h, int x, int y, int thickness){
-					mX = x;
-					mY = y;
-					mW = w;
-					mH = h;
+				public void drawLine(int w, int h, int x, int y){
+					this.mW= w;
+					this.mH= h;
+					this.mX= x;
+					this.mY= y;
 					showMouseLine = true;
-				}
-
-				public void line2(){
-					line2 = true;
-				}
-
-				public void line3(){
-					line3 = true;
 				}
 
 				public void hideLine(){
 					showMouseLine = false;
-					line2 = false;
-					line3 = false;
 				}
-
 
 				//setters
 				public void changeTile(int tileID){selectedTileID = tileID;}

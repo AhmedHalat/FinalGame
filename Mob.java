@@ -2,7 +2,7 @@ import java.util.Comparator;
 import java.lang.Override;
 import java.lang.Comparable;
 
-public class Mob extends Character implements Comparable <Mob>{
+public class Mob extends Character{
   private int sheetSize;
   private int room;
   private int rectangle;
@@ -33,12 +33,21 @@ public class Mob extends Character implements Comparable <Mob>{
     this.room = room;
   }
 
+  public void render(RenderHandler renderer, int xZoom, int yZoom){
+    rect.generateGraphics(0x0Fff0005);
+    renderer.renderRectangle(rect, xZoom, yZoom, false);
+    // System.out.println(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*100);
+    Rectangle r = new Rectangle(rect.x, rect.y-rect.h-5, (int) Math.round(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*10), 5);
+    r.generateGraphics(0xFFff000F);
+    renderer.renderRectangle(r, xZoom, yZoom, false);
+  }
+
   public void action(Game game, Player player, Spawn spawner){
     int preDirection = direction;
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
     if(rect.intersects(player.getRectangle())){
-      hit();
+      hit(player);
       return;
     }
     else if(cooldown > 30){
@@ -64,17 +73,21 @@ public class Mob extends Character implements Comparable <Mob>{
     cooldown++;
   }
 
-  public void updateStats(int [] stats){
-    speed = stats[0];
+  public void updateStats(){
+    speed = stats.getSpeed();
   }
 
   public void updateDirection(){
     if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 3, (direction * 3) + 2);
   }
 
-  public void hit(){
-    dead = true;
-    move = false;
+  public void hit(Player player){
+    this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
+    if (this.stats.getHealthLeft() <= 0){
+      player.getStats().setExp(player.getStats().getExp()+1);
+      dead = true;
+      move = false;
+    }
   }
 
   public boolean isAlive(){
