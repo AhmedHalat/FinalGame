@@ -36,7 +36,7 @@ public abstract class Character implements Comparable <Character>{
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = new Stats(1,10,0,100,speed);
+    this.stats = new Stats(1,10,1,100,speed);
   }
 
   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
@@ -45,7 +45,7 @@ public abstract class Character implements Comparable <Character>{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = new Stats(1,10,0,100,speed);
+    this.stats = new Stats(1,10,1,100,speed);
   }
 
 
@@ -54,7 +54,7 @@ public abstract class Character implements Comparable <Character>{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = new Stats(1,10,0,100,speed);
+    this.stats = new Stats(1,10,1,100,speed);
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -168,6 +168,11 @@ public abstract class Character implements Comparable <Character>{
     public int compareTo(Character mob2){
       if(this.rect.intersects(mob2.rect)) return 0;
       return 1;
+    }
+
+    public boolean equals(Object o){
+      Mob mob2 = (Mob) o;
+      return this.rect.intersects(mob2.rect);
     }
 
 }

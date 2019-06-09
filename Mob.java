@@ -2,7 +2,7 @@ import java.util.Comparator;
 import java.lang.Override;
 import java.lang.Comparable;
 
-public class Mob extends Character implements Comparable <Mob>{
+public class Mob extends Character{
   private int sheetSize;
   private int room;
   // private Rectangle rect;
@@ -26,16 +26,19 @@ public class Mob extends Character implements Comparable <Mob>{
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
-    rect.generateGraphics(0xFFff0005);
+    rect.generateGraphics(0x0Fff0005);
     renderer.renderRectangle(rect, xZoom, yZoom, false);
+    // System.out.println(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*100);
+    Rectangle r = new Rectangle(rect.x, rect.y-rect.h-5, (int) Math.round(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*10), 5);
+    r.generateGraphics(0xFFff000F);
+    renderer.renderRectangle(r, xZoom, yZoom, false);
   }
-
 
   public void action(Game game, Player player, Spawn spawner){
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
     if(rect.intersects(player.getRectangle())){
-       hit();
+       hit(player);
        return;
      }
     else if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
@@ -58,9 +61,13 @@ public class Mob extends Character implements Comparable <Mob>{
     if(animatedSprite != null) animatedSprite.setAnimationRange(direction * sheetSize, (direction * sheetSize) + sheetSize-1);
   }
 
-  public void hit(){
-    dead = true;
-    move = false;
+  public void hit(Player player){
+    this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
+    if (this.stats.getHealthLeft() <= 0){
+      player.getStats().setExp(player.getStats().getExp()+1);
+      dead = true;
+      move = false;
+    }
   }
 
   public boolean isAlive(){
@@ -74,17 +81,6 @@ public class Mob extends Character implements Comparable <Mob>{
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     return false;
-  }
-
-public boolean equals(Object o){
-  Mob mob2 = (Mob) o;
-  return this.rect.intersects(mob2.rect);
-}
-
-@Override
-  public int compareTo(Mob mob2){
-    if(this.rect.intersects(mob2.rect)) return 0;
-    return 1;
   }
 
 }

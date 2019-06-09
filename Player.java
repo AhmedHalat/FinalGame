@@ -105,7 +105,13 @@ public class Player extends Character implements GameObject{
 	}
 
 	public void action(Game game, Player player, Spawn spawner){
-
+		if(rect.intersects(player.getRectangle())){
+			this.stats.setHealthLeft(this.stats.getHealthLeft() - player.stats.getDamage());
+	    if (this.stats.getHealthLeft() <= 0){
+	      dead = true;
+	      move = false;
+	    }
+		}
 	}
 
 	public boolean isAlive(){

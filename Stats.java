@@ -17,7 +17,6 @@ public class Stats{
 		this.speed = speed;
 	}
 
-
 	public int getLuck() {
 		return luck;
 	}

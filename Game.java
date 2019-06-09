@@ -94,24 +94,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
 
-		//Load Tiles
+		//Load Tiles and Map
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 		resetMap(new File ("Map.txt"));
 		randomMap();
 		map = new Map(new File("Map.txt"), tiles);
 
 
-		//Load SDK GUI
-		GUIButton[] buttons = new GUIButton[tiles.size()];
 		Sprite[] tileSprites = tiles.getSprites();
-
-
-		for(int i = 0; i < buttons.length; i++){
-			Rectangle tileRectangle = new Rectangle(0, i*(16*xZoom + 2), 16*xZoom, 16*yZoom);
-			buttons[i] = new SDKButton(this, player, spawner, i, tileSprites[i], tileRectangle, false);
-		}
-		GUI gui = new GUI(null, 5, 5, true); //change null to buttons to enable button ui
-
 		BufferedImage proImg = loadImage("book.png");
 		SpriteSheet proSheet = new SpriteSheet(proImg);
 		proSheet.loadSprites(62, 54);
@@ -120,11 +110,10 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		Projectile projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
 
 		//Load Objects
-		objects = new GameObject[3];
+		objects = new GameObject[2];
 		spawner = new Spawn();
 		objects[0] = player;
-		objects[1] = gui;
-		objects[2] = spawner;
+		objects[1] = spawner;
 
 		spawner.addWeapon(projectile);
 		randomMobs();
@@ -203,8 +192,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void actionPerformed(ActionEvent event) {
-					for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
-					System.out.println("All Dead:" + spawner.allDead(0));
+					// for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
+					// System.out.println("All Dead:" + spawner.allDead(0));
 
 					if (keyListener.levelUp()) levelUp++;
 					if (levelUp > 0){
@@ -354,8 +343,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void leftClick(int x, int y){
-					levelUp++;
-					jMenu();
+					if (keyListener.levelUp()) player.getStats().setExp(player.getStats().getExp()+50);
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
 					for(int i = 0; i < objects.length; i++)
@@ -393,7 +381,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 						mapLevel++;
-						levelUp++;
+						player.getStats().setExp(player.getStats().getExp()+1);
+						player.getStats().setHealthLeft((int) Math.round(player.getStats().getHealthLeft()+player.getStats().getHealth()*.1));
+						if (player.getStats().getHealthLeft() > player.getStats().getHealth())player.getStats().setHealthLeft(player.getStats().getHealth());
 						jMenu();
 						reset();
 					}
@@ -406,11 +396,21 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
 					mapUpdater();
+					if (player.getStats().getExp() >= 10){
+						player.getStats().setExp(player.getStats().getExp()-10);
+						levelUp++;
+						jMenu();
+					}
+					Rectangle r = new Rectangle(20, getHeight()-100, (int) Math.round(player.getStats().getHealthLeft()*1.0/player.getStats().getHealth()*100), 5);
+					r.generateGraphics(0xFFff000F);
+					renderer.renderRectangle(r, xZoom, yZoom, true);
 					// // player.renderParticles(renderer, 2, 2);
 					renderer.render(graphics);
 					graphics.setColor(new Color(255, 255, 255));
 					renderer.renderString(graphics,mapLevel+"-"+room,getWidth() - 100, getHeight()- 50,50);
 					renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
+					renderer.renderString(graphics, "XP:" + player.getStats().getExp() +"/"+10, 200, getHeight()- 50, 20);
+
 					if(showMouseLine){
 						graphics.setColor(Color.red);
 						graphics.drawLine(mW, mH, mX, mY);

@@ -23,8 +23,7 @@ public class Particle{
       if(Math.random() < 0.001 * density) pixels[i] = 0xFFE7DF25;
     }
     rect.setPixel(pixels);
-
-    System.out.println(pixels.length);
+    // System.out.println(pixels.length);
   }
 
   public void fill(){
