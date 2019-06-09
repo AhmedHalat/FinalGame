@@ -4,6 +4,7 @@ import java.awt.MouseInfo;
 public class Projectile extends Character{
   private int cooldown;
   private int timer = 0;
+  private boolean fired = false;
 
   public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
     super(sprite, 0, w, h);
@@ -34,6 +35,8 @@ public class Projectile extends Character{
 
   public void open(){
     move = true;
+    timer = 40;
+    fired = false;
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -54,22 +57,34 @@ public class Projectile extends Character{
         timer = 0;
         dead = false;
         move = false;
+        fired = false;
         color = 0xFFE7DF25;
         animatedSprite.reset();
       }
     }
-    else if(move)animatedSprite.update(game, player, spawner);
-    int mouseX =  (int)Math.round(0.3 * (MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x- game.getWidth()/2 ));
-    int mouseY =  (int)Math.round(0.3 *(MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - game.getHeight()/2) );
+    else if(move){
+      if(fired)animatedSprite.update(game, player, spawner);
+      else{
+      if(timer < 30) game.line2();
+      if(timer < 15) game.line3();
+      if(timer <= 0){
+        game.hideLine();
+        fired = true;
+      }
+      timer--;
+      }
+    }
+    int mouseX =  (int)(MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x- game.getWidth()/2 );
+    int mouseY =  (int)(MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - game.getHeight()/2);
 
     double magnitude = (1/Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)))*70.0;
     mouseX = player.getRectangle().x +(int)(mouseX*magnitude);
     mouseY = player.getRectangle().y +(int)(mouseY*magnitude);
     rect = new Rectangle(mouseX, mouseY, 100, 100);
-    if(!dead)game.drawLine(MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x, MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y
-    , game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2
-    ,game.getHeight()/2 + rect.y +rect.h/4 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2);
-    else game.hideLine();
+    if(!fired)game.drawLine( 0xFFf61f19,MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x, MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y
+    , (game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2)
+    ,game.getHeight()/2 + rect.y +rect.h/4 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2, 5);
+
   }
 
   public boolean isAlive(){

@@ -42,6 +42,7 @@ public class Chest extends Character{
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
+    if(move) return false;
     Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
     System.out.println("Collision"+collision);
     System.out.println("Rect"+rect);

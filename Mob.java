@@ -5,15 +5,23 @@ import java.lang.Comparable;
 public class Mob extends Character implements Comparable <Mob>{
   private int sheetSize;
   private int room;
-  // private Rectangle rect;
+  private int rectangle;
+  private int cooldown;
+  private int type;
+  private int direction; //down left right up
   public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize, int room){ //add stats to parameters
     super(sprite, 3, w, h);
     this.sprite = sprite;
+    this.sheetSize = sheetSize;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     dead = false;
     move = true;
+    direction = 0;
     this.room = room;
+    type = (int) (Math.random()*(3-0+1))+0;
+    animatedSprite.setAnimationRange(direction * sheetSize + 3* type, (direction * sheetSize) + 3*type + 2);
+
   }
 
   public Mob(int x, int y, int w, int h, int xZoom, int yZoom,int room){ //add stats to parameters
@@ -25,29 +33,35 @@ public class Mob extends Character implements Comparable <Mob>{
     this.room = room;
   }
 
-  public void render(RenderHandler renderer, int xZoom, int yZoom){
-    rect.generateGraphics(0xFFff0005);
-    renderer.renderRectangle(rect, xZoom, yZoom, false);
-  }
-
-
   public void action(Game game, Player player, Spawn spawner){
+    int preDirection = direction;
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
     if(rect.intersects(player.getRectangle())){
-       hit();
-       return;
-     }
-    else if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
-      if(rect.x < player.getRectangle().x)collisionCheckRectangle.x += speed;
-      else if(rect.x > player.getRectangle().x) collisionCheckRectangle.x -= speed;
-      didMove(game);
+      hit();
+      return;
+    }
+    else if(cooldown > 30){
+      cooldown = 0;
+    if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
+      if(rect.x < player.getRectangle().x) direction = 2;
+      else if(rect.x > player.getRectangle().x) direction = 1;
     }
     else{
-      if(rect.y < player.getRectangle().y) collisionCheckRectangle.y += speed;
-      else if(rect.y > player.getRectangle().y) collisionCheckRectangle.y -= speed;
-      didMove(game);
+      if(rect.y < player.getRectangle().y) direction = 0;
+      else if(rect.y > player.getRectangle().y)direction = 3;
     }
+    }
+    if(direction == 0) collisionCheckRectangle.y += speed;
+    else if(direction == 1) collisionCheckRectangle.x -= speed;
+    else if(direction == 2) collisionCheckRectangle.x += speed;
+    else if(direction == 3) collisionCheckRectangle.y -= speed;
+
+    if(preDirection != direction)animatedSprite.setAnimationRange(direction * sheetSize + 3* type, (direction * sheetSize) + 3*type + 3);
+
+    animatedSprite.update(game, player, spawner);
+    didMove(game, player, spawner);
+    cooldown++;
   }
 
   public void updateStats(int [] stats){
@@ -55,7 +69,7 @@ public class Mob extends Character implements Comparable <Mob>{
   }
 
   public void updateDirection(){
-    if(animatedSprite != null) animatedSprite.setAnimationRange(direction * sheetSize, (direction * sheetSize) + sheetSize-1);
+    if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 3, (direction * 3) + 2);
   }
 
   public void hit(){
@@ -76,12 +90,12 @@ public class Mob extends Character implements Comparable <Mob>{
     return false;
   }
 
-public boolean equals(Object o){
-  Mob mob2 = (Mob) o;
-  return this.rect.intersects(mob2.rect);
-}
+  public boolean equals(Object o){
+    Mob mob2 = (Mob) o;
+    return this.rect.intersects(mob2.rect);
+  }
 
-@Override
+  @Override
   public int compareTo(Mob mob2){
     if(this.rect.intersects(mob2.rect)) return 0;
     return 1;

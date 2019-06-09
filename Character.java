@@ -85,7 +85,7 @@ public abstract class Character{
   }
 
 
-  public void didMove(Game game){
+  public void didMove(Game game ,Player player, Spawn spawner){
     collisionCheckRectangle.x += xCollisionOffset;
     collisionCheckRectangle.y += yCollisionOffset;
 
