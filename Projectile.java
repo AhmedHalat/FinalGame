@@ -8,7 +8,7 @@ public class Projectile extends Character{
   private boolean fired = false;
   private Rectangle runeRect;
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type){ //add stats to parameters
     super(sprite, 0, w, h);
     this.sprite = sprite;
 
@@ -18,7 +18,7 @@ public class Projectile extends Character{
     dead = false;
     move = false;
     int seconds = 3;
-    type = 1;
+    this.type = type;
     runeRect = new Rectangle(x,y,20,20);
     runeRect.generateGraphics(0xFFa45d3f);
     cooldown = seconds * 60;
@@ -93,6 +93,7 @@ public class Projectile extends Character{
         color = 0xFFE7DF25;
         runeRect.generateGraphics(0xFF917911);
         hitbox = null;
+        line = new int[4];
         animatedSprite.reset();
       }
     }
@@ -122,9 +123,17 @@ public class Projectile extends Character{
   }
 
   public void ray(Game game, Player player){
-    if(!fired)game.drawLine( 0xFFf61f19,MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x, MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y
-    , (game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2)
-    ,game.getHeight()/2 + rect.y +rect.h/4 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2, 5);
+    line[0] = MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x;
+    line[1] = MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y;
+    line[2] =(game.getWidth()/2+ rect.x + rect.w/4 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2);
+    line[3] = game.getHeight()/2 + rect.y +rect.h/4 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2;
+
+    if(!fired)game.drawLine(0xFFf61f19, line[0], line[1], line[2], line[3], 5);
+  }
+
+  public boolean hitLine(){
+    if(line != null && move && !fired) return true;
+    return false;
   }
 
   public void rune(Game game, Player player){
