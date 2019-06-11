@@ -25,6 +25,7 @@ public abstract class Character implements Comparable <Character>{
   protected Stats stats;
   protected int color = 0;
   protected Rectangle hitbox;
+  protected int[] line = new int[4];
 
    Character[] drops = new Character[2];
 
@@ -169,8 +170,17 @@ public abstract class Character implements Comparable <Character>{
     return hitbox;
   }
 
+  public int[] getHitLine(){
+    return line;
+  }
+
   public boolean hitbox(){
     if(hitbox != null) return true;
+    return false;
+  }
+
+  public boolean hitLine(){
+    if(line != null) return true;
     return false;
   }
 

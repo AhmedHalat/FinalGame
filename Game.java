@@ -108,12 +108,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 
 		Sprite[] tileSprites = tiles.getSprites();
-		BufferedImage proImg = loadImage("book.png");
-		SpriteSheet proSheet = new SpriteSheet(proImg);
-		proSheet.loadSprites(62, 54);
-		AnimatedSprite pro = new AnimatedSprite(proSheet, 25);
+		BufferedImage proImg1 = loadImage("book0.png");
+		SpriteSheet proSheet1 = new SpriteSheet(proImg1);
+		proSheet1.loadSprites(62, 54);
+		AnimatedSprite pro1 = new AnimatedSprite(proSheet1, 25);
 
-		Character projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1);
+		Character projectile = new Projectile(pro1, 0, 0, 16, 16, 1, 1,0);
 
 		//Load Objects
 		objects = new GameObject[2];
