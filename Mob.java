@@ -89,7 +89,7 @@ public class Mob extends Character{
         int x0 = -(b1-b2)/(a1-a2);
         boolean intersect = false;
         if(Math.min(x1, x2) < x0 && x0 < Math.max(x1, x2) && Math.min(x3, x4) < x0 && x0 < Math.max(x3, x4)) intersect = true;
-        hit(player);
+        mobHit(player);
         return;
       }
     }
