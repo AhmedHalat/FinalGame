@@ -19,8 +19,10 @@ public class Projectile extends Character{
     move = false;
     int seconds = 3;
     this.type = type;
-    runeRect = new Rectangle(x,y,20,20);
-    runeRect.generateGraphics(0xFFa45d3f);
+    if(type == 1){
+      runeRect = new Rectangle(x,y,50,50);
+      runeRect.generateGraphics(0xFFff00dc);
+    }
     cooldown = seconds * 60;
 
     particle = true;
@@ -42,7 +44,7 @@ public class Projectile extends Character{
     int seconds = 3;
     type = 1;
     runeRect = new Rectangle(x,y,20,20);
-    runeRect.generateGraphics(0xFFa45d3f);
+    runeRect.generateGraphics(0xFFff00dc);
     cooldown = seconds * 60;
 
     particle = true;
@@ -91,7 +93,7 @@ public class Projectile extends Character{
         move = false;
         fired = false;
         color = 0xFFE7DF25;
-        runeRect.generateGraphics(0xFF917911);
+        runeRect.generateGraphics(0xFFff00dc);
         hitbox = null;
         line = new int[4];
         animatedSprite.reset();
@@ -100,13 +102,13 @@ public class Projectile extends Character{
     else if(move){
       if(fired)animatedSprite.update(game, player, spawner);
       else{
-      if(timer < 30) game.line2();
-      if(timer < 15) game.line3();
-      if(timer <= 0){
-        game.hideLine();
-        fired = true;
-      }
-      timer--;
+        if(timer < 30) game.line2();
+        if(timer < 15) game.line3();
+        if(timer <= 0){
+          game.hideLine();
+          fired = true;
+        }
+        timer--;
       }
     }
     int mouseX =  (int)(MouseInfo.getPointerInfo().getLocation().x-game.getCanvas().getLocationOnScreen().x- game.getWidth()/2 );
@@ -118,7 +120,7 @@ public class Projectile extends Character{
     rect = new Rectangle(mouseX, mouseY, 100, 100);
 
     if(type == 0) ray(game, player);
-    else if(!move && type == 1) rune(game, player);
+    else if(!fired && type == 1) rune(game, player);
 
   }
 
@@ -132,11 +134,12 @@ public class Projectile extends Character{
   }
 
   public boolean hitLine(){
-    if(line != null && move && !fired) return true;
+    if(move && !fired) return true;
     return false;
   }
 
   public void rune(Game game, Player player){
+    game.hideLine();
     runeRect.x = player.getRectangle().x+ MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x - game.getWidth()/2 - runeRect.w ;
     runeRect.y =  game.getRenderer().getCamera().y +MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - runeRect.h;
   }

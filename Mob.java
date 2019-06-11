@@ -2,6 +2,7 @@ import java.util.Comparator;
 import java.lang.Override;
 import java.lang.Comparable;
 import java.util.Arrays;
+import java.awt.geom.Line2D;
 
 public class Mob extends Character{
   private int sheetSize;
@@ -54,47 +55,42 @@ public class Mob extends Character{
     }
     else if(spawner.hitline()){
       int [] line = spawner.getHitLine();
-      int [][] mobLine = {
-        {rect.x,rect.y,rect.x+rect.w,rect.y},
-        {rect.x,rect.y+rect.h,rect.x+rect.w,rect.y+rect.h},
-        {rect.x,rect.y,rect.x,rect.y+rect.h},
-        {rect.x+rect.w,rect.y,rect.x+rect.w,rect.y+rect.h}
-      };
-      for(int[] mobSide : mobLine){
         int x1 = line[0];
         int y1 = line[1];
         int x2 = line[2];
         int y2 = line[3];
+      int [][] mobLine = {
+        {rect.x,rect.y,rect.x+rect.w * 3,rect.y},
+        {rect.x,rect.y+rect.h *3,rect.x+rect.w *3,rect.y+rect.h *3},
+        {rect.x,rect.y,rect.x,rect.y+rect.h *3},
+        {rect.x+rect.w *3,rect.y,rect.x+rect.w*3,rect.y+rect.h*3}
+      };
+      for(int[] mobSide : mobLine){
 
-        int x3 = mobSide[0];
-        int y3 = mobSide[1];
-        int x4 = mobSide[2];
-        int y4 = mobSide[3];
-        if((y2-y1)*(x4-x3) == (x2-x1)*(y4-y3)) continue;
-        if((x2-x1) == 0 || (x4-x3) == 0) continue;
-        int a1 = (y2-y1)/(x2-x1);
-        int b1 = y1 - a1*x1;
-        int a2 = (y4-y3)/(x4-x3);
-        int b2 = y3 - a2*x3;
-        if(a1-a2 == 0) continue;
-        int x0 = -(b1-b2)/(a1-a2);
-        if(Math.min(x1, x2) < x0 && x0 < Math.max(x1, x2) && Math.min(x3, x4) < x0 && x0 < Math.max(x3, x4)){
+        int x3 = mobSide[0] + game.getWidth()/2 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2;
+        int y3 = mobSide[1]+ game.getHeight()/2 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2;
+        int x4 = mobSide[2] + game.getWidth()/2 - game.getRenderer().getCamera().x - game.getRenderer().getCamera().w/2;
+        int y4 = mobSide[3] + game.getHeight()/2 - game.getRenderer().getCamera().y - game.getRenderer().getCamera().h/2;
+
+        Line2D line1 = new Line2D.Float(x1, y1, x2, y2);
+        Line2D line2 = new Line2D.Float(x3, y3, x4, y4);
+        boolean result = line2.intersectsLine(line1);
+        if(result) {
           hit(player);
           return;
         }
-
       }
     }
     else if(cooldown > 30){
       cooldown = 0;
-    if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
-      if(rect.x < player.getRectangle().x) direction = 2;
-      else if(rect.x > player.getRectangle().x) direction = 1;
-    }
-    else{
-      if(rect.y < player.getRectangle().y) direction = 0;
-      else if(rect.y > player.getRectangle().y)direction = 3;
-    }
+      if(Math.abs(rect.x - player.getRectangle().x) > Math.abs(rect.y - player.getRectangle().y) ){
+        if(rect.x < player.getRectangle().x) direction = 2;
+        else if(rect.x > player.getRectangle().x) direction = 1;
+      }
+      else{
+        if(rect.y < player.getRectangle().y) direction = 0;
+        else if(rect.y > player.getRectangle().y)direction = 3;
+      }
     }
     if(direction == 0) collisionCheckRectangle.y += speed;
     else if(direction == 1) collisionCheckRectangle.x -= speed;
@@ -117,6 +113,7 @@ public class Mob extends Character{
   }
 
   public void hit(Player player){
+    System.out.println("HIT");
     this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
     if (this.stats.getHealthLeft() <= 0){
       player.getStats().setExp(player.getStats().getExp()+1);

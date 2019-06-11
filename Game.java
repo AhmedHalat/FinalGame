@@ -46,6 +46,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private int mW;
 	private int mH;
 	private boolean showMouseLine = false;
+	private int mX2;
+	private int mY2;
+	private int mW2;
+	private int mH2;
+	private boolean showMouseLine2 = false;
 		private boolean line2 = false;
 			private boolean line3 = false;
 
@@ -108,12 +113,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 
 		Sprite[] tileSprites = tiles.getSprites();
-		BufferedImage proImg1 = loadImage("book0.png");
+		BufferedImage proImg1 = loadImage("book1.png");
 		SpriteSheet proSheet1 = new SpriteSheet(proImg1);
 		proSheet1.loadSprites(62, 54);
 		AnimatedSprite pro1 = new AnimatedSprite(proSheet1, 25);
 
-		Character projectile = new Projectile(pro1, 0, 0, 16, 16, 1, 1,0);
+		Character projectile = new Projectile(pro1, 0, 0, 16, 16, 1, 1,1);
 
 		//Load Objects
 		objects = new GameObject[2];
@@ -432,6 +437,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					graphics.setColor(new Color(255, 223, 6));
 					g2.setStroke(new BasicStroke(2));
 					if(showMouseLine) g2.drawLine(mX, mY, mW, mH);
+					if(showMouseLine2) g2.drawLine(mX2, mY2, mW2, mH2);
 					graphics.dispose();
 					bufferStrategy.show();
 					renderer.clear();
@@ -444,6 +450,13 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					mW = w;
 					mH = h;
 					showMouseLine = true;
+				}
+				public void drawLine2(int color, int w, int h, int x, int y, int thickness){
+					mX2 = x;
+					mY2 = y;
+					mW2 = w;
+					mH2 = h;
+					showMouseLine2 = true;
 				}
 
 				public void line2(){
