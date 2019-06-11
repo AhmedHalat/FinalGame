@@ -283,7 +283,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
 							for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
 								if (i == 0 && y == randomMap[i][1] && (x == 1 || x == -1 || x == 0)) saveMap("0,6,"+x+","+y);
-								if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
+								else if (i == randomMap.length-1 && y == randomMap[i][3] && (x == 1 || x == -1 || x == 0)) saveMap(0+","+3+","+x+","+y);
 								else if (i == randomMap.length-1 && y == randomMap[i][3]+3 && x == 0) saveMap("0,10,"+x+","+y);
 								else if ((y == randomMap[i][1] || y == randomMap[i][3]) && (x == 1 || x == -1 || x == 0)) {}
 								else if (x == randomMap[i][0] && y == randomMap[i][1]) saveMap(0+","+ 5+","+x+","+ y);
