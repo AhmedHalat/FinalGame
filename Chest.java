@@ -14,7 +14,7 @@ public class Chest extends Character{
     particles.fill(0xFFF7D80C);
   }
 
-  public void updateStats(int [] stats){
+  public void updateStats(){
 
   }
 

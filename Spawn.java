@@ -100,10 +100,12 @@ public class Spawn implements GameObject{
     return false;
   }
 
+
   public boolean hitline(){
     if(weapons.get(0).hitLine()) return true;
     return false;
   }
+public ArrayList<Character> getWeapons(){return weapons;}
 
   public int getLayer(){return layer;}
 

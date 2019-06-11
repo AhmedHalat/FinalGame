@@ -18,10 +18,8 @@ public class Item{
 	}
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
-		if(animatedSprite != null)
-		renderer.renderSprite(animatedSprite, Player.getPlayerRectangle().x, Player.getPlayerRectangle().y, xZoom, yZoom, false);
-		else if(sprite != null)
-		renderer.renderSprite(sprite, Player.getPlayerRectangle().x, Player.getPlayerRectangle().y, xZoom, yZoom, false);
+		if(animatedSprite != null) renderer.renderSprite(animatedSprite, Player.getPlayerRectangle().x, Player.getPlayerRectangle().y, xZoom, yZoom, false);
+		else if(sprite != null) renderer.renderSprite(sprite, Player.getPlayerRectangle().x, Player.getPlayerRectangle().y, xZoom, yZoom, false);
 		// else
 		// renderer.renderRectangle(playerRectangle, xZoom, yZoom, false);
 	}
