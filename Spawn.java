@@ -96,6 +96,7 @@ public class Spawn implements GameObject{
     return false;
   }
 
+  public ArrayList<Character> getWeapons(){return weapons;}
 
 
   public int getLayer(){return layer;}

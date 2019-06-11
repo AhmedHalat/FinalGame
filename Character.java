@@ -37,7 +37,7 @@ public abstract class Character implements Comparable <Character>{
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = new Stats(1,10,1,100,speed);
+    this.stats = randomStats(speed);
   }
 
   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
@@ -46,7 +46,7 @@ public abstract class Character implements Comparable <Character>{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = new Stats(1,10,1,100,speed);
+    this.stats = randomStats(speed);
   }
 
 
@@ -55,7 +55,11 @@ public abstract class Character implements Comparable <Character>{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = new Stats(1,10,1,100,speed);
+    this.stats = randomStats(speed);
+  }
+
+  public Stats randomStats(int speed){//needs to be randomized/calculated
+    return new Stats(1,10,1,100,speed);
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -73,7 +77,6 @@ public abstract class Character implements Comparable <Character>{
   public void interact(Game game, Player player, Spawn spawner){
     if(true) action(game, player, spawner);
   }
-
 
   public void didMove(Game game ,Player player, Spawn spawner){
     collisionCheckRectangle.x += xCollisionOffset;
@@ -113,6 +116,11 @@ public abstract class Character implements Comparable <Character>{
 	public Rectangle getRect() {return rect;}
 
 	public void setRect(Rectangle rect) {this.rect = rect;}
+
+  public void setDead(Boolean b) {this.dead = b;}
+
+  public void setMove(Boolean b) {this.move = b;}
+
 
 	public Rectangle getCollisionCheckRectangle() {return collisionCheckRectangle;}
 

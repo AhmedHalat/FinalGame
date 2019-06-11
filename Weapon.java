@@ -1,5 +1,6 @@
 class Weapon extends Character{
   private String name;
+  
   public Weapon(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
     super(sprite, 0, w, h);
     this.sprite = sprite;

@@ -47,8 +47,17 @@ public class Mob extends Character{
     int preDirection = direction;
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
-    if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
-      hit(player);
+    if (rect.intersects(player.rect) && spawner.hitbox() && rect.intersects(spawner.getHitBox())){
+      playerHit(player);
+      mobHit(player);
+      return;
+    }
+    else if (rect.intersects(player.rect)){
+      playerHit(player);
+      return;
+    }
+    else if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
+      mobHit(player);
       return;
     }
     else if(cooldown > 30){
@@ -82,12 +91,20 @@ public class Mob extends Character{
     if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 3, (direction * 3) + 2);
   }
 
-  public void hit(Player player){
+  public void mobHit(Player player){
     this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
     if (this.stats.getHealthLeft() <= 0){
       player.getStats().setExp(player.getStats().getExp()+1);
       dead = true;
       move = false;
+    }
+  }
+
+  public void playerHit(Player player){
+    if (!player.isAlive()) player.getStats().setHealthLeft(player.getStats().getHealthLeft() - (this.stats.getDamage()));
+    if (player.stats.getHealthLeft() <= 0){
+      player.setDead(true);
+      player.setMove(false);
     }
   }
 
