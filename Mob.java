@@ -53,7 +53,6 @@ public class Mob extends Character{
       return;
     }
     else if(spawner.hitline()){
-      System.out.println(spawner.hitline());
       int [] line = spawner.getHitLine();
       int [][] mobLine = {
         {rect.x,rect.y,rect.x+rect.w,rect.y},
@@ -71,17 +70,19 @@ public class Mob extends Character{
         int y3 = mobSide[1];
         int x4 = mobSide[2];
         int y4 = mobSide[3];
-        if((y2-y1)*(x4-x3) == (x2-x1)*(y4-y3)) return;
+        if((y2-y1)*(x4-x3) == (x2-x1)*(y4-y3)) continue;
+        if((x2-x1) == 0 || (x4-x3) == 0) continue;
         int a1 = (y2-y1)/(x2-x1);
         int b1 = y1 - a1*x1;
         int a2 = (y4-y3)/(x4-x3);
         int b2 = y3 - a2*x3;
-
+        if(a1-a2 == 0) continue;
         int x0 = -(b1-b2)/(a1-a2);
-        boolean intersect = false;
-        if(Math.min(x1, x2) < x0 && x0 < Math.max(x1, x2) && Math.min(x3, x4) < x0 && x0 < Math.max(x3, x4)) intersect = true;
-        hit(player);
-        return;
+        if(Math.min(x1, x2) < x0 && x0 < Math.max(x1, x2) && Math.min(x3, x4) < x0 && x0 < Math.max(x3, x4)){
+          hit(player);
+          return;
+        }
+
       }
     }
     else if(cooldown > 30){
