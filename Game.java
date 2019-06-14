@@ -300,18 +300,18 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					SpriteSheet proSheet1 = new SpriteSheet(proImg1);
 					proSheet1.loadSprites(62, 54);
 					AnimatedSprite pro1 = new AnimatedSprite(proSheet1, 25);
-					Character projectile = new Projectile(pro1, 0, 0, 16, 16, 1, 1,0, "Arcane Ray Book");
+					Character projectile = new Projectile(pro1, 0, 0, 16, 16, 1, 1,0, "Arcane Ray Book", 3);
 
 					BufferedImage proImg2 = loadImage("book1.png");
 					SpriteSheet proSheet2 = new SpriteSheet(proImg2);
 					proSheet2.loadSprites(62, 54);
 					AnimatedSprite pro2 = new AnimatedSprite(proSheet2, 25);
-					Character projectile2 = new Projectile(pro2, 0, 0, 16, 16, 1, 1,1, "Arcane Rune Book");
-					weapons.add(type, projectile);
+					Character projectile2 = new Projectile(pro2, 0, 0, 16, 16, 1, 1,1, "Arcane Rune Book", 3);
+					weapons.add(type, projectile2);
 					jMenu();
 					pickup = true;
 					pickupTimer = 5*60;
-					pickedUp += "\n"+projectile.getName()+" has been picked up from "+originName+"\n"+projectile.getName()+" added to weapons inventory";
+					pickedUp += "\n"+projectile2.getName()+" has been picked up from "+originName+"\n"+projectile2.getName()+" added to weapons inventory";
 				}
 
 
@@ -388,7 +388,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						enemySheet.loadSprites(27, 28);
 						AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
 
-						mobSet.add(new Mob(enemyAnimations, 0, -360, 16, 26, 16, 16,12, 0));
+						mobSet.add(new Mob(enemyAnimations, 0, -360, 16, 26, 3, 3,12, 0));
 						BufferedImage chestSheetImage = loadImage("Chest.png");
 						SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
 						chestSheet.loadSprites(16, 16);
@@ -493,13 +493,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							graphics.setColor(new Color(255, 223, 6));
 							g2.setStroke(new BasicStroke(2));
 							if(showMouseLine) g2.drawLine(mX, mY, mW, mH);
-							double angle = Math.atan2(mX , mY );
-							angle+= Math.PI * 2;
-							//g2.drawRect(getWidth()/2  + player.getRectangle().w, getHeight()/2 + player.getRectangle().h, 26, 28);
-							//g2.rotate(angle, getWidth()/2  + player.getRectangle().w, getHeight()/2 + player.getRectangle().h);
-							//g2.drawImage(sword, getWidth()/2  + player.getRectangle().w/2, getHeight()/2 + player.getRectangle().h/2, sword.getWidth(), sword.getHeight(), null);
-							//g2.drawRect(getWidth()/2  + player.getRectangle().w, getHeight()/2 + player.getRectangle().h, 26, 64);
-
 
 							graphics.dispose();
 							bufferStrategy.show();
@@ -509,8 +502,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						private void drawString(Graphics graphics, String text, int x, int y, int size) {
 							int i = 0;
 							for (String line : text.split("\n")){
-							if(!line.equals("null"))renderer.renderString(graphics, line, x, y+ size * i , size);
-							i++;
+								if(!line.equals("null"))renderer.renderString(graphics, line, x, y+ size * i , size);
+								i++;
 							}
 						}
 

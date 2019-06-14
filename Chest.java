@@ -3,6 +3,7 @@ public class Chest extends Character{
   public Chest(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
     super(sprite, 0, w, h);
     this.sprite = sprite;
+    this.name = "Chest";
 
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
@@ -30,7 +31,7 @@ public class Chest extends Character{
     // If they  are within range and they clicked F keyListener
     if(animatedSprite.getLooped()){
       animatedSprite.setStatic();
-      if(!dead)game.createWeaponDrop(1, "Chest");
+      if(!dead)game.createWeaponDrop(0, name);
       dead = true;
       particle = true;
     }

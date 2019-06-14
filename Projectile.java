@@ -8,7 +8,7 @@ public class Projectile extends Character{
   private boolean fired = false;
   private Rectangle runeRect;
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name){ //add stats to parameters
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds){ //add stats to parameters
     super(sprite, 0, w, h);
     this.name = name;
     rect = new Rectangle(x, y, w, h);
@@ -16,7 +16,6 @@ public class Projectile extends Character{
     animatedSprite.setAnimationRange(0, 2);
     dead = false;
     move = false;
-    int seconds = 3;
     this.type = type;
     if(type == 1){
       runeRect = new Rectangle(x,y,50,50);
@@ -152,7 +151,7 @@ public class Projectile extends Character{
     Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
 
     //DO SOMETHING
-    open();
+    if(!dead)open();
     return true;
 
   }

@@ -81,21 +81,21 @@ public abstract class Character implements Comparable <Character>{
   }
 
   public void didMove(Game game ,Player player, Spawn spawner){
-    collisionCheckRectangle.x += xCollisionOffset;
-    collisionCheckRectangle.y += yCollisionOffset;
+    String str = "";
+			collisionCheckRectangle.x += xCollisionOffset;
+			collisionCheckRectangle.y += yCollisionOffset;
+			Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, rect.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);
+			//Check the X axis
 
-    Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, rect.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);
+			if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)){ rect.x = collisionCheckRectangle.x - xCollisionOffset; str += " - Walk X";}
 
-    //Check the X axis
-    if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.x = collisionCheckRectangle.x - xCollisionOffset;
-
-    axisCheck.x = rect.x + xCollisionOffset;
-    axisCheck.y = collisionCheckRectangle.y;
-    axisCheck.w = collisionCheckRectangle.w;
-    axisCheck.h = collisionCheckRectangle.h;
-    //axisCheck = new Rectangle(botRectangle.x, collisionCheckRectangle.y, collisionCheckRectangle.w, collisionCheckRectangle.h);
-    //Check the Y axis
-    if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
+			axisCheck.x = rect.x + xCollisionOffset;
+			axisCheck.y = collisionCheckRectangle.y;
+			axisCheck.w = collisionCheckRectangle.w;
+			axisCheck.h = collisionCheckRectangle.h;
+			//Check the Y axis
+			if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)){ rect.y = collisionCheckRectangle.y - yCollisionOffset; str += " - Walk Y";}
+      System.out.println(str);
   }
 
   public abstract void updateStats();
