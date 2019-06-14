@@ -8,10 +8,9 @@ public class Projectile extends Character{
   private boolean fired = false;
   private Rectangle runeRect;
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type){ //add stats to parameters
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name){ //add stats to parameters
     super(sprite, 0, w, h);
-    this.sprite = sprite;
-
+    this.name = name;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     animatedSprite.setAnimationRange(0, 2);
@@ -82,7 +81,7 @@ public class Projectile extends Character{
         dead = true;
         if(timer == 0){
           color = 0xFFe81414;
-          runeRect.generateGraphics(0xFF9d3131);
+          if(type ==1)runeRect.generateGraphics(0xFF9d3131);
           hitbox = runeRect;
         }
         timer++;
@@ -93,7 +92,7 @@ public class Projectile extends Character{
         move = false;
         fired = false;
         color = 0xFFE7DF25;
-        runeRect.generateGraphics(0xFFff00dc);
+        if(type ==1)runeRect.generateGraphics(0xFFff00dc);
         hitbox = null;
         line = new int[4];
         animatedSprite.reset();

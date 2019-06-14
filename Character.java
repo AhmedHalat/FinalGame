@@ -26,6 +26,7 @@ public abstract class Character implements Comparable <Character>{
   protected int color = 0;
   protected Rectangle hitbox;
   protected int[] line = new int[4];
+  protected String name;
 
    Character[] drops = new Character[2];
 
@@ -115,6 +116,8 @@ public abstract class Character implements Comparable <Character>{
     return -1;
   }
 	public Rectangle getRect() {return rect;}
+
+  public String getName(){return name;}
 
 	public void setRect(Rectangle rect) {this.rect = rect;}
 

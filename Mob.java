@@ -113,7 +113,6 @@ public class Mob extends Character{
   }
 
   public void hit(Player player){
-    System.out.println("HIT");
     this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
     if (this.stats.getHealthLeft() <= 0){
       player.getStats().setExp(player.getStats().getExp()+1);

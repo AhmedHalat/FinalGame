@@ -7,9 +7,10 @@ import java.util.Set;
 public class Spawn implements GameObject{
   private ArrayList<Character> characters= new ArrayList <Character> ();
   private ArrayList<Character> items= new ArrayList <Character> ();
-  private ArrayList<Character> weapons = new ArrayList <Character> ();
+  private Character weapon;
   private Rectangle rect;
   private int layer;
+  private boolean equipped = false;
   private static int room;
   private static int wave;
 
@@ -32,8 +33,14 @@ public class Spawn implements GameObject{
     for(int i = 0; i < multiple; i++) items.add(item);
   }
 
-  public void addWeapon(Character weapon){
-    weapons.add(weapon);
+  public void changeWeapon(Character weapon){
+    this.weapon = weapon;
+    equipped = true;
+  }
+
+  public void removeWeapon(){
+    weapon = null;
+    equipped = false;
   }
 
   public void removeAll(){
@@ -55,10 +62,10 @@ public class Spawn implements GameObject{
       if(item.isAlive()) item.render(renderer, xZoom, yZoom);
       if(item.particles()) item.renderParticles(renderer, xZoom, yZoom);
     }
-    for(Character weapon: weapons){
-      if(weapon.isAlive()) weapon.render(renderer, xZoom, yZoom);
-      if(weapon.particles()) weapon.renderParticles(renderer, xZoom, yZoom);
-    }
+
+      if( equipped && weapon.isAlive()) weapon.render(renderer, xZoom, yZoom);
+      if(equipped && weapon.particles()) weapon.renderParticles(renderer, xZoom, yZoom);
+
   }
 
   public void update(Game game, Player player, Spawn spawner){
@@ -68,9 +75,9 @@ public class Spawn implements GameObject{
     for(Character item: items){
       if(item.isAlive()) item.interact(game, player, spawner);
     }
-    for(Character weapon: weapons){
-      if(weapon.isAlive()) weapon.interact(game, player, spawner);
-    }
+
+      if(equipped && weapon.isAlive()) weapon.interact(game, player, spawner);
+
   }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom){
@@ -83,29 +90,28 @@ public class Spawn implements GameObject{
       if(item.isAlive()) stoppedChecking = item.handleMouseClick(mouseRectangle, camera, xZoom, yZoom);
       if(stoppedChecking) return stoppedChecking;
     }
-    stoppedChecking = weapons.get(0).handleMouseClick(mouseRectangle, camera, xZoom, yZoom);
+    if(equipped)stoppedChecking = weapon.handleMouseClick(mouseRectangle, camera, xZoom, yZoom);
     return stoppedChecking;
   }
 
   public Rectangle getHitBox(){
-    return weapons.get(0).getHitBox();
+    return weapon.getHitBox();
   }
 
   public int[] getHitLine(){
-    return weapons.get(0).getHitLine();
+    return weapon.getHitLine();
   }
 
   public boolean hitbox(){
-    if(weapons.get(0).getHitBox() != null) return true;
+    if(equipped && weapon.getHitBox() != null) return true;
     return false;
   }
 
 
   public boolean hitline(){
-    if(weapons.get(0).hitLine()) return true;
+    if(equipped && weapon.hitLine()) return true;
     return false;
   }
-  public ArrayList<Character> getWeapons(){return weapons;}
 
   public int getLayer(){return layer;}
 
