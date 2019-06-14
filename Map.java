@@ -18,7 +18,7 @@ public class Map{
 	private int blockHeight = 6;
 	private int blockPixelWidth = blockWidth * 16;
 	private int blockPixelHeight = blockHeight * 16;
-
+	private Game game;
 	private HashMap<Integer, String> comments = new HashMap<Integer, String>();
 
 	private File mapFile;
@@ -26,6 +26,11 @@ public class Map{
 	private int numLayers;
 
 	public Map (File mapFile, Tiles tileSet){
+		loadMap(mapFile,tileSet);
+	}
+
+	public Map (File mapFile, Tiles tileSet,Game game ){
+		this.game = game;
 		loadMap(mapFile,tileSet);
 	}
 
@@ -96,6 +101,10 @@ public class Map{
 		}
 	}
 
+	public void fixMap(){
+		for(MappedTile t: game.addLaterMap) setTile(t.layer,t.x,t.y,t.id);
+	}
+	
 	public MappedTile getTile(int layer, int tileX, int tileY) {
 		int blockX = (tileX - blockStartX)/blockWidth;
 		int blockY = (tileY - blockStartY)/blockHeight;
@@ -361,22 +370,6 @@ public class Map{
 				if(tile.x == tileX && tile.y == tileY)return tile;
 				return null;
 			}catch(Exception e){return null;}
-		}
-	}
-
-	//Tile ID in the tileSet and the position of the tile in the map
-	public static class MappedTile
-	{
-		public int layer, id, x, y;
-		//Parameters: layer of tile, tile id, x-y position of tile
-		//Sets variables to be easily accesed
-		//Constructor
-		public MappedTile(int layer, int id, int x, int y)
-		{
-			this.layer = layer;
-			this.id = id;
-			this.x = x;
-			this.y = y;
 		}
 	}
 }

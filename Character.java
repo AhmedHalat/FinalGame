@@ -38,7 +38,7 @@ public abstract class Character implements Comparable <Character>{
     this.animatedSprite = animatedSprite;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed);
+    this.stats = randomStats(speed,0);
   }
 
   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
@@ -47,7 +47,16 @@ public abstract class Character implements Comparable <Character>{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed);
+    this.stats = randomStats(speed,0);
+  }
+
+  public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset, int room){
+    this.animatedSprite = sprite;
+    this.speed = speed;
+    this.layer = 0;
+    this.xCollisionOffset = xCollisionOffset;
+    this.yCollisionOffset = yCollisionOffset;
+    this.stats = randomStats(speed,room);
   }
 
 
@@ -56,11 +65,24 @@ public abstract class Character implements Comparable <Character>{
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed);
+    this.stats = randomStats(speed,0);
+  }
+  public Character(int speed, int xCollisionOffset, int yCollisionOffset, int room){
+    this.speed = speed;
+    this.layer = 0;
+    this.xCollisionOffset = xCollisionOffset;
+    this.yCollisionOffset = yCollisionOffset;
+    this.stats = randomStats(speed,room);
   }
 
-  public Stats randomStats(int speed){//needs to be randomized/calculated
-    return new Stats(1,10,1,100,speed);
+
+  public Stats randomStats(int speed,int room){//needs to be randomized/calculated
+    if (this instanceof Player) return new Stats(1,10,1,100,speed);
+    int luck, defense, damage, health;
+    health = 100;//+room*5;
+    defense = 10;//+room*2;
+    damage = 1;//+room*3;
+    return new Stats(1,defense,damage,health,speed+room);
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -80,6 +102,7 @@ public abstract class Character implements Comparable <Character>{
   }
 
   public void didMove(Game game ,Player player, Spawn spawner){
+    if (!move) return;
     collisionCheckRectangle.x += xCollisionOffset;
     collisionCheckRectangle.y += yCollisionOffset;
 

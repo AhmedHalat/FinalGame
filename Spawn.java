@@ -32,6 +32,11 @@ public class Spawn implements GameObject{
     for(int i = 0; i < multiple; i++) items.add(item);
   }
 
+public void dontMove(int r){
+  for(Character m: characters)
+  if (r != m.getRoom()) m.setMove(true);
+  else m.setMove(false);
+}
   public void addWeapon(Character weapon){
     weapons.add(weapon);
   }

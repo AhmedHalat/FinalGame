@@ -9,10 +9,11 @@ public class Mob extends Character{
   private int room;
   private int rectangle;
   private int cooldown;
+  private int damageCooldown;
   private int type;
   private int direction; //down left right up
   public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize, int room){ //add stats to parameters
-    super(sprite, 3, w, h);
+    super(sprite, 3, w, h, room);
     this.sprite = sprite;
     this.animatedSprite = sprite;
     this.sheetSize = sheetSize;
@@ -28,7 +29,7 @@ public class Mob extends Character{
   }
 
   public Mob(int x, int y, int w, int h, int xZoom, int yZoom,int room){ //add stats to parameters
-    super(3, w, h);
+    super(3, w, h, room);
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     dead = false;
@@ -37,9 +38,9 @@ public class Mob extends Character{
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
-    rect.generateGraphics(0x0Fff0005);
+    // rect.generateGraphics(0x0Fff0005);
     // System.out.println(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*100);
-    Rectangle r = new Rectangle(rect.x, rect.y-rect.h-5, (int) Math.round(this.stats.getHealthLeft()*1.0/this.stats.getHealth()*10), 5);
+    Rectangle r = new Rectangle(rect.x, rect.y-rect.h-5, (int) Math.round((this.stats.getHealthLeft()*1.0/this.stats.getHealth())*rect.w), 5);
     r.generateGraphics(0xFFff000F);
     renderer.renderSprite(animatedSprite, rect.x, rect.y, xZoom, yZoom, false);
     renderer.renderRectangle(r, xZoom, yZoom, false);
@@ -49,8 +50,22 @@ public class Mob extends Character{
     int preDirection = direction;
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
-    if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
-      hit(player);
+    if (spawner.hitbox() && rect.intersects(spawner.getHitBox()) && rect.intersects(player.getRect())){
+      mobHit(player);
+      if (damageCooldown%5 != 0 && damageCooldown != 0) {damageCooldown = 0; return;}
+      playerHit(player);
+      damageCooldown++;
+      return;
+    }
+    else if(rect.intersects(player.getRect())){
+      if (damageCooldown%5 != 0 && damageCooldown != 0) {damageCooldown = 0; return;}
+      playerHit(player);
+      damageCooldown++;
+      return;
+    }
+    else if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
+      mobHit(player);
+      damageCooldown++;
       return;
     }
     else if(spawner.hitline()){
@@ -76,7 +91,7 @@ public class Mob extends Character{
         Line2D line2 = new Line2D.Float(x3, y3, x4, y4);
         boolean result = line2.intersectsLine(line1);
         if(result) {
-          hit(player);
+          mobHit(player);
           return;
         }
       }
@@ -89,7 +104,7 @@ public class Mob extends Character{
       }
       else{
         if(rect.y < player.getRectangle().y) direction = 0;
-        else if(rect.y > player.getRectangle().y)direction = 3;
+        else if(rect.y > player.getRectangle().y) direction = 3;
       }
     }
     if(direction == 0) collisionCheckRectangle.y += speed;
@@ -112,13 +127,20 @@ public class Mob extends Character{
     if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 3, (direction * 3) + 2);
   }
 
-  public void hit(Player player){
-    System.out.println("HIT");
-    this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
+  public void mobHit(Player player){
+    if (move) this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
     if (this.stats.getHealthLeft() <= 0){
       player.getStats().setExp(player.getStats().getExp()+1);
       dead = true;
       move = false;
+    }
+  }
+
+  public void playerHit(Player player){
+    if (player.getStats().getHealthLeft() > 0) player.getStats().setHealthLeft(player.getStats().getHealthLeft() - (this.stats.getDamage()));
+    if (player.getStats().getHealthLeft() <= 0){
+      player.setDead(true);
+      player.setMove(false);
     }
   }
 
@@ -130,6 +152,9 @@ public class Mob extends Character{
     return this.room;
   }
 
+  public boolean getMove(){
+    return this.move;
+  }
 
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     return false;

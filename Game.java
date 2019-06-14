@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
-
+import java.util.ArrayList;
 public class Game extends JFrame implements Runnable, ActionListener{
 
 	public static int alpha = 0xFFFF00DC;
@@ -62,6 +62,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private MouseEventListener mouseListener = new MouseEventListener(this);
 
 	private int[][] randomMap;
+	public ArrayList <MappedTile> addLaterMap = new ArrayList <MappedTile>();
 	private int xZoom = 3;
 	private int yZoom = 3;
 
@@ -89,15 +90,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		//Player Animated Sprites
 		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
 		player = new Player(playerAnimations, xZoom, yZoom);
-		//Menu Bar
-		jMenu();
 
-		//Add our graphics compoent
-		add(canvas);
-		//Make our frame visible.
-		setVisible(true);
-		//Create our object for buffer strategy.
-		canvas.createBufferStrategy(3);
 		renderer = new RenderHandler(getWidth(), getHeight());
 
 		//Load Assets
@@ -109,7 +102,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 		resetMap(new File ("Map.txt"));
 		randomMap();
-		map = new Map(new File("Map.txt"), tiles);
+		map = new Map(new File("Map.txt"), tiles,this);
 
 
 		Sprite[] tileSprites = tiles.getSprites();
@@ -128,6 +121,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 		spawner.addWeapon(projectile);
 		randomMobs();
+		//Menu Bar
+		jMenu();
+		//Add our graphics compoent
+		add(canvas);
+		//Make our frame visible.
+		setVisible(true);
+		//Create our object for buffer strategy.
+		canvas.createBufferStrategy(3);
 
 		//Add Listeners
 		canvas.addKeyListener(keyListener);
@@ -156,8 +157,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 				public void jMenu(){
 					mainMenu.removeAll();
-					JMenuItem weapon = new JMenuItem ("Weapon");
-					JMenuItem weapon2 = new JMenuItem ("Weapon 2");
+					JMenu weapon = new JMenu ("Weapon");
+					JMenu weapon2 = new JMenu ("Weapon 2");
 					JMenuItem attack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
 					JMenuItem defense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
 					JMenuItem health = new JMenuItem ("Health: " + (player.getStats().getHealth()));
@@ -165,10 +166,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					JMenuItem luck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
 					JMenuItem expInfo = new JMenuItem ("You can now level up "+levelUp+" times!\nClick on a stat to upgrade it!");
 					if (levelUp == 1)  expInfo = new JMenuItem ("You can now level up "+levelUp+" time!\nClick on a stat to upgrade it!");
-					// JMenuItem weaponAttack = new JMenuItem ("Attack: " + (player.getStats().getDamage()));
-					// JMenuItem weaponDefense = new JMenuItem ("Defense: " + (player.getStats().getDefense()));
-					// JMenuItem weaponSpeed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
-					// JMenuItem weaponLuck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
+					JMenuItem weaponAttack = new JMenuItem ("Attack: " + (spawner.getWeapons().get(0).getStats().getDamage()));
+					JMenuItem weaponDefense = new JMenuItem ("Defense: " + (spawner.getWeapons().get(0).getStats().getDefense()));
+					JMenuItem weaponSpeed = new JMenuItem ("Speed: " + (spawner.getWeapons().get(0).getStats().getSpeed()));
+					JMenuItem weaponLuck = new JMenuItem ("Luck: " + (spawner.getWeapons().get(0).getStats().getLuck()));
+					JMenuItem weapon2Attack = new JMenuItem ("Attack: " + (spawner.getWeapons().get(0).getStats().getDamage()));
+					JMenuItem weapon2Defense = new JMenuItem ("Defense: " + (spawner.getWeapons().get(0).getStats().getDefense()));
+					JMenuItem weapon2Speed = new JMenuItem ("Speed: " + (spawner.getWeapons().get(0).getStats().getSpeed()));
+					JMenuItem weapon2Luck = new JMenuItem ("Luck: " + (spawner.getWeapons().get(0).getStats().getLuck()));
 					JMenu statMenu = new JMenu ("Stats");
 					JMenu expMenu = new JMenu ("Level Up!");
 					JMenu weaponMenu = new JMenu ("Weapons");
@@ -184,6 +189,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					mainMenu.add (statMenu);
 					mainMenu.add(expMenu);
 					setJMenuBar(mainMenu);
+					weapon.add(weaponAttack);
+					weapon.add(weaponDefense);
+					weapon.add(weaponSpeed);
+					weapon.add(weaponLuck);
+					weapon2.add(weapon2Attack);
+					weapon2.add(weapon2Defense);
+					weapon2.add(weapon2Speed);
+					weapon2.add(weapon2Luck);
 					attack.setActionCommand ("Attack");
 					attack.addActionListener (this);
 					defense.setActionCommand ("Defense");
@@ -268,7 +281,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					final int maxHeight = 22;
 					final int minHight = 16;
 					selectedLayer = 1;
-					int width, height, numberOfChambers = 2;//(int) (Math.random()*(5-3+1))+3;
+					int width, height, numberOfChambers = (int) (Math.random()*(5-3+1))+3;
 					int layer = 0;
 					randomMap = new int[numberOfChambers+1][4];
 					height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
@@ -294,8 +307,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 								else if (x == randomMap[i][0] && y == randomMap[i][1]) saveMap(0+","+ 5+","+x+","+ y);
 								else if (x == randomMap[i][2] && y == randomMap[i][1]) saveMap(0+","+ 7+","+x+","+ y);
 								else if (x == randomMap[i][0]) saveMap(0+","+2+","+x+","+y);
-								else if (x == randomMap[i][2]) saveMap(0+","+4+","+x+","+y);
-								else if (y == randomMap[i][1]) saveMap(0+","+6+","+x+","+y);
+								else if (x == randomMap[i][2]) saveMap(0+","+4+","+x+","+ y);//addLaterMap.add(new MappedTile(0,4,x,y)); //4
+								else if (y == randomMap[i][1]) saveMap(0+","+6+","+x+","+ y);//addLaterMap.add(new MappedTile(0,6,x,y)); //6
 								else if (y == randomMap[i][3]) saveMap(0+","+3+","+x+","+y);
 								else saveMap(0+","+1+","+x+","+y);
 							}
@@ -330,8 +343,15 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					SpriteSheet enemySheet = new SpriteSheet(enemySheetImage);
 					enemySheet.loadSprites(27, 28);
 					AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
-
-					mobSet.add(new Mob(enemyAnimations, 0, -360, 16, 26, 16, 16,12, 0));
+					for (int i = 1; i < randomMap.length-1;i++) {
+						for (int n = 0; n <=i;n++){
+							int x = (int) (Math.random()*(randomMap[i][2]-2-randomMap[i][0]-1))+randomMap[i][0];
+							int y = (int) (Math.random()*(5+randomMap[i][3]-randomMap[i][1]-2))+randomMap[i][1]-2;//*(randomMap[i][1]-randomMap[i][3])) + randomMap[i][3];
+							x = x*16*xZoom;
+							y = y*16*yZoom;
+							mobSet.add(new Mob(enemyAnimations, x, y, 16, 26, 16, 16,12, i));
+						}
+					}
 					System.out.println("create");
 					BufferedImage chestSheetImage = loadImage("Chest.png");
 					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
@@ -356,6 +376,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void leftClick(int x, int y){
+					// map.fixMap();
 					if (keyListener.levelUp()) player.getStats().setExp(player.getStats().getExp()+50);
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
@@ -406,6 +427,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void render() {
 					BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 				 graphics = bufferStrategy.getDrawGraphics();
+				 	spawner.dontMove(room);
 					super.paint(graphics);
 					map.render(renderer, objects, xZoom, yZoom);
 					mapUpdater();
