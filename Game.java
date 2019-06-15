@@ -37,6 +37,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private Player player;
 	private Spawn spawner;
 
+	private BufferedImage startImg = loadImage("start.png");
+
 	private int selectedTileID = 2;
 	private int selectedLayer = 0;
 
@@ -73,6 +75,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private int pickupTimer = 5*60;
 	private String pickedUp;
 
+	private boolean start = false;
+		private boolean end = false;
+
 	public Game(){
 		//Make our program shutdown when we exit out.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,7 +93,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 		//Player Animated Sprites
 		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
 		player = new Player(playerAnimations, xZoom, yZoom);
-
 
 		renderer = new RenderHandler(getWidth(), getHeight());
 
@@ -223,6 +227,13 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					setJMenuBar(mainMenu);
 					if (levelUp == 0) expMenu.hide();
 					expInfo.disable();
+				}
+
+				public void menu(){
+					//BufferedImage start = loadImage("start.png");
+					//renderer.renderImage(start, 1, 1, 16, 16, false);
+					//renderer.renderImage(start, getWidth()/2, getHeight()/2, 1, 1, false);
+					//System.out.println("st32a");
 				}
 
 				public void actionPerformed(ActionEvent event) {
@@ -449,6 +460,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void leftClick(int x, int y){
+					start = true;
 					if (keyListener.levelUp()) player.getStats().setExp(player.getStats().getExp()+50);
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
@@ -494,7 +506,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 						public void render() {
 							BufferStrategy bufferStrategy = canvas.getBufferStrategy();
-						 graphics = bufferStrategy.getDrawGraphics();
+						 	graphics = bufferStrategy.getDrawGraphics();
 						 	spawner.dontMove(room);
 							super.paint(graphics);
 							map.render(renderer, objects, xZoom, yZoom);
@@ -514,6 +526,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
 							renderer.renderString(graphics, "XP:" + player.getStats().getExp() +"/"+10, 200, getHeight()- 50, 20);
 							if(pickup)drawString( graphics, pickedUp, 10,50, 15);
+							if(!start){
+								renderer.renderString(graphics, "Click to Start",getHeight()/2, getWidth()/2,50);
+							}
+							if(end){
+								renderer.renderString(graphics, "GameOver Quit to reset",getWidth()/2 - 50*4, getHeight()/2 ,50);
+							}
 							Graphics2D g2 = (Graphics2D) graphics;
 
 							graphics.setColor(new Color(199, 14, 14));
@@ -578,6 +596,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						public int getRoom() {return room;}
 						public int getLevel() {return mapLevel;}
 						public int getSelectedTile(){return selectedTileID;}
+						public void endGame(){
+							end = true;
+						}
 
 						public void run(){
 							long lastTime = System.nanoTime(); //long 2^63
@@ -589,7 +610,10 @@ public class Game extends JFrame implements Runnable, ActionListener{
 
 								changeInSeconds += (now - lastTime) / nanoSecondConversion;
 								while(changeInSeconds >= 1) {
-									update();
+									if(start && !end)update();
+									else{
+										menu();
+									}
 									changeInSeconds--;
 								}
 								render();

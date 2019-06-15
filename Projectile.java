@@ -7,6 +7,7 @@ public class Projectile extends Character{
   private int type;
   private boolean fired = false;
   private Rectangle runeRect;
+  private Sprite rune;
 
   public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Stats stats){
     super(sprite, 0, w, h,stats);
@@ -30,19 +31,21 @@ public class Projectile extends Character{
 
   }
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, Sprite rune, int type, Stats stats){
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Sprite rune){ //add stats to parameters
     super(sprite, 0, w, h,stats);
-    this.sprite = sprite;
-
+    this.name = name;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     animatedSprite.setAnimationRange(0, 2);
     dead = false;
     move = false;
-    int seconds = 3;
-    type = 1;
-    runeRect = new Rectangle(x,y,20,20);
-    runeRect.generateGraphics(0xFFff00dc);
+    this.type = type;
+    this.rune = rune;
+    System.out.println("RUNE SPRITE ADDED");
+    if(type == 1){
+      runeRect = new Rectangle(x,y,50,50);
+      runeRect.generateGraphics(0xFFff00dc);
+    }
     cooldown = seconds * 60;
 
     particle = true;
@@ -68,7 +71,7 @@ public class Projectile extends Character{
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     renderer.renderSprite(animatedSprite, rect.x, rect.y, 1, 1, false);
-    if(type ==1) renderer.renderRectangle(runeRect, xZoom, yZoom, false);
+    if(type ==1) renderer.renderSprite(rune, runeRect.x, runeRect.y, 1, 1, false);
   }
 
 
@@ -140,6 +143,7 @@ public class Projectile extends Character{
     game.hideLine();
     runeRect.x = player.getRectangle().x+ MouseInfo.getPointerInfo().getLocation().x -game.getCanvas().getLocationOnScreen().x - game.getWidth()/2 - runeRect.w ;
     runeRect.y =  game.getRenderer().getCamera().y +MouseInfo.getPointerInfo().getLocation().y-game.getCanvas().getLocationOnScreen().y - runeRect.h;
+
   }
 
 

@@ -16,7 +16,7 @@ public class Player extends Character implements GameObject{
 		this.sprite = sprite;
 		if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;
 		updateDirection();
-		Rectangle playerRectangle = new Rectangle(0, 0, 20, 26);
+		Rectangle playerRectangle = new Rectangle(0, 100, 20, 26);
 		Rectangle collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
 		particles = new Particle(30, 46, 50, 1);
 		particles.fill(0xFFF7D80C);
@@ -40,6 +40,7 @@ public class Player extends Character implements GameObject{
 	}
 
 	public void update(Game game, Player player, Spawn spawner){
+		if(dead) game.endGame();
 		KeyBoardListener keyListener = game.getKeyListener();
 		boolean didMove = false;
 		int newDirection = direction;
