@@ -1,11 +1,11 @@
 import java.io.*;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.io.*;
+
+/**
+ * Map class used to make the map
+ */
 public class Map{
 	private Tiles tileSet;
 	private int fillTileID = 0;
@@ -34,6 +34,11 @@ public class Map{
 		loadMap(mapFile,tileSet);
 	}
 
+/**
+ * loads the map from a file
+ * @param mapFile the file where the map is currently WriteContents
+ * @param tileSet the tiles to use to load the map
+ */
 	public void loadMap (File mapFile, Tiles tileSet){
 		this.mapFile = mapFile;
 		this.tileSet = tileSet;
@@ -41,6 +46,7 @@ public class Map{
 		int minY = Integer.MAX_VALUE;
 		int maxX = Integer.MIN_VALUE;
 		int maxY = Integer.MIN_VALUE;
+		//try to access the file and parse through it
 		try{
 			Scanner scanner = new Scanner(mapFile);
 			int currentLine = 0;
@@ -56,6 +62,7 @@ public class Map{
 					}
 
 					String[] splitString = line.split(",");
+					//gets the x,y,layer and tileID and creates a new tile
 					if(splitString.length >= 4){
 						MappedTile mappedTile = new MappedTile(Integer.parseInt(splitString[0]), Integer.parseInt(splitString[1]), Integer.parseInt(splitString[2]), Integer.parseInt(splitString[3]));
 						if(mappedTile.x < minX) minX = mappedTile.x;
@@ -67,17 +74,15 @@ public class Map{
 					}
 				}
 				else comments.put(currentLine, line);
-
 				currentLine++;
 			}
-
+			//creats max and mins
 			if(mappedTiles.size() == 0) {
 				minX = -blockWidth;
 				minY = -blockHeight;
 				maxX = blockWidth;
 				maxY = blockHeight;
 			}
-
 			blockStartX = minX;
 			blockStartY = minY;
 			int blockSizeX = (maxX + blockWidth) - minX;
@@ -101,10 +106,14 @@ public class Map{
 		}
 	}
 
-	public void fixMap(){
-		for(MappedTile t: game.addLaterMap) setTile(t.layer,t.x,t.y,t.id);
-	}
-	
+
+	/**
+	 * returns the tile at the Pos
+	 * @param  layer the layer the tile is on
+	 * @param  tileX the x
+	 * @param  tileY y
+	 * @return       returns the tile
+	 */
 	public MappedTile getTile(int layer, int tileX, int tileY) {
 		int blockX = (tileX - blockStartX)/blockWidth;
 		int blockY = (tileY - blockStartY)/blockHeight;
@@ -118,6 +127,14 @@ public class Map{
 		return block.getTile(layer, tileX, tileY);
 	}
 
+/**
+ * checks to see if there is a collision between a rectangle and Map
+ * @param  rect  the rectangle to check, belongs to a Character
+ * @param  layer the layer the tile exists on
+ * @param  xZoom the zoom ratio
+ * @param  yZoom the zoom ratio
+ * @return       returns true when there is a collision
+ */
 	public boolean checkCollision(Rectangle rect, int layer, int xZoom, int yZoom) {
 		int tileWidth = 16 * xZoom;
 		int tileHeight = 16 * yZoom;
@@ -159,6 +176,13 @@ public class Map{
 		return false;
 	}
 
+	/**
+	 * set the tile at a certain Spot
+	 * @param layer  the layer to add the TilePane
+	 * @param tileX  the x
+	 * @param tileY  the y
+	 * @param tileID the id of the tile based on the tile.txt file
+	 */
 	public void setTile(int layer, int tileX, int tileY, int tileID){
 		if(layer >= numLayers) numLayers = layer + 1;
 		for(int i = 0; i < mappedTiles.size(); i++){
@@ -216,6 +240,12 @@ public class Map{
 		}
 	}
 
+/**
+ * removes a TilePane
+ * @param layer the layer the tile is on
+ * @param tileX the x Position
+ * @param tileY the y Position
+ */
 	public void removeTile(int layer, int tileX, int tileY){
 		for(int i = 0; i < mappedTiles.size(); i++){
 			MappedTile mappedTile = mappedTiles.get(i);
@@ -230,6 +260,9 @@ public class Map{
 		}
 	}
 
+/**
+ * saves the map into a file
+ */
 	public void saveMap(){
 		try{
 			int currentLine = 0;
@@ -259,18 +292,24 @@ public class Map{
 		}
 	}
 
-
+	/**
+	 * renders Map
+	 * @param renderer where it renders
+	 * @param objects  spawner, characters and Map
+	 * @param xZoom    zoom ratio
+	 * @param yZoom    zoom ratio
+	 */
 	public void render(RenderHandler renderer, GameObject[] objects, int xZoom, int yZoom){
 		int tileWidth = 16 * xZoom;
 		int tileHeight = 16 * yZoom;
-
+		//fills the floor of the map
 		if(fillTileID >= 0){
 			Rectangle camera = renderer.getCamera();
 			for(int y = camera.y - tileHeight - (camera.y % tileHeight); y < camera.y + camera.h; y+= tileHeight)
 			for(int x = camera.x - tileWidth - (camera.x % tileWidth); x < camera.x + camera.w; x+= tileWidth)
 			tileSet.renderTile(fillTileID, renderer, x, y, xZoom, yZoom);
 		}
-
+		//fils the rest of the map
 		for(int layer = 0; layer < numLayers; layer++){
 			int topLeftX = renderer.getCamera().x;
 			int topLeftY = renderer.getCamera().y;
@@ -285,7 +324,6 @@ public class Map{
 
 			while(pixelX < bottomRightX && pixelY < bottomRightY){
 				if(blockX >= 0 && blockY >= 0 && blockX < blocks.length && blockY < blocks[0].length && blocks[blockX][blockY] != null) blocks[blockX][blockY].render(renderer, layer, tileWidth, tileHeight, xZoom, yZoom);
-
 				blockX++;
 				pixelX += blockPixelWidth;
 
@@ -297,37 +335,39 @@ public class Map{
 					if(pixelY > bottomRightY) break;
 				}
 			}
-
+			//renders objects on different layers of the map
 			for(int i = 0; i < objects.length; i++) if(objects[i].getLayer() == layer) objects[i].render(renderer, xZoom, yZoom);
-
 			else if(objects[i].getLayer() + 1 == layer){
 				Rectangle rect = objects[i].getRectangle();
-
 				int tileBelowX = rect.x/tileWidth;
 				int tileBelowX2 = (int) Math.floor((rect.x + rect.w/2*xZoom*1.0)/tileWidth);
 				int tileBelowX3 = (int) Math.floor((rect.x + rect.w*xZoom*1.0)/tileWidth);
-
 				int tileBelowY = (int) Math.floor((rect.y + rect.h*yZoom*1.0)/tileHeight);
-
 				if(getTile(layer, tileBelowX, tileBelowY) == null && getTile(layer, tileBelowX2, tileBelowY) == null && getTile(layer, tileBelowX3, tileBelowY) == null) objects[i].render(renderer, xZoom, yZoom);
 			}
 		}
-
 		for(int i = 0; i < objects.length; i++) if(objects[i].getLayer() == Integer.MAX_VALUE) objects[i].render(renderer, xZoom, yZoom);
 	}
+
 	//Block represents a 6/6 block of tiles
 	@SuppressWarnings("unchecked")
-	private class Block
-	{
+	private class Block{
 		public ArrayList<MappedTile>[] mappedTilesByLayer;
 		public Block() {
 			mappedTilesByLayer = new ArrayList[numLayers];
 			for(int i = 0; i < mappedTilesByLayer.length; i++)
 			mappedTilesByLayer[i] = new ArrayList<MappedTile>();
 		}
-		//Parameters: renderer object, layer of tile and tile sizes
-		//renders each tile in the map
-		//return void
+
+		/**
+		 * renders objects, layers and tiles
+		 * @param renderer   where to render
+		 * @param layer      the current Layer
+		 * @param tileWidth  the width of TilePane
+		 * @param tileHeight the getHeight
+		 * @param xZoom      the zoom ratio
+		 * @param yZoom      the zoom ratio
+		 */
 		public void render(RenderHandler renderer, int layer, int tileWidth, int tileHeight, int xZoom, int yZoom)
 		{
 			if(mappedTilesByLayer.length > layer)
@@ -340,29 +380,38 @@ public class Map{
 				}
 			}
 		}
-		//Parameters: mappedTile contains layer, tilex and y
-		//places the tile on the map
-		//returns Void
+
+		/**
+		 * Places tiles on map
+		 * @param tile tile to add
+		 */
 		public void addTile(MappedTile tile) {
 			if(mappedTilesByLayer.length <= tile.layer)
 			{
 				ArrayList<MappedTile>[] newTilesByLayer = new ArrayList[tile.layer + 1];
-
 				int i = 0;
 				for(i = 0; i < mappedTilesByLayer.length; i++)
 				newTilesByLayer[i] = mappedTilesByLayer[i];
 				for(; i < newTilesByLayer.length; i++)
 				newTilesByLayer[i] = new ArrayList<MappedTile>();
-
 				mappedTilesByLayer = newTilesByLayer;
 			}
 			mappedTilesByLayer[tile.layer].add(tile);
 		}
 
+		/**
+ 		* Removes tiles
+ 		* @param tile mapped tile to remove
+ 		*/
 		public void removeTile(MappedTile tile) {mappedTilesByLayer[tile.layer].remove(tile);}
 
-		//Parameters: layer, tile positions on spritesheet
-		//returns the position of a specific tile
+		/**
+		 * returns a mapped tile at that x,y Pos
+		 * @param  layer the layer the tile is on
+		 * @param  tileX the x Pos
+		 * @param  tileY the y Pos
+		 * @return       mappedTIle
+		 */
 		public MappedTile getTile(int layer, int tileX, int tileY){
 			// System.out.println(mappedTilesByLayer[0].get(0).x);
 			try{

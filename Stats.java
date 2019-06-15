@@ -1,3 +1,6 @@
+/**
+ * Stats given to all characters
+ */
 public class Stats{
   private int luck;
   private int defense;
@@ -17,9 +20,9 @@ public class Stats{
 		this.speed = speed;
 	}
 
+  //getters and setters
 	public int getLuck() {
-		return luck;
-	}
+		return luck;}
 
 	public void setLuck(int luck) {
 		this.luck = luck;

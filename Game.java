@@ -24,24 +24,23 @@ import java.util.HashSet;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.util.ArrayList;
+
+/**Mohamed and Ahmed
+ *June 15 2019
+ * This game is a dungeon crawler with randomized weapons, stats, ennemies and maps. Every floor gets more difficult and luck play a big part (so upgrade that stat)
+ */
 public class Game extends JFrame implements Runnable, ActionListener{
-
-	public static int alpha = 0xFFFF00DC;
-
+	//Global Variables
+	public static int alpha = 0xFFFF00DC; //Used as transparency
 	private Canvas canvas = new Canvas();
 	private RenderHandler renderer;
-
-	private SpriteSheet sheet;
-	private SpriteSheet playerSheet;
-
-	private Player player;
-	private Spawn spawner;
-
+	//Game end/start
 	private BufferedImage startImg = loadImage("start.png");
-
+	private boolean start = false;
+	private boolean end = false;
 	private int selectedTileID = 2;
 	private int selectedLayer = 0;
-
+	//used for spell books
 	private int mX;
 	private int mY;
 	private int mW;
@@ -49,21 +48,17 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private boolean showMouseLine = false;
 	private boolean line2 = false;
 	private boolean line3 = false;
-
-	private Tiles tiles;
-	private Map map;
-
+	//Sprite sheets and game objects
+	private SpriteSheet sheet;
+	private SpriteSheet playerSheet;
+	private Player player;
+	private Spawn spawner;
 	private GameObject[] objects;
 	private ArrayList <Character> weapons = new ArrayList<Character>();
 	private KeyBoardListener keyListener = new KeyBoardListener(this);
 	private MouseEventListener mouseListener = new MouseEventListener(this);
 
-	private int[][] randomMap;
-	private int xZoom = 3;
-	private int yZoom = 3;
-
 	private Graphics graphics;
-
 	private Rectangle mouseRectangle;
 	private int mapLevel = 1;
 	private int room = 1;
@@ -74,56 +69,48 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private boolean pickup = false;
 	private int pickupTimer = 5*60;
 	private String pickedUp;
+	//Map Variables
+	private int[][] randomMap;
+	private int xZoom = 3;
+	private int yZoom = 3;
+	private Tiles tiles;
+	private Map map;
 
-	private boolean start = false;
-		private boolean end = false;
 
 	public Game(){
-		//Make our program shutdown when we exit out.
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//Set the position and size of our frame.
-		setBounds(0,0, 1000, 800);
-		//Put our frame in the center of the screen.
-		setLocationRelativeTo(null);
-
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		//Make our program shutdown when we exit out.
+		setBounds(0,0, 1000, 800);		//Set the position and size of our frame.
+		setLocationRelativeTo(null);		//Put our frame in the center of the screen.
+		//Create player
 		BufferedImage playerSheetImage = loadImage("Player.png");
 		playerSheet = new SpriteSheet(playerSheetImage);
 		playerSheet.loadSprites(20, 26);
-
 		//Player Animated Sprites
 		AnimatedSprite playerAnimations = new AnimatedSprite(playerSheet, 5);
 		player = new Player(playerAnimations, xZoom, yZoom);
-
+		//render game
 		renderer = new RenderHandler(getWidth(), getHeight());
-
 		//Load Assets
 		BufferedImage sheetImage = loadImage("DungeonTileset2.png");
 		sheet = new SpriteSheet(sheetImage);
 		sheet.loadSprites(16, 16);
-
 		//Load Tiles and Map
 		tiles = new Tiles(new File("Tiles2.txt"),sheet);
 		resetMap(new File ("Map.txt"));
 		randomMap();
 		map = new Map(new File("Map.txt"), tiles,this);
-
-
+		//load tiles
 		Sprite[] tileSprites = tiles.getSprites();
-
+		//set weapons and bar
 		weapons.add(null);
 		weapons.add(null);
 		jMenu();
-
 		//Load Objects
 		objects = new GameObject[2];
 		spawner = new Spawn();
 		objects[0] = player;
 		objects[1] = spawner;
-
-		//spawner.changeWeapon(projectile);
 		randomMobs();
-		//Menu Bar
-		jMenu();
 		//Add our graphics compoent
 		add(canvas);
 		//Make our frame visible.
@@ -155,9 +142,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					canvas.requestFocus();
 				}
 
-
+				/**
+				 * Responsible for the JMenu and displays stats and weapons
+				 */
 				public void jMenu(){
 					mainMenu.removeAll();
+					//initialize
 					JMenu statMenu = new JMenu ("Stats");
 					JMenu expMenu = new JMenu ("Level Up!");
 					JMenu weaponMenu = new JMenu ("Weapons");
@@ -168,6 +158,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					JMenuItem speed = new JMenuItem ("Speed: " + (player.getStats().getSpeed()));
 					JMenuItem luck = new JMenuItem ("Luck: " + (player.getStats().getLuck()));
 					JMenuItem expInfo = new JMenuItem ("You can now level up "+levelUp+" times!\nClick on a stat to upgrade it!");
+					//build
 					statMenu.add(attack);
 					statMenu.add(defense);
 					statMenu.add(health);
@@ -176,6 +167,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					mainMenu.add (weaponMenu);
 					mainMenu.add (statMenu);
 					mainMenu.add(expMenu);
+					//set actions
 					attack.setActionCommand ("Attack");
 					attack.addActionListener (this);
 					defense.setActionCommand ("Defense");
@@ -186,7 +178,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					speed.addActionListener (this);
 					luck.setActionCommand ("Luck");
 					luck.addActionListener (this);
-					//if (levelUp == 1)  expInfo = new JMenuItem ("You can now level up "+levelUp+" time!\nClick on a stat to upgrade it!");
+					//Set Weapon vars and actions
 					if(weapons.get(0) != null){
 						JMenu weapon = new JMenu (weapons.get(0).getName());
 						JMenuItem weaponAttack = new JMenuItem ("Attack: " + (weapons.get(0).getStats().getDamage()));
@@ -219,7 +211,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						equipWeapon2.addActionListener (this);
 						weaponMenu.add(weapon2);
 					}
-
 					expMenu.add(expInfo);
 					weaponMenu.add(removeWeapon);
 					removeWeapon.setActionCommand ("removeWeapon");
@@ -229,9 +220,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					expInfo.disable();
 				}
 
+				/**
+				 * Handles actions from JMeny
+				 * @param event the action which needs to take place
+				 */
 				public void actionPerformed(ActionEvent event) {
 					String e = event.getActionCommand ();
 					System.out.println(e);
+					//weapons
 					if(e.equals("weapon")){
 						spawner.changeWeapon(weapons.get(0));
 						showMouseLine = true;
@@ -244,8 +240,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						showMouseLine = false;
 						spawner.removeWeapon();
 					}
-
-					if (keyListener.levelUp()) levelUp++;
+					//upgradable stats if player has leveledup
 					if (levelUp > 0){
 						if (e.equals("Attack")) player.getStats().setDamage(player.getStats().getDamage()+1);
 						else if (e.equals("Defense")) player.getStats().setDefense(player.getStats().getDefense()+1);
@@ -258,24 +253,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					}
 				}
 
-				public void resetMap(File mapFile){
-					try {
-						FileWriter writer = new FileWriter(mapFile);
-						writer.write("//Fill Tile\nFill:0\n//Layer,TileID,X,Y\n");
-						writer.flush();
-						writer.close();
-					}catch (Exception e) {e.printStackTrace();}
-				}
-
-				public void saveMap(String str){
-					try{
-						FileWriter fr = new FileWriter(new File("Map.txt"), true);
-						fr.write(str+"\n");
-						fr.close();
-					}
-					catch (java.io.IOException e){e.printStackTrace();}
-				}
-
+				/**
+				 * Updates all the objects within the game
+				 */
 				public void update(){
 					for(int i = 0; i < objects.length; i++) objects[i].update(this, player, spawner);
 					if(pickup){
@@ -287,12 +267,16 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					}
 				}
 
+				/**
+				 * Loads all sprite images
+				 * @param  path the location of the file
+				 * @return      a formated image
+				 */
 				public static BufferedImage loadImage(String path){
 					try{
 						BufferedImage loadedImage = ImageIO.read(Game.class.getResource(path));
 						BufferedImage formattedImage = new BufferedImage(loadedImage.getWidth(), loadedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 						formattedImage.getGraphics().drawImage(loadedImage, 0, 0, null);
-
 						return formattedImage;
 					}
 					catch(IOException exception){
@@ -301,6 +285,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					}
 				}
 
+				/**
+				 * Creates random weapon drop at the start of the game
+				 * @param type       name of the character that called it (ie Chest)
+				 * @param originName if weapon or mob
+				 */
 				public void createWeaponDrop(int type, String originName){
 					int rand = (int) Math.round(Math.random()*10);
 					BufferedImage proImg;
@@ -331,12 +320,40 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					pickedUp += "\n"+projectile.getName()+" has been picked up from "+originName+"\n"+projectile.getName()+" added to weapons inventory";
 				}
 
+				//Save map through Map class
+				public void saveMap(){map.saveMap();}
 
-				public void saveMap(){
-					map.saveMap();
+				/**
+				 * Wipes the map at the start of the game
+				 * @param mapFile The file needed to be wiped
+				 */
+				public void resetMap(File mapFile){
+					try {
+						FileWriter writer = new FileWriter(mapFile);
+						writer.write("//Fill Tile\nFill:0\n//Layer,TileID,X,Y\n");
+						writer.flush();
+						writer.close();
+					}catch (Exception e) {e.printStackTrace();}
 				}
 
+				/**
+				 * Saves map after building it though randomMap
+				 * @param str map
+				 */
+				public void saveMap(String str){
+					try{
+						FileWriter fr = new FileWriter(new File("Map.txt"), true);
+						fr.write(str+"\n");
+						fr.close();
+					}
+					catch (java.io.IOException e){e.printStackTrace();}
+				}
+
+			/**
+			 * Creates a random Map
+			 */
 				public void randomMap(){
+					//map variables
 					final int maxWidth = 22;
 					final int minWidth = 16;
 					final int maxHeight = 22;
@@ -346,7 +363,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					int layer = 0;
 					randomMap = new int[numberOfChambers+1][4];
 					height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
-
+					//Creating the size of the map
 					for(int n = 0; n <= numberOfChambers; n++){
 						width = (int) (Math.random()*(maxWidth-minWidth+1))+minWidth;
 						height = (int) (Math.random()*(maxHeight-minHight+1))+minHight;
@@ -357,7 +374,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						if (n == 0) randomMap[n][3] = -height/2;
 						else randomMap[n][3] = randomMap[n-1][3]-height/2-20;
 					}
-
+					//creating and saving the map, every if is a different block
 					for (int i = 0; i < randomMap.length; i++) {
 						for (int x = randomMap[i][0]; x <= randomMap[i][2]; x++){
 							for (int y = randomMap[i][1]; y >= randomMap[i][3]; y--){
@@ -375,6 +392,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 								}
 							}
 						}
+						//creating the paths between the rooms
 						for (int n =0; n < randomMap.length-1;n++)
 						for(int i = randomMap[n][3]; i >= randomMap[n+1][1];i--){
 							if (i != randomMap[n][3] && i != randomMap[n][1]) {
@@ -398,14 +416,20 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						}
 					}
 
+				/**
+				 * Adds random mobs to every room
+				 */
 				public void randomMobs(){
+					//clear and load new mobs
 					mobSet.removeAll(mobSet);
 					BufferedImage enemySheetImage = loadImage("EnemySpriteSheet.png");
+					//for every room spawn mobs
 					for (int i = 1; i < randomMap.length-1;i++) {
 						for (int n = 0; n <=i; n++){
 							SpriteSheet enemySheet = new SpriteSheet(enemySheetImage);
 							enemySheet.loadSprites(27, 28);
 							AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
+							//random x and y positions
 							int x = (int) (Math.random()*(randomMap[i][2]-1-randomMap[i][0])+2)+randomMap[i][0];
 							int y = (int) Math.round(Math.random()*(Math.abs(randomMap[i][3])-Math.abs(randomMap[i][1])+1))+Math.abs(randomMap[i][1]);//*(randomMap[i][1]-randomMap[i][3])) + randomMap[i][3];
 							if (x > randomMap[i][2]-1 || x < randomMap[i][0]+1) x = 0;
@@ -415,6 +439,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							mobSet.add(new Mob(enemyAnimations, x, y, 16, 26, 3, 3,12, i, randomStats(i)));
 							}
 					}
+					//adds a chest at the start
 					BufferedImage chestSheetImage = loadImage("Chest.png");
 					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
 					chestSheet.loadSprites(16, 16);
@@ -425,6 +450,11 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					spawner.addItem(chest, 1);
 				}
 
+				/**
+				 * Creates random stats for enemies and weapons
+				 * @param  room the room the player is currently in, chest is only 0 and mobs are everywhere else
+				 * @return      Stats
+				 */
 				public Stats randomStats(int room){
 					if (room != 0) { //mobs
 						return new Stats(0, //luck
@@ -442,6 +472,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						);
 				}
 
+				/**
+				 * Reseting the world to go to a new map/floor
+				 */
 				public void reset(){
 					randomMobs();
 					player.getRect().x = 0;
@@ -453,26 +486,37 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					render();
 				}
 
+				/**
+				 * Is called when ever the character left clicks
+				 * @param x x pos of the mouse
+				 * @param y pos of the mouse
+				 */
 				public void leftClick(int x, int y){
 					start = true;
-					if (keyListener.levelUp()) player.getStats().setExp(player.getStats().getExp()+50);
+					if (keyListener.levelUp()) player.getStats().setExp(player.getStats().getExp()+50);//force level ups
+					//rune updates
 					 Rectangle mouseRectangle = new Rectangle(x, y, 1, 1);
 					 boolean stoppedChecking = false;
 					for(int i = 0; i < objects.length; i++)
 					if(!stoppedChecking) stoppedChecking = objects[i].handleMouseClick(mouseRectangle, renderer.getCamera(), xZoom, yZoom);
 				}
 
-
+				/**
+				 * Updates the map by locking character in rooms if enemies present and creates ladder to new floors
+				 */
 					public void mapUpdater() {
+						//determines what room player is in
 						for (int i = 0; i < randomMap.length; i++) {
 							if (player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom && player.getRect().y > randomMap[i][3]*yZoom*16) room = i+1;
 						}
 						int i = room-1;
+						//locks the door
 						if (i > 0 && i < randomMap.length-1 && player.getRect().y < randomMap[i][1]*yZoom*16-32*yZoom ){
 							map.setTile(0,-1,randomMap[i][1],3);
 							map.setTile(0,0,randomMap[i][1],3);
 							map.setTile(0,1,randomMap[i][1],3);
 						}
+						//locks the other pair of doors
 						if ((i < randomMap.length-1 && player.getRect().x < 3*16*yZoom && player.getRect().x > -3*16*yZoom && player.getRect().y-32*yZoom < randomMap[i][3]*yZoom*16 && player.getRect().y > randomMap[i+1][1]*yZoom*16 && spawner.allDead(i)) ||
 						(player.getRect().y+32*yZoom > randomMap[i][3]*yZoom*16 && spawner.allDead(i))) {
 							if (i < randomMap.length-1){
@@ -485,7 +529,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 									map.setTile(0,1,randomMap[i][1],1);
 								}
 							}
-
+							//The ladder
 							if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 								mapLevel++;
@@ -497,33 +541,38 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							}
 						}
 
-
+						/**
+						 * Reocurring method that is constantly called to render the world
+						 */
 						public void render() {
 							BufferStrategy bufferStrategy = canvas.getBufferStrategy();
 						 	graphics = bufferStrategy.getDrawGraphics();
-						 	spawner.dontMove(room);
+						 	spawner.dontMove(room);//checks to see if mobs move
 							super.paint(graphics);
 							map.render(renderer, objects, xZoom, yZoom);
 							mapUpdater();
+							//levels up the player
 							if (player.getStats().getExp() >= 10){
 								player.getStats().setExp(player.getStats().getExp()-10);
 								levelUp++;
 								jMenu();
 							}
+							//create all health bars and stat bars
 							Rectangle r = new Rectangle(20, getHeight()-100, (int) Math.round(player.getStats().getHealthLeft()*1.0/player.getStats().getHealth()*100), 5);
 							r.generateGraphics(0xFFff000F);
 							renderer.renderRectangle(r, xZoom, yZoom, true);
-							// // player.renderParticles(renderer, 2, 2);
 							renderer.render(graphics);
 							graphics.setColor(new Color(255, 255, 255));
 							renderer.renderString(graphics,mapLevel+"-"+room,getWidth() - 100, getHeight()- 50,50);
 							renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
 							renderer.renderString(graphics, "XP:" + player.getStats().getExp() +"/"+10, 200, getHeight()- 50, 20);
+							//picked up weapon
 							if(pickup)drawString( graphics, pickedUp, 10,50, 15);
+							//ends and stats the game
 							if(!start)renderer.renderString(graphics, "Click to Start",getHeight()/2, getWidth()/2,50);
 							else if(end) renderer.renderString(graphics, "Game Over!",getWidth()/2 - 50*4, getHeight()/2 ,50);
 							Graphics2D g2 = (Graphics2D) graphics;
-
+							//rune lasers
 							graphics.setColor(new Color(199, 14, 14));
 							g2.setStroke(new BasicStroke(30));
 							if(line3)g2.drawLine(mX, mY, mW, mH);
@@ -541,6 +590,14 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							renderer.clear();
 						}
 
+						/**
+						 * Draws strings on the screen
+						 * @param graphics Graphics component
+						 * @param text    Text to build
+						 * @param x        X pos
+						 * @param y        y pos
+						 * @param size     size of the text
+						 */
 						private void drawString(Graphics graphics, String text, int x, int y, int size) {
 							int i = 0;
 							for (String line : text.split("\n")){
@@ -549,7 +606,15 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							}
 						}
 
-
+						/**
+						 * Draws a line based on mouse
+						 * @param color
+						 * @param w         width
+						 * @param h        height
+						 * @param x         mouse x
+						 * @param y         mouse y
+						 * @param thickness
+						 */
 						public void drawLine(int color, int w, int h, int x, int y, int thickness){
 							mX = x;
 							mY = y;
@@ -557,25 +622,18 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							mH = h;
 							showMouseLine = true;
 						}
-
-						public void line2(){
-							line2 = true;
-						}
-
-						public void line3(){
-							line3 = true;
-						}
-
+						//laser runes setters kinda
+						public void line2(){line2 = true;}
+						public void line3(){line3 = true;}
+						//is the rune a laser rune? then hide lasers
 						public void hideLine(){
 							showMouseLine = false;
 							line2 = false;
 							line3 = false;
 						}
 
-
 						//setters
 						public void changeTile(int tileID){selectedTileID = tileID;}
-
 						//getters
 						public KeyBoardListener getKeyListener(){return keyListener;}
 						public MouseEventListener getMouseListener(){return mouseListener;}
@@ -586,10 +644,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						public int getRoom() {return room;}
 						public int getLevel() {return mapLevel;}
 						public int getSelectedTile(){return selectedTileID;}
-						public void endGame(){
-							end = true;
-						}
+						public void endGame(){end = true;}
+						public Canvas getCanvas(){return canvas;}
 
+						/**
+						 * start of the game
+						 */
 						public void run(){
 							long lastTime = System.nanoTime(); //long 2^63
 							double nanoSecondConversion = 1000000000.0 / 60; //60 frames per second
@@ -601,9 +661,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 								changeInSeconds += (now - lastTime) / nanoSecondConversion;
 								while(changeInSeconds >= 1) {
 									if(start && !end)update();
-									else{
-										menu();
-									}
 									changeInSeconds--;
 								}
 								render();
@@ -611,10 +668,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							}
 						}
 
-						public Canvas getCanvas(){
-							return canvas;
-						}
-
+						//main method
 						public static void main(String[] args){
 							Game game = new Game();
 							Thread gameThread = new Thread(game);
