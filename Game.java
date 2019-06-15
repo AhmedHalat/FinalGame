@@ -396,7 +396,7 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							x = x*16*xZoom;
 							y = y*16*yZoom;
 							mobSet.add(new Mob(enemyAnimations, x, y, 16, 26, 3, 3,12, i));
-						}
+							}
 					}
 					System.out.println("create");
 					BufferedImage chestSheetImage = loadImage("Chest.png");

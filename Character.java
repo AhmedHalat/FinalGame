@@ -103,7 +103,7 @@ public abstract class Character implements Comparable <Character>{
   }
 
   public void didMove(Game game ,Player player, Spawn spawner){
-    if (!move) return;
+    if (!move && !(this instanceof Player)) return;
 			collisionCheckRectangle.x += xCollisionOffset;
 			collisionCheckRectangle.y += yCollisionOffset;
 			Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, rect.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);

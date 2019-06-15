@@ -38,9 +38,6 @@ public void dontMove(int r){
   if (r != m.getRoom()) m.setMove(true);
   else m.setMove(false);
 }
-  public void addWeapon(Character weapon){
-    weapons.add(weapon);
-  }
 
   public void changeWeapon(Character weapon){
     this.weapon = weapon;
@@ -51,7 +48,7 @@ public void dontMove(int r){
     weapon = null;
     equipped = false;
   }
-  
+
   public void removeAll(){
     characters.clear();
     items.clear();
