@@ -14,6 +14,9 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
+/**
+ * handles renders made throughout the entire FinalGame
+ */
 public class RenderHandler{
   private static BufferedImage view;
   private Rectangle camera;
@@ -21,7 +24,13 @@ public class RenderHandler{
   private int maxScreenWidth, maxScreenHeight;
   public static GraphicsDevice[] graphicsDevices = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 
+/**
+ * defult Constructor
+ * @param width  size
+ * @param height size
+ */
   public RenderHandler(int width, int height){
+    // gets the window size
     for(int i = 0; i < graphicsDevices.length; i++) {
       if(maxScreenWidth < graphicsDevices[i].getDisplayMode().getWidth()) maxScreenWidth = graphicsDevices[i].getDisplayMode().getWidth();
       if(maxScreenHeight < graphicsDevices[i].getDisplayMode().getHeight()) maxScreenHeight = graphicsDevices[i].getDisplayMode().getHeight();
@@ -33,35 +42,91 @@ public class RenderHandler{
     pixels = ((DataBufferInt) view.getRaster().getDataBuffer()).getData();
   }
 
+  /**
+   * renders the graphics of a the camera
+   * @param graphics Graphics used to draw
+   */
   public void render(Graphics graphics){
     graphics.drawImage(view.getSubimage(0, 0, camera.w, camera.h), 0, 0, camera.w, camera.h, null);
   }
 
+/**
+ * renders an Image
+ * @param image     to be rendered
+ * @param xPosition pos on screen
+ * @param yPosition pos on Screen
+ * @param xZoom     zoom ratio
+ * @param yZoom     zoom ratio
+ * @param fixed     if it moves with the camera or not
+ */
   public void renderImage(BufferedImage image, int xPosition, int yPosition, int xZoom, int yZoom, boolean fixed){
     int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
     renderArray(imagePixels, image.getWidth(), image.getHeight(), xPosition, yPosition, xZoom, yZoom, fixed);
   }
 
+  /**
+   * prints strings onto the Screen
+   * @param graphics used to Draw
+   * @param string   string to draw on screen
+   * @param posX     x
+   * @param posY     y
+   * @param size     size of String
+   */
   public void renderString(Graphics graphics, String string, int posX, int posY, int size){
     graphics.setFont(new Font("TimesRoman", Font.BOLD, size));
     graphics.drawString(string, posX, posY);
   }
 
+  /**
+   * renders a sprite
+   * @param sprite     sprite to draw
+   * @param xPosition pos on screen
+   * @param yPosition pos on Screen
+   * @param xZoom     zoom ratio
+   * @param yZoom     zoom ratio
+   * @param fixed     if it moves with the camera or not
+   */
   public void renderSprite(Sprite sprite, int xPosition, int yPosition, int xZoom, int yZoom, boolean fixed) {
     renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), xPosition, yPosition, xZoom, yZoom, fixed);
   }
 
+  /**
+   * renders a rectangle
+   * @param rectangle     needed to render
+   * @param xZoom     zoom ratio
+   * @param yZoom     zoom ratio
+   * @param fixed     if it moves with the camera or not
+   */
   public void renderRectangle(Rectangle rectangle, int xZoom, int yZoom, boolean fixed){
     int[] rectanglePixels = rectangle.getPixels();
     if(rectanglePixels != null) renderArray(rectanglePixels, rectangle.w, rectangle.h, rectangle.x, rectangle.y, xZoom, yZoom, fixed);
   }
 
+  /**
+   * renders a rectangle but with an offset
+   * @param rectangle     needed to render
+   * @param offset    needed to render
+   * @param xZoom     zoom ratio
+   * @param yZoom     zoom ratio
+   * @param fixed     if it moves with the camera or not
+   */
   public void renderRectangle(Rectangle rectangle, Rectangle offset, int xZoom, int yZoom, boolean fixed){
     int[] rectanglePixels = rectangle.getPixels();
     if(rectanglePixels != null)
     renderArray(rectanglePixels, rectangle.w, rectangle.h, rectangle.x + offset.x, rectangle.y + offset.y, xZoom, yZoom, fixed);
   }
 
+  /**
+   * renders an array of Pixels
+   * @param renderPixels color InformationDesc
+   * @param renderWidth  width
+   * @param renderHeight height
+   * @param xPosition    x
+   * @param yPosition    y
+   * @param xZoom        zoom ratio
+   * @param yZoom        zoom ratio
+   * @param fixed        if it is fixed on screen or moves with the camera
+   */
   public void renderArray(int[] renderPixels, int renderWidth, int renderHeight, int xPosition, int yPosition, int xZoom, int yZoom, boolean fixed){
     for(int y = 0; y < renderHeight; y++)
     for(int x = 0; x < renderWidth; x++)
@@ -70,6 +135,13 @@ public class RenderHandler{
     setPixel(renderPixels[x + y * renderWidth], (x * xZoom) + xPosition + xZoomPosition, ((y * yZoom) + yPosition + yZoomPosition), fixed);
   }
 
+/**
+ * sets the pixels
+ * @param pixel color information
+ * @param x     x
+ * @param y     y Pos
+ * @param fixed if it is fixed or moves with the camera
+ */
   private void setPixel(int pixel, int x, int y, boolean fixed) {
     int pixelIndex = 0;
     if(!fixed){
@@ -85,7 +157,7 @@ public class RenderHandler{
   }
 
 
-
+  //getters and setters
   public Rectangle getCamera() {
     return camera;
   }

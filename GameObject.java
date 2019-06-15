@@ -1,4 +1,6 @@
-
+/**
+ * creates an interface of the game that all game objects (spawner, player, game) must follow
+ */
 public interface GameObject {
 
    public void render(RenderHandler renderer, int xZoom, int yZoom);
