@@ -37,15 +37,6 @@ public class RenderHandler{
     graphics.drawImage(view.getSubimage(0, 0, camera.w, camera.h), 0, 0, camera.w, camera.h, null);
   }
 
-  public Graphics renderLine(Graphics graphics, int color, int x1, int y1, int x2, int y2, int thickness){
-
-    graphics.setColor(new Color(75, 47, 224));
-    //g2.setStroke(new BasicStroke(thickness));
-    graphics.drawLine(x1, y1, x2, y2);
-    return graphics;
-    //System.out.println("LINE!!");
-  }
-
   public void renderImage(BufferedImage image, int xPosition, int yPosition, int xZoom, int yZoom, boolean fixed){
     int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
     renderArray(imagePixels, image.getWidth(), image.getHeight(), xPosition, yPosition, xZoom, yZoom, fixed);

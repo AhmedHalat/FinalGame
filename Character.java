@@ -26,6 +26,7 @@ public abstract class Character implements Comparable <Character>{
   protected int color = 0;
   protected Rectangle hitbox;
   protected int[] line = new int[4];
+  protected String name;
 
    Character[] drops = new Character[2];
 
@@ -103,21 +104,19 @@ public abstract class Character implements Comparable <Character>{
 
   public void didMove(Game game ,Player player, Spawn spawner){
     if (!move) return;
-    collisionCheckRectangle.x += xCollisionOffset;
-    collisionCheckRectangle.y += yCollisionOffset;
+			collisionCheckRectangle.x += xCollisionOffset;
+			collisionCheckRectangle.y += yCollisionOffset;
+			Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, rect.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);
+			//Check the X axis
 
-    Rectangle axisCheck = new Rectangle(collisionCheckRectangle.x, rect.y + yCollisionOffset, collisionCheckRectangle.w, collisionCheckRectangle.h);
+			if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)) rect.x = collisionCheckRectangle.x - xCollisionOffset;
 
-    //Check the X axis
-    if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.x = collisionCheckRectangle.x - xCollisionOffset;
-
-    axisCheck.x = rect.x + xCollisionOffset;
-    axisCheck.y = collisionCheckRectangle.y;
-    axisCheck.w = collisionCheckRectangle.w;
-    axisCheck.h = collisionCheckRectangle.h;
-    //axisCheck = new Rectangle(botRectangle.x, collisionCheckRectangle.y, collisionCheckRectangle.w, collisionCheckRectangle.h);
-    //Check the Y axis
-    if(!game.getMap().checkCollision(axisCheck, 0, 3, 3) && !game.getMap().checkCollision(axisCheck, 0 + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
+			axisCheck.x = rect.x + xCollisionOffset;
+			axisCheck.y = collisionCheckRectangle.y;
+			axisCheck.w = collisionCheckRectangle.w;
+			axisCheck.h = collisionCheckRectangle.h;
+			//Check the Y axis
+			if(!game.getMap().checkCollision(axisCheck, layer, 3, 3) && !game.getMap().checkCollision(axisCheck, layer + 1, 3, 3)) rect.y = collisionCheckRectangle.y - yCollisionOffset;
   }
 
   public abstract void updateStats();
@@ -138,6 +137,8 @@ public abstract class Character implements Comparable <Character>{
     return -1;
   }
 	public Rectangle getRect() {return rect;}
+
+  public String getName(){return name;}
 
 	public void setRect(Rectangle rect) {this.rect = rect;}
 

@@ -8,16 +8,14 @@ public class Projectile extends Character{
   private boolean fired = false;
   private Rectangle runeRect;
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type){ //add stats to parameters
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds){ //add stats to parameters
     super(sprite, 0, w, h);
-    this.sprite = sprite;
-
+    this.name = name;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     animatedSprite.setAnimationRange(0, 2);
     dead = false;
     move = false;
-    int seconds = 3;
     this.type = type;
     if(type == 1){
       runeRect = new Rectangle(x,y,50,50);
@@ -82,7 +80,7 @@ public class Projectile extends Character{
         dead = true;
         if(timer == 0){
           color = 0xFFe81414;
-          runeRect.generateGraphics(0xFF9d3131);
+          if(type ==1)runeRect.generateGraphics(0xFF9d3131);
           hitbox = runeRect;
         }
         timer++;
@@ -93,7 +91,7 @@ public class Projectile extends Character{
         move = false;
         fired = false;
         color = 0xFFE7DF25;
-        runeRect.generateGraphics(0xFFff00dc);
+        if(type ==1)runeRect.generateGraphics(0xFFff00dc);
         hitbox = null;
         line = new int[4];
         animatedSprite.reset();
@@ -153,7 +151,7 @@ public class Projectile extends Character{
     Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
 
     //DO SOMETHING
-    open();
+    if(!dead)open();
     return true;
 
   }

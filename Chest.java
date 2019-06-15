@@ -3,6 +3,7 @@ public class Chest extends Character{
   public Chest(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom){ //add stats to parameters
     super(sprite, 0, w, h);
     this.sprite = sprite;
+    this.name = "Chest";
 
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
@@ -30,6 +31,7 @@ public class Chest extends Character{
     // If they  are within range and they clicked F keyListener
     if(animatedSprite.getLooped()){
       animatedSprite.setStatic();
+      if(!dead)game.createWeaponDrop(0, name);
       dead = true;
       particle = true;
     }
@@ -44,8 +46,6 @@ public class Chest extends Character{
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     if(move) return false;
     Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
-    System.out.println("Collision"+collision);
-    System.out.println("Rect"+rect);
     if(collision.intersects(rect)){
       //DO SOMETHING
       open();
