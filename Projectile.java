@@ -28,12 +28,13 @@ public class Projectile extends Character{
 
     particles = new Particle(rect.w, rect.h, 50, 1);
     particles.fill(0xFFF7D80C);
-
+// System.out.println(1);
   }
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Sprite rune){ //add stats to parameters
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Sprite rune, Stats stats){ //add stats to parameters
     super(sprite, 0, w, h,stats);
     this.name = name;
+    // System.out.println(2);
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
     animatedSprite.setAnimationRange(0, 2);
@@ -41,7 +42,7 @@ public class Projectile extends Character{
     move = false;
     this.type = type;
     this.rune = rune;
-    System.out.println("RUNE SPRITE ADDED");
+    // System.out.println("RUNE SPRITE ADDED");
     if(type == 1){
       runeRect = new Rectangle(x,y,50,50);
       runeRect.generateGraphics(0xFFff00dc);

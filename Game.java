@@ -229,13 +229,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					expInfo.disable();
 				}
 
-				public void menu(){
-					//BufferedImage start = loadImage("start.png");
-					//renderer.renderImage(start, 1, 1, 16, 16, false);
-					//renderer.renderImage(start, getWidth()/2, getHeight()/2, 1, 1, false);
-					//System.out.println("st32a");
-				}
-
 				public void actionPerformed(ActionEvent event) {
 					String e = event.getActionCommand ();
 					System.out.println(e);
@@ -324,11 +317,12 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					weapons.add(0, projectile);
 				}
 				else {
+					Sprite rune = new Sprite(loadImage("rune.png"));
 					proImg = loadImage("book1.png");
 					proSheet = new SpriteSheet(proImg);
 					proSheet.loadSprites(62, 54);
 					pro = new AnimatedSprite(proSheet, 25);
-					projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1,1, "Arcane Rune Book", 3,randomStats(0));
+					projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1,1, "Arcane Rune Book", 3,rune,randomStats(0));
 					weapons.add(1, projectile);
 				}
 					jMenu();
@@ -526,12 +520,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							renderer.renderString(graphics, "Health:" + player.getStats().getHealthLeft() +"/" +player.getStats().getHealth(), 20, getHeight()- 50, 20);
 							renderer.renderString(graphics, "XP:" + player.getStats().getExp() +"/"+10, 200, getHeight()- 50, 20);
 							if(pickup)drawString( graphics, pickedUp, 10,50, 15);
-							if(!start){
-								renderer.renderString(graphics, "Click to Start",getHeight()/2, getWidth()/2,50);
-							}
-							if(end){
-								renderer.renderString(graphics, "GameOver Quit to reset",getWidth()/2 - 50*4, getHeight()/2 ,50);
-							}
+							if(!start)renderer.renderString(graphics, "Click to Start",getHeight()/2, getWidth()/2,50);
+							else if(end) renderer.renderString(graphics, "Game Over!",getWidth()/2 - 50*4, getHeight()/2 ,50);
 							Graphics2D g2 = (Graphics2D) graphics;
 
 							graphics.setColor(new Color(199, 14, 14));

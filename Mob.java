@@ -39,23 +39,26 @@ public class Mob extends Character{
   }
 
   public void action(Game game, Player player, Spawn spawner){
+    Rectangle hitbox = rect;
+    // hitbox.w*=3;
+    // hitbox.h*=3;
     int preDirection = direction;
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
-    if (spawner.hitbox() && rect.intersects(spawner.getHitBox()) && rect.intersects(player.getRect())){
+    if (spawner.hitbox() && hitbox.intersects(spawner.getHitBox()) && hitbox.intersects(player.getRect())){
       mobHit(player,spawner);
       if (damageCooldown%5 != 0 && damageCooldown != 0) {damageCooldown = 0; return;}
       playerHit(player);
       damageCooldown++;
       return;
     }
-    else if(rect.intersects(player.getRect())){
+    else if(hitbox.intersects(player.getRect())){
       if (damageCooldown%5 != 0 && damageCooldown != 0) {damageCooldown = 0; return;}
       playerHit(player);
       damageCooldown++;
       return;
     }
-    else if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
+    else if(spawner.hitbox() && hitbox.intersects(spawner.getHitBox())){
       mobHit(player,spawner);
       damageCooldown++;
       return;
