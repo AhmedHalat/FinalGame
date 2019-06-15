@@ -1,6 +1,9 @@
 import java.awt.Point;
 import java.awt.MouseInfo;
-
+/**
+ * There are 2 types of projectiles (Should be renamed Books but too late)
+ * Arcanre ray book and arcane rune book
+ */
 public class Projectile extends Character{
   private int cooldown;
   private int timer = 0;
@@ -9,6 +12,7 @@ public class Projectile extends Character{
   private Rectangle runeRect;
   private Sprite rune;
 
+  //Arcanre ray book constructor
   public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Stats stats){
     super(sprite, 0, w, h,stats);
     this.name = name;
@@ -28,9 +32,8 @@ public class Projectile extends Character{
 
     particles = new Particle(rect.w, rect.h, 50, 1);
     particles.fill(0xFFF7D80C);
-// System.out.println(1);
   }
-
+  //Arcanre rune book constructor
   public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Sprite rune, Stats stats){ //add stats to parameters
     super(sprite, 0, w, h,stats);
     this.name = name;
@@ -56,32 +59,41 @@ public class Projectile extends Character{
 
   }
 
-  public void updateStats(){
-
-  }
-
-  public void updateDirection(){
-
-  }
-
+  /**
+   * Make the book start attack timer, fired when done shooting
+   */
   public void open(){
     move = true;
     timer = 40;
     fired = false;
   }
 
+  /**
+   * Renders the books
+   * @param renderer
+   * @param xZoom
+   * @param yZoom
+   */
   public void render(RenderHandler renderer, int xZoom, int yZoom){
     renderer.renderSprite(animatedSprite, rect.x, rect.y, 1, 1, false);
+    //if rune book, render rune
     if(type ==1) renderer.renderSprite(rune, runeRect.x, runeRect.y, 1, 1, false);
   }
 
-
+  /**
+   * Ticks the book
+   * @param game    Used for rendering lines, (renderer cant do that)
+   * @param player  Update book location to player
+   * @param spawner
+   */
   public void action(Game game, Player player, Spawn spawner){
-    // If they  are within range and they clicked F keyListener
+    // If book has finished its closing animation
     if(animatedSprite.getLooped()){
+      //If the book cooldown has finished, keep the book closed
       if(timer < cooldown){
         animatedSprite.setStatic();
         dead = true;
+        //if timer is done, attack
         if(timer == 0){
           color = 0xFFe81414;
           if(type ==1)runeRect.generateGraphics(0xFF9d3131);
@@ -89,7 +101,9 @@ public class Projectile extends Character{
         }
         timer++;
       }
+      //If animation still happening
       else{
+        //Not dead or done firing,
         timer = 0;
         dead = false;
         move = false;
@@ -147,11 +161,18 @@ public class Projectile extends Character{
 
   }
 
-
+  //never dies, only equipped and UnEquipped
   public boolean isAlive(){
-    return !false;
+    return true;
   }
 
+  public void updateStats(){
+  }
+
+  public void updateDirection(){
+  }
+
+  //Projectile is always the last charcter to check mouse, if nothign else uses it, attack
   public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
     Rectangle collision = new Rectangle((int) Math.floor(((mouseRectangle.x + camera.x)/(16.0 * xZoom))), (int) Math.floor((mouseRectangle.y + camera.y)/(16.0 * yZoom)),1 ,1 );
 

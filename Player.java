@@ -4,13 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
-//GameObject method
+/**
+ * The player class is a GameObject and a Character
+ * This class is responsible for his motion, animations and collisions
+ */
 public class Player extends Character implements GameObject{
-
-	//Parameters: Sprite - the players animated sprite, zoom - the pixel zoom used to set player collision rectangle
-	//Player object constructor, creates player rectangle and collision
-	//Contructor
-	Particle particles;
+	private Particle particles;
 	public Player(Sprite sprite, int xZoom, int yZoom){
 		super((AnimatedSprite) sprite, 5, 15, 25);
 		this.sprite = sprite;
@@ -24,31 +23,31 @@ public class Player extends Character implements GameObject{
 		this.collisionCheckRectangle = collisionCheckRectangle;
 	}
 
-	//Parameters: array that contains players current stats
-	//sets the players new motion speed if the stats have been upgraded
-	//returns Void
-	public void updateStats(){
-		speed = stats.getSpeed();
-	}
-
-	public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
-		particles.render(renderer, xZoom, yZoom);
-	}
-
+	/**
+	 * When the player changes direction, load different layer on spritesheet
+	 */
 	public void updateDirection(){
 		if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 8, (direction * 8) + 7);
 	}
 
+	/**
+	 * Ticks player with Game
+	 * @param game    Give player access to map
+	 * @param player  Not Used
+	 * @param spawner Give player access to mobs and weaponS
+	 */
 	public void update(Game game, Player player, Spawn spawner){
+		//end game if player is dead
 		if(dead) game.endGame();
+		//Get Key controlls
 		KeyBoardListener keyListener = game.getKeyListener();
 		boolean didMove = false;
 		int newDirection = direction;
 		layer = 0;
-
+		//Create the collision rectangle to see if he can move
 		collisionCheckRectangle.x = rect.x;
 		collisionCheckRectangle.y = rect.y;
-
+		//Move collisionCheckRectangle to position character is trying to move in
 		if(keyListener.left()){
 			newDirection = 1;
 			didMove = true;
@@ -69,32 +68,38 @@ public class Player extends Character implements GameObject{
 			didMove = true;
 			collisionCheckRectangle.y += speed;
 		}
-
+		//Change character sprite direction
 		if(newDirection != direction) {
 			direction = newDirection;
 			updateDirection();
 		}
-
-
+		//if he isnt moving, make his sprite standstill
 		if(!didMove) {
 			animatedSprite.reset();
 		}
 		else {
+			//call didmove if he moved, which will check collisions and move character
 			didMove(game, player, spawner);
+			//animates his sprite
 			animatedSprite.update(game, this, spawner);
 		}
-
+		//Moves camera to keep centered above him
 		updateCamera(game.getRenderer().getCamera());
-		particles.update(rect.x, rect.y);
+	}
+
+	//Methods required from character
+	public void action(Game game, Player player, Spawn spawner){
+	}
+	public void renderParticles(RenderHandler renderer, int xZoom, int yZoom){
+	}
+
+	public void updateStats(){
+		speed = stats.getSpeed();
 	}
 
 	public void updateCamera(Rectangle camera) {
 		camera.x = rect.x - (camera.w / 2);
 		camera.y = rect.y - (camera.h / 2);
-	}
-
-	public void action(Game game, Player player, Spawn spawner){
-
 	}
 
 	public boolean isAlive(){
@@ -108,7 +113,7 @@ public class Player extends Character implements GameObject{
 	public Rectangle getRectangle() {
 		return rect;
 	}
-
+	//Player doesnt use mouse
 	public boolean handleMouseClick(Rectangle mouseRectangle, Rectangle camera, int xZoom, int yZoom) {
 		return false;
 	}
