@@ -12,8 +12,9 @@ public class Mob extends Character{
   private int damageCooldown;
   private int type;
   private int direction; //down left right up
-  public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize, int room){ //add stats to parameters
-    super(sprite, 3, w, h, room);
+
+  public Mob(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int sheetSize, int room, Stats stats){ //add stats to parameters
+    super(sprite, 3, w, h, room, stats);
     this.sprite = sprite;
     this.animatedSprite = sprite;
     this.sheetSize = sheetSize;
@@ -26,15 +27,6 @@ public class Mob extends Character{
     type = (int) (Math.random()*(3-0+1))+0;
     animatedSprite.setAnimationRange(direction * sheetSize + 3* type, (direction * sheetSize) + 3*type + 2);
 
-  }
-
-  public Mob(int x, int y, int w, int h, int xZoom, int yZoom,int room){ //add stats to parameters
-    super(3, w, h, room);
-    rect = new Rectangle(x, y, w, h);
-    collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
-    dead = false;
-    move = true;
-    this.room = room;
   }
 
   public void render(RenderHandler renderer, int xZoom, int yZoom){
@@ -51,7 +43,7 @@ public class Mob extends Character{
     collisionCheckRectangle.x = rect.x;
     collisionCheckRectangle.y = rect.y;
     if (spawner.hitbox() && rect.intersects(spawner.getHitBox()) && rect.intersects(player.getRect())){
-      mobHit(player);
+      mobHit(player,spawner);
       if (damageCooldown%5 != 0 && damageCooldown != 0) {damageCooldown = 0; return;}
       playerHit(player);
       damageCooldown++;
@@ -64,7 +56,7 @@ public class Mob extends Character{
       return;
     }
     else if(spawner.hitbox() && rect.intersects(spawner.getHitBox())){
-      mobHit(player);
+      mobHit(player,spawner);
       damageCooldown++;
       return;
     }
@@ -91,7 +83,7 @@ public class Mob extends Character{
         Line2D line2 = new Line2D.Float(x3, y3, x4, y4);
         boolean result = line2.intersectsLine(line1);
         if(result) {
-          mobHit(player);
+          mobHit(player,spawner);
           return;
         }
       }
@@ -127,18 +119,21 @@ public class Mob extends Character{
     if(animatedSprite != null) animatedSprite.setAnimationRange(direction * 3, (direction * 3) + 2);
   }
 
-  public void mobHit(Player player){
-    if (move) this.stats.setHealthLeft(this.stats.getHealthLeft() - (player.stats.getDamage()));
+  public void mobHit(Player player,Spawn s){
+    int damage = Math.abs(player.getStats().getDamage()+s.getWeapon().getStats().getDamage()-this.stats.getDefense()/3);
+    if (damage == 0) damage = 2;
+    if (move) this.stats.setHealthLeft(this.stats.getHealthLeft() - damage);
     if (this.stats.getHealthLeft() <= 0){
-      player.getStats().setExp(player.getStats().getExp()+1);
+      player.getStats().setExp(player.getStats().getExp()+1 + (int) Math.round(player.getStats().getLuck()*Math.random()));
       dead = true;
       move = false;
     }
   }
 
   public void playerHit(Player player){
-    if (player.getStats().getHealthLeft() > 0) player.getStats().setHealthLeft(player.getStats().getHealthLeft() - (this.stats.getDamage()));
+    if (player.getStats().getHealthLeft() > 0) player.getStats().setHealthLeft(player.getStats().getHealthLeft() - Math.abs(this.stats.getDamage()-player.getStats().getDefense()/3));
     if (player.getStats().getHealthLeft() <= 0){
+      player.getStats().setHealthLeft(0);
       player.setDead(true);
       player.setMove(false);
     }

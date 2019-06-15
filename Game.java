@@ -57,18 +57,17 @@ public class Game extends JFrame implements Runnable, ActionListener{
 	private MouseEventListener mouseListener = new MouseEventListener(this);
 
 	private int[][] randomMap;
-	public ArrayList <MappedTile> addLaterMap = new ArrayList <MappedTile>();
 	private int xZoom = 3;
 	private int yZoom = 3;
 
 	private Graphics graphics;
 
 	private Rectangle mouseRectangle;
-	public int mapLevel = 1;
-	public int room = 1;
-	public int levelUp = 0;
-	public static JMenuBar mainMenu = new JMenuBar ();
-	public static Set mobSet = new HashSet <Character> ();
+	private int mapLevel = 1;
+	private int room = 1;
+	private int levelUp = 0;
+	private static JMenuBar mainMenu = new JMenuBar ();
+	private static Set mobSet = new HashSet <Character> ();
 
 	private boolean pickup = false;
 	private int pickupTimer = 5*60;
@@ -227,8 +226,6 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void actionPerformed(ActionEvent event) {
-					// for (Character c: spawner.getCharacters()) System.out.println(c.isAlive() + ":	" + c.getRoom());
-					// System.out.println("All Dead:" + spawner.allDead(0));
 					String e = event.getActionCommand ();
 					System.out.println(e);
 					if(e.equals("weapon")){
@@ -278,7 +275,10 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void update(){
 					for(int i = 0; i < objects.length; i++) objects[i].update(this, player, spawner);
 					if(pickup){
-						if(pickupTimer <= 0) pickup = false;
+						if(pickupTimer <= 0){
+							pickup = false;
+							pickedUp ="";
+						}
 						pickupTimer --;
 					}
 				}
@@ -298,22 +298,32 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				}
 
 				public void createWeaponDrop(int type, String originName){
-					BufferedImage proImg1 = loadImage("book0.png");
-					SpriteSheet proSheet1 = new SpriteSheet(proImg1);
-					proSheet1.loadSprites(62, 54);
-					AnimatedSprite pro1 = new AnimatedSprite(proSheet1, 25);
-					Character projectile = new Projectile(pro1, 0, 0, 16, 16, 1, 1,0, "Arcane Ray Book", 3);
+					int rand = (int) Math.round(Math.random()*10);
+					BufferedImage proImg;
+					SpriteSheet proSheet;
+					AnimatedSprite pro;
+					Character projectile;
 
-					BufferedImage proImg2 = loadImage("book1.png");
-					SpriteSheet proSheet2 = new SpriteSheet(proImg2);
-					proSheet2.loadSprites(62, 54);
-					AnimatedSprite pro2 = new AnimatedSprite(proSheet2, 25);
-					Character projectile2 = new Projectile(pro2, 0, 0, 16, 16, 1, 1,1, "Arcane Rune Book", 3);
-					weapons.add(type, projectile2);
+					if (rand > 5){
+					proImg = loadImage("book0.png");
+					proSheet = new SpriteSheet(proImg);
+					proSheet.loadSprites(62, 54);
+					pro = new AnimatedSprite(proSheet, 25);
+					projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1,0, "Arcane Ray Book", 3,randomStats(0));
+					weapons.add(0, projectile);
+				}
+				else {
+					proImg = loadImage("book1.png");
+					proSheet = new SpriteSheet(proImg);
+					proSheet.loadSprites(62, 54);
+					pro = new AnimatedSprite(proSheet, 25);
+					projectile = new Projectile(pro, 0, 0, 16, 16, 1, 1,1, "Arcane Rune Book", 3,randomStats(0));
+					weapons.add(1, projectile);
+				}
 					jMenu();
 					pickup = true;
 					pickupTimer = 5*60;
-					pickedUp += "\n"+projectile2.getName()+" has been picked up from "+originName+"\n"+projectile2.getName()+" added to weapons inventory";
+					pickedUp += "\n"+projectile.getName()+" has been picked up from "+originName+"\n"+projectile.getName()+" added to weapons inventory";
 				}
 
 
@@ -386,19 +396,20 @@ public class Game extends JFrame implements Runnable, ActionListener{
 				public void randomMobs(){
 					mobSet.removeAll(mobSet);
 					BufferedImage enemySheetImage = loadImage("EnemySpriteSheet.png");
-					SpriteSheet enemySheet = new SpriteSheet(enemySheetImage);
-					enemySheet.loadSprites(27, 28);
-					AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
 					for (int i = 1; i < randomMap.length-1;i++) {
-						for (int n = 0; n <=i;n++){
-							int x = (int) (Math.random()*(randomMap[i][2]-2-randomMap[i][0]-1))+randomMap[i][0];
-							int y = (int) (Math.random()*(5+randomMap[i][3]-randomMap[i][1]-2))+randomMap[i][1]-2;//*(randomMap[i][1]-randomMap[i][3])) + randomMap[i][3];
+						for (int n = 0; n <=i; n++){
+							SpriteSheet enemySheet = new SpriteSheet(enemySheetImage);
+							enemySheet.loadSprites(27, 28);
+							AnimatedSprite enemyAnimations = new AnimatedSprite(enemySheet, 25);
+							int x = (int) (Math.random()*(randomMap[i][2]-1-randomMap[i][0])+2)+randomMap[i][0];
+							int y = (int) Math.round(Math.random()*(Math.abs(randomMap[i][3])-Math.abs(randomMap[i][1])+1))+Math.abs(randomMap[i][1]);//*(randomMap[i][1]-randomMap[i][3])) + randomMap[i][3];
+							if (x > randomMap[i][2]-1 || x < randomMap[i][0]+1) x = 0;
+							if (y > Math.abs(randomMap[i][3])-1 || y < Math.abs(randomMap[i][1])+1) y = Math.abs(randomMap[i][1])+(Math.abs(randomMap[i][3]-randomMap[i][1])/2);
 							x = x*16*xZoom;
-							y = y*16*yZoom;
-							mobSet.add(new Mob(enemyAnimations, x, y, 16, 26, 3, 3,12, i));
+							y = y*-16*yZoom;
+							mobSet.add(new Mob(enemyAnimations, x, y, 16, 26, 3, 3,12, i, randomStats(i)));
 							}
 					}
-					System.out.println("create");
 					BufferedImage chestSheetImage = loadImage("Chest.png");
 					SpriteSheet chestSheet = new SpriteSheet(chestSheetImage);
 					chestSheet.loadSprites(16, 16);
@@ -407,6 +418,23 @@ public class Game extends JFrame implements Runnable, ActionListener{
 					spawner.removeAll();
 					spawner.addCharacter(mobSet);
 					spawner.addItem(chest, 1);
+				}
+
+				public Stats randomStats(int room){
+					if (room != 0) { //mobs
+						return new Stats(0, //luck
+						(int) Math.abs(Math.round((mapLevel+room)*Math.random()*8) - (int) Math.round(player.getStats().getLuck()*Math.random())) //defense
+						,(int) Math.abs(Math.round((mapLevel+room)*Math.random()*8) - (int) Math.round(player.getStats().getLuck()*Math.random())) //damage
+						,(int) Math.abs(Math.round((mapLevel+room)*Math.random()*8) - (int) Math.round(player.getStats().getLuck()*Math.random())) //health
+						,Math.abs(mapLevel+(int) Math.round(player.getStats().getLuck()*Math.random()))	//speed
+						);					}
+					else //items
+						return new Stats(Math.abs(mapLevel+ (int) Math.round(player.getStats().getLuck()*Math.random())), //luck
+						0 //defense
+						,Math.abs(player.getStats().getDamage()+mapLevel + (int) Math.round(player.getStats().getLuck()*Math.random())) //damage
+						,0	//health
+						,Math.abs(mapLevel+ (int) Math.round(player.getStats().getLuck()*Math.random()))	//speed
+						);
 				}
 
 				public void reset(){
@@ -455,9 +483,9 @@ public class Game extends JFrame implements Runnable, ActionListener{
 							if (player.getRect().y <= randomMap[randomMap.length-1][3]*yZoom*16+3*16*yZoom && player.getRect().y > randomMap[randomMap.length-1][3]*yZoom*16+2*16*yZoom
 							&& player.getRect().x < 1*16*yZoom && player.getRect().x > -1*16*yZoom) {
 								mapLevel++;
-								player.getStats().setExp(player.getStats().getExp()+1);
-								player.getStats().setHealthLeft((int) Math.round(player.getStats().getHealthLeft()+player.getStats().getHealth()*.1));
-								if (player.getStats().getHealthLeft() > player.getStats().getHealth())player.getStats().setHealthLeft(player.getStats().getHealth());
+								player.getStats().setExp(player.getStats().getExp()+1 + (int) Math.round(player.getStats().getLuck()*Math.random()));
+								player.getStats().setHealthLeft((int) Math.round(player.getStats().getLuck()+player.getStats().getHealthLeft()+player.getStats().getHealth()*.1));
+								if (player.getStats().getHealthLeft() > player.getStats().getHealth()) player.getStats().setHealthLeft(player.getStats().getHealth());
 								jMenu();
 								reset();
 							}
@@ -547,8 +575,8 @@ public class Game extends JFrame implements Runnable, ActionListener{
 						public Map getMap() {return map;}
 						public int getXZoom() {return xZoom;}
 						public int getYZoom() {return yZoom;}
-
-
+						public int getRoom() {return room;}
+						public int getLevel() {return mapLevel;}
 						public int getSelectedTile(){return selectedTileID;}
 
 						public void run(){

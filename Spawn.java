@@ -124,4 +124,7 @@ public void dontMove(int r){
   public Rectangle getRectangle(){return rect;}
 
   public ArrayList <Character> getCharacters(){return characters;}
+
+  public Character getWeapon(){return weapon;}
+
 }

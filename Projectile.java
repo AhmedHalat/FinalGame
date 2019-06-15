@@ -8,8 +8,8 @@ public class Projectile extends Character{
   private boolean fired = false;
   private Rectangle runeRect;
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds){ //add stats to parameters
-    super(sprite, 0, w, h);
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, int type, String name, int seconds, Stats stats){
+    super(sprite, 0, w, h,stats);
     this.name = name;
     rect = new Rectangle(x, y, w, h);
     collisionCheckRectangle = new Rectangle(0, 0, 10*xZoom, 15*yZoom);
@@ -30,8 +30,8 @@ public class Projectile extends Character{
 
   }
 
-  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, Sprite rune, int type){ //add stats to parameters
-    super(sprite, 0, w, h);
+  public Projectile(AnimatedSprite sprite, int x, int y, int w, int h, int xZoom, int yZoom, Sprite rune, int type, Stats stats){
+    super(sprite, 0, w, h,stats);
     this.sprite = sprite;
 
     rect = new Rectangle(x, y, w, h);

@@ -30,17 +30,16 @@ public abstract class Character implements Comparable <Character>{
 
    Character[] drops = new Character[2];
 
-  public Character(AnimatedSprite animatedSprite, Rectangle rect, Rectangle collisionCheckRectangle, int speed, int direction, int layer, int xCollisionOffset, int yCollisionOffset) {
-    this.rect = rect;
-    this.collisionCheckRectangle = collisionCheckRectangle;
-    this.direction = direction;
-    this.speed = speed;
-    this.layer = layer;
-    this.animatedSprite = animatedSprite;
-    this.xCollisionOffset = xCollisionOffset;
-    this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed,0);
-  }
+   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset, Stats stats){
+     this.animatedSprite = sprite;
+     this.speed = speed;
+     this.layer = 0;
+     this.xCollisionOffset = xCollisionOffset;
+     this.yCollisionOffset = yCollisionOffset;
+     this.stats = stats;
+     // System.out.println("1"+this);
+
+   }
 
   public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset){
     this.animatedSprite = sprite;
@@ -49,33 +48,19 @@ public abstract class Character implements Comparable <Character>{
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
     this.stats = randomStats(speed,0);
+    // System.out.println("2"+this);
+
   }
 
-  public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset, int room){
+  public Character(AnimatedSprite sprite, int speed, int xCollisionOffset, int yCollisionOffset, int room, Stats stats){
     this.animatedSprite = sprite;
     this.speed = speed;
     this.layer = 0;
     this.xCollisionOffset = xCollisionOffset;
     this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed,room);
+    this.stats = stats;
+    // System.out.println("3"+this);
   }
-
-
-  public Character(int speed, int xCollisionOffset, int yCollisionOffset){
-    this.speed = speed;
-    this.layer = 0;
-    this.xCollisionOffset = xCollisionOffset;
-    this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed,0);
-  }
-  public Character(int speed, int xCollisionOffset, int yCollisionOffset, int room){
-    this.speed = speed;
-    this.layer = 0;
-    this.xCollisionOffset = xCollisionOffset;
-    this.yCollisionOffset = yCollisionOffset;
-    this.stats = randomStats(speed,room);
-  }
-
 
   public Stats randomStats(int speed,int room){//needs to be randomized/calculated
     if (this instanceof Player) return new Stats(1,10,1,100,speed);

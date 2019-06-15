@@ -14,7 +14,6 @@ public class Player extends Character implements GameObject{
 	public Player(Sprite sprite, int xZoom, int yZoom){
 		super((AnimatedSprite) sprite, 5, 15, 25);
 		this.sprite = sprite;
-
 		if(sprite != null && sprite instanceof AnimatedSprite) animatedSprite = (AnimatedSprite) sprite;
 		updateDirection();
 		Rectangle playerRectangle = new Rectangle(0, 0, 20, 26);
@@ -24,6 +23,7 @@ public class Player extends Character implements GameObject{
 		this.rect = playerRectangle;
 		this.collisionCheckRectangle = collisionCheckRectangle;
 	}
+
 	//Parameters: array that contains players current stats
 	//sets the players new motion speed if the stats have been upgraded
 	//returns Void
