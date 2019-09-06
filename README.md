@@ -1,4 +1,4 @@
-          **FinalGame**
+          ** FinalGame **
 #By Mohamed and Ahmed
  
  *How to Play*
