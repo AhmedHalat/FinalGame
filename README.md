@@ -6,7 +6,7 @@
   - Basically everything that occurs in the game uses the luck stat, highly recommend investing in it
   - Mess around with each book before leaving the safe zone to learn how to use it, the glyph in the book shows what it does
   - Click anywhere to start and close window to restart (didnt have time to make it elegant 👍)
-  - If you want to cheat a little, hold L and click the screen, then watch your EXP graphicsDevices
+  - If you want to cheat a little, hold L and click the screen, then watch your EXP grow
 
 *Notes*
   - Some of our sprites have pink particles around them. That isn't a bug in the code. When they were exported from photoshop the files were compressed and some of the colors were slightly changed and is now handled differently.
