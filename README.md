@@ -1,6 +1,7 @@
-          ** FinalGame **
-#By Mohamed and Ahmed
- 
+# FinalGame
+### Grade 12 Final By Mohamed and Ahmed
+Check out [Whimsical](https://whimsical.co/XRnDKKfsQ9CrTStVnGK3qq) for all data structures
+
  *How to Play*
   - To get a weapon at the start of the game left click on the chest or in the bottom right corner of the screen when in the main room
   - Basically everything that occurs in the game uses the luck stat, highly recommend investing in it
@@ -20,6 +21,3 @@
   - Sometimes the text in the JMenu glitches, not sure if this is a mac thing or what
   - On mac, not sure about windows, Making the window fullsize mode (different from full screen), causes the map to go black (Grabbing the edges and making it fullscreen still works)
       *Never Mind I think I fixed the spawning issue*
-
-
-Check out [Whimsical](https://whimsical.co/XRnDKKfsQ9CrTStVnGK3qq) for all data structures
